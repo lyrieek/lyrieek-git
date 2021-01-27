@@ -23,25 +23,51 @@ app.get('/', function (req: any, res: any) {
 
 let localDir = '/e/project'
 
-app.get('/pwd', async (req: any, res: any) => {
-	const pwd = await execa('pwd')
-	console.log(pwd)
-	res.send(pwd.stdout)
-})
-
-app.get('/cd', async (req: any, res: any) => {
-	try {
-		process.chdir(req.query.dir)
-		res.redirect('/pwd')
-	} catch (error) {
-		res.send(error)
+const routes = {
+	handler(controller: any) {
+		return async (req: any, res: any) => {
+			try {
+				const result = await controller(req.query);
+				if (result.exitCode) {
+					res.status(500).send(result)
+				}
+				console.log(result);
+				res.send(result)
+			} catch (error) {
+				res.status(500).send(error)
+			}
+		}
+	},
+	get(mapping: any, controller: any) {
+		app.get(mapping, this.handler(controller))
+	},
+	post(mapping: any, controller: any) {
+		app.post(mapping, this.handler(controller))
 	}
+}
+
+routes.get('/pwd', async () => {
+	const pwd = await execa('pwd')
+	return pwd.stdout
 })
 
-app.get('/status', async (req: any, res: any) => {
-	const status = await execa('git status ' + req.params.dir)
-	console.log(status)
-	res.send(status.stdout)
+routes.get('/cd', async (query: any) => {
+	process.chdir(query.dir)
+	return query.dir
+})
+
+routes.get('/status', async () => {
+	return (await execa('git status'))
+})
+
+routes.get('/ls', async () => {
+	const res = await execa('ls', ['-o'])
+	return res.stdout.split('\n').splice(1)
+})
+
+routes.get('/ls', async () => {
+	const res = await execa('git', ['log', '--graph', '--oneline', '--decorate', '--all'])
+	return res.stdout.split('\n')
 })
 
 const _wss = getWss('/')
