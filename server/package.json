@@ -1,0 +1,31 @@
+{
+	"name": "lyrieek-git-server",
+	"version": "0.1.0",
+	"private": true,
+	"bin": "app.js",
+	"scripts": {
+		"predev": "tsc index.ts",
+		"dev": "node index.js",
+		"prebuild": "tsc index.ts",
+		"build": "pkg . --out-path=dist/ && echo ./dist/lyrieek-git-server.exe"
+	},
+	"dependencies": {
+		"execa": "^5.0.0",
+		"express": "^4.17.1",
+		"express-ws": "^4.0.0"
+	},
+	"pkg": {
+		"options": [
+			"experimental-modules"
+		],
+		"scripts": [
+			"./app.js"
+		],
+		"assets": [
+			"../dist"
+		],
+		"targets": [
+			"node14-win-x64"
+		]
+	}
+}
