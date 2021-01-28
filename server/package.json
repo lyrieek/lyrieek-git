@@ -10,6 +10,7 @@
 		"build": "pkg . --out-path=dist/ && echo ./dist/lyrieek-git-server.exe"
 	},
 	"dependencies": {
+		"core-js": "^3.8.3",
 		"execa": "^5.0.0",
 		"express": "^4.17.1",
 		"express-ws": "^4.0.0"
