@@ -21,7 +21,7 @@ app.get('/', function (req: any, res: any) {
 	res.redirect('/index.html')
 })
 
-let localDir = '/e/project'
+let currentWorkDir = '/e/project'
 
 const routes = {
 	handler(controller: any) {
@@ -53,11 +53,30 @@ routes.get('/pwd', async () => {
 
 routes.get('/cd', async (query: any) => {
 	process.chdir(query.dir)
+	currentWorkDir = query.dir
 	return query.dir
 })
 
+routes.get('/exclude', async () => {
+})
+
 routes.get('/status', async () => {
-	return (await execa('git status'))
+	const statusContent = (await execa('git', ['status'])).stdout.split('\n')
+	const result = Object.create(null)
+	result.branch = statusContent[0].replace('On branch ', '')
+	result.branchHasUpdate = !~statusContent[1].indexOf('up to date')
+	const changeList = (await execa('git', ['status', '-s'])).stdout.split('\n')
+	result.changes = []
+	if (changeList.length > 1) {
+		for (let index = 0; index < changeList.length; index++) {
+			const element = changeList[index].split(/(?<=\S)\ +/)
+			result.changes.push({
+				type: element[0],
+				fileName: element[1]
+			})
+		}
+	}
+	return result
 })
 
 routes.get('/ls', async () => {
@@ -65,7 +84,17 @@ routes.get('/ls', async () => {
 	return res.stdout.split('\n').splice(1)
 })
 
-routes.get('/ls', async () => {
+routes.get('/branch', async () => {
+	const res = await execa('git', ['branch'])
+	return res.stdout.split('\n')
+})
+
+routes.get('/npmFund', async () => {
+	const res = await execa('npm', ['fund'])
+	return res.stdout.split('\n')
+})
+
+routes.get('/graph', async () => {
 	const res = await execa('git', ['log', '--graph', '--oneline', '--decorate', '--all'])
 	return res.stdout.split('\n')
 })
