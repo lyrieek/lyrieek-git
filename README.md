@@ -3,6 +3,8 @@
 ## Project setup
 ```
 yarn install
+cd server
+yran install
 ```
 
 ### Compiles and hot-reloads for development
