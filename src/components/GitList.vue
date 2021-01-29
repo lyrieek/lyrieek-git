@@ -1,7 +1,7 @@
 <template>
-	<div style="height:100%">
-		<Row style="height:100%">
-			<Col span="3" :style="{'border-right' : '1px solid #504c4c'}">
+	<div style="height: 100%">
+		<Row style="height: 100%">
+			<Col span="3" :style="{ 'border-right': '1px solid #504c4c' }">
 			<div style="padding: 20px">
 				<List>
 					<ListItem class="project-item-label">
@@ -9,7 +9,7 @@
 						<Badge :count="10" slot="extra" />
 					</ListItem>
 					<ListItem class="add-project-item">
-						<div style="text-align: center;width: 100%">
+						<div style="text-align: center; width: 100%">
 							<Icon type="md-add" />
 							添加新项目
 						</div>
@@ -17,14 +17,14 @@
 				</List>
 			</div>
 			</Col>
-			<Col span="18" :style="{'padding' : '10px'}">
+			<Col span="18" :style="{ padding: '10px' }">
 			<div class="git-work-url">
-				<h2>{{currentProject.name}}</h2>
+				<h2>{{ currentProject.name }}</h2>
 				<span>工作目录:</span>
-				<span style="padding: 3px;" v-text="currentProject.pwd"></span>
+				<span style="padding: 3px" v-text="currentProject.pwd"></span>
 			</div>
-			<Input v-model="commitMessage" maxlength="100" show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
-			<div style="margin-top:10px;text-align: right">
+			<Input v-model="commitMessage" maxlength="100" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
+			<div style="margin-top: 10px; text-align: right">
 				<Button type="success">
 					<Icon type="md-checkmark" />Commit</Button>
 			</div>
@@ -53,18 +53,22 @@
 			</Modal>
 			<Divider />
 			</Col>
-			<Col span="3" :style="{'border-left' : '1px solid #504c4c'}">
+			<Col span="3" :style="{ 'border-left': '1px solid #504c4c' }">
 			<Split mode="vertical">
 				<div slot="top" class="git-area work-area">
 					<Divider>工作区</Divider>
 					<ul class="file-list">
-						<li v-for="item of workChanges" :key="item.fileName">{{item.fileName}}</li>
+						<li v-for="item of workChanges" :key="item.fileName">
+							<span>{{ item.fileName }}</span>
+						</li>
 					</ul>
 				</div>
 				<div slot="bottom" class="git-area stage-area">
 					<Divider>暂存区</Divider>
 					<ul class="file-list">
-						<li v-for="item of indexChanges" :key="item.fileName">{{item.fileName}}</li>
+						<li v-for="item of indexChanges" :key="item.fileName">
+							<span>{{ item.fileName }}</span>
+						</li>
 					</ul>
 				</div>
 			</Split>
@@ -74,93 +78,97 @@
 </template>
 
 <style>
-.project-item-label:hover {
-	background: rgb(197, 211, 224);
-}
+	.project-item-label:hover {
+		background: rgb(197, 211, 224);
+	}
 
-.add-project-item:hover {
-	font-weight: bold;
-	cursor: pointer;
-}
+	.add-project-item:hover {
+		font-weight: bold;
+		cursor: pointer;
+	}
 
-.git-area {
-	margin: 10px;
-}
+	.git-area {
+		margin: 10px;
+	}
 
-.git-work-url {
-	margin: 10px;
-	font-size: 16px;
-}
+	.git-work-url {
+		margin: 10px;
+		font-size: 16px;
+	}
 
-.git-work-url>h2 {
-	font-weight: bold;
-}
+	.git-work-url>h2 {
+		font-weight: bold;
+	}
 
-.git-work-url>span:last-child {
-	font-weight: bold;
-	margin-left: 5px;
-	border: 1px solid gray;
-}
+	.git-work-url>span:last-child {
+		font-weight: bold;
+		margin-left: 5px;
+		border: 1px solid gray;
+	}
 
-.file-list {
-	list-style-type: none;
-}
+	.file-list {
+		list-style-type: none;
+	}
 
-.file-list>li {
-	line-height: 27px;
-}
+	.file-list>li {
+		line-height: 27px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 
-.file-list>li:hover {
-	line-height: 25px;
-	border: 1px solid #504c4c;
-	cursor: pointer;
-	background: #fdecd3;
-	font-weight: bold;
-}
+	.file-list>li:hover {
+		line-height: 25px;
+		border: 1px solid #504c4c;
+		cursor: pointer;
+		background: #fdecd3;
+		font-weight: bold;
+	}
 
-#main-control-button>* {
-	margin-right: 10px;
-}
+	#main-control-button>* {
+		margin-right: 10px;
+	}
 
 </style>
 
 <script>
-export default {
-	name: 'GitList',
-	data() {
-		return {
-			indexChanges: [],
-			workChanges: [],
-			configModal: false,
-			commitMessage: '',
-			currentProject: {
-				name: 'Lyrieek-Git',
-				pwd: 'Unselected'
-			}
-		}
-	},
-	mounted() {
-		fetch('http://localhost:3516/status').then((e) => {
-			e.json().then((data) => {
-				this.$nextTick().then(() => {
-					this.indexChanges = data.changes.filter((f) => !f.type.startsWith(' '))
-					this.workChanges = data.changes.filter((f) => f.type.startsWith(' '))
-				})
-			})
-		})
-		fetch('http://localhost:3516/pwd').then((e) => {
-			e.text().then((pwd) => {
-				this.$nextTick().then(() => {
-					this.currentProject.pwd = pwd
-				})
-			})
-		})
-	},
-	methods: {
-		updateConfig() {
-			console.log('update');
-		}
-	}
-}
+	export default {
+		name: "GitList",
+		data() {
+			return {
+				indexChanges: [],
+				workChanges: [],
+				configModal: false,
+				commitMessage: "",
+				currentProject: {
+					name: "Lyrieek-Git",
+					pwd: "Unselected",
+				},
+			};
+		},
+		mounted() {
+			fetch("http://localhost:3516/status").then((e) => {
+				e.json().then((data) => {
+					this.$nextTick().then(() => {
+						this.indexChanges = data.changes.filter(
+							(f) => !f.type.startsWith(" ")
+						);
+						this.workChanges = data.changes.filter((f) => f.type.startsWith(" "));
+					});
+				});
+			});
+			fetch("http://localhost:3516/pwd").then((e) => {
+				e.text().then((pwd) => {
+					this.$nextTick().then(() => {
+						this.currentProject.pwd = pwd;
+					});
+				});
+			});
+		},
+		methods: {
+			updateConfig() {
+				console.log("update");
+			},
+		},
+	};
 
 </script>
