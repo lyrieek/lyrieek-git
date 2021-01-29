@@ -28,5 +28,8 @@
 		"targets": [
 			"node14-win-x64"
 		]
+	},
+	"devDependencies": {
+		"@types/express-ws": "^3.0.0"
 	}
 }
