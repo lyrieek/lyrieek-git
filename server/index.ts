@@ -9,7 +9,7 @@ console.log("http://localhost:3516/");
 
 app.use(express.static('../dist'))
 
-app.all('*', function (req, res, next) {
+app.all('*', function (req: any, res: any, next: any) {
 	res.header("Access-Control-Allow-Origin", "*")
 	res.header("Access-Control-Allow-Headers", "X-Requested-With")
 	res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS")
@@ -47,6 +47,7 @@ const routes = {
 }
 
 routes.get('/pwd', async () => {
+	// await execa('chcp 65001')
 	const pwd = await execa('pwd')
 	return pwd.stdout
 })
@@ -114,7 +115,7 @@ const _wss = getWss('/')
 app.ws('/', function (ws: any, req: any) {
 	ws.on('message', function (msg: any) {
 		const data = JSON.parse(msg);
-		_wss.clients.forEach((client) => {
+		_wss.clients.forEach((client: any) => {
 			client.send(JSON.stringify(data))
 		});
 	})
