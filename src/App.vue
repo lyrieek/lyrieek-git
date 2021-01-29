@@ -24,7 +24,7 @@
 					</div>
 				</Menu>
 			</Header>
-			<Content :style="{margin: '88px 20px 0', background: '#fff', minHeight: '500px'}">
+			<Content :style="{margin: '88px 20px 0', background: '#fff', height: '500px'}">
 				<GitList />
 			</Content>
 			<Footer class="layout-footer-center">2021 &copy; Lyrieek</Footer>

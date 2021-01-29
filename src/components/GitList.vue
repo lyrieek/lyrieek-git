@@ -1,7 +1,7 @@
 <template>
-	<div class="hello">
-		<Row>
-			<Col span="3">
+	<div style="height:100%">
+		<Row style="height:100%">
+			<Col span="3" :style="{'border-right' : '1px solid #504c4c'}">
 			<div style="padding: 20px">
 				<List>
 					<ListItem class="project-item-label">
@@ -21,14 +21,24 @@
 			<div class="git-work-url">
 				<h2>{{currentProject.name}}</h2>
 				<span>工作目录:</span>
-				<span v-text="currentProject.pwd"></span>
+				<span style="padding: 3px;" v-text="currentProject.pwd"></span>
 			</div>
-			<Button type="success"><Icon type="md-checkmark" />Commit</Button>
+			<Input v-model="commitMessage" maxlength="100" show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
+			<div style="margin-top:10px;text-align: right">
+				<Button type="success">
+					<Icon type="md-checkmark" />Commit</Button>
+			</div>
 			<Divider />
-			<ButtonGroup>
-				<Button type="success"><Icon type="md-arrow-round-up" />Push</Button>
-				<Button type="info"><Icon type="md-arrow-round-down" />Pull</Button>
-			</ButtonGroup>
+			<div id="main-control-button">
+				<ButtonGroup>
+					<Button type="success">
+						<Icon type="md-arrow-round-up" />Push</Button>
+					<Button type="info">
+						<Icon type="md-arrow-round-down" />Pull</Button>
+				</ButtonGroup>
+				<Button type="info">
+					<Icon type="md-arrow-round-down" />Fetch</Button>
+			</div>
 			<Divider />
 			<Button type="primary" @click="configModal = true">修改配置</Button>
 			<Modal v-model="configModal" title="修改" @on-ok="updateConfig">
@@ -43,17 +53,17 @@
 			</Modal>
 			<Divider />
 			</Col>
-			<Col span="3" :style="{'border-left' : '1px solid black'}">
+			<Col span="3" :style="{'border-left' : '1px solid #504c4c'}">
 			<Split mode="vertical">
 				<div slot="top" class="git-area work-area">
 					<Divider>工作区</Divider>
-					<ul style="list-style-type: none;">
+					<ul class="file-list">
 						<li v-for="item of workChanges" :key="item.fileName">{{item.fileName}}</li>
 					</ul>
 				</div>
 				<div slot="bottom" class="git-area stage-area">
 					<Divider>暂存区</Divider>
-					<ul style="list-style-type: none;">
+					<ul class="file-list">
 						<li v-for="item of indexChanges" :key="item.fileName">{{item.fileName}}</li>
 					</ul>
 				</div>
@@ -92,6 +102,26 @@
 	border: 1px solid gray;
 }
 
+.file-list {
+	list-style-type: none;
+}
+
+.file-list>li {
+	line-height: 27px;
+}
+
+.file-list>li:hover {
+	line-height: 25px;
+	border: 1px solid #504c4c;
+	cursor: pointer;
+	background: #fdecd3;
+	font-weight: bold;
+}
+
+#main-control-button>* {
+	margin-right: 10px;
+}
+
 </style>
 
 <script>
@@ -102,6 +132,7 @@ export default {
 			indexChanges: [],
 			workChanges: [],
 			configModal: false,
+			commitMessage: '',
 			currentProject: {
 				name: 'Lyrieek-Git',
 				pwd: 'Unselected'
