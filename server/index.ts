@@ -21,7 +21,7 @@ app.get('/', function (req: any, res: any) {
 	res.redirect('/index.html')
 })
 
-let currentWorkDir = '/e/project'
+let currentWorkDir = process.cwd()
 
 const routes = {
 	handler(controller: any) {
@@ -82,6 +82,17 @@ routes.get('/status', async () => {
 routes.get('/ls', async () => {
 	const res = await execa('ls', ['-o'])
 	return res.stdout.split('\n').splice(1)
+})
+
+routes.get('/ssh-agent', async () => {
+	const agentPid = await execa('ssh-agent', ['-s'])
+	const id_ed25519 = await execa('ssh-add', ['~/.ssh/id_ed25519'])
+	const sshAdd = await execa('ssh-add', ['-l', '-E', 'sha256'])
+	return {
+		agentPid,
+		id_ed25519,
+		sshAdd
+	}
 })
 
 routes.get('/branch', async () => {
