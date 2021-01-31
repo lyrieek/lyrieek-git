@@ -69,3 +69,11 @@ routes.get('/graph', async () => {
 	const res = await execa('git', ['log', '--graph', '--oneline', '--decorate', '--all'])
 	return res.stdout.split('\n')
 })
+
+routes.post('/commit', async (query: any) => {
+	const commitArg = ['commit', '-m', query.message, '--date="' + query.date + '"']
+	console.log(commitArg);
+	// return commitArg
+	const res = await execa('git', commitArg)
+	return res.stdout
+})
