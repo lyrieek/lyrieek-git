@@ -28,24 +28,34 @@ app.ws('/', function (ws: any, req: any) {
 })
 
 export default {
-	handler(controller: any) {
-		return async (req: any, res: any) => {
+	paserParameter(req: any, next: Function){
+		let param = req.query
+		if (req.method === 'GET') {
+			return next(param)
+		}
+		req.on("data", (chunk: any) => param += chunk)
+		req.on("end", () => next(JSON.parse(param.replace(/^\[object Object]/, ''))))
+	},
+	handler(controller: Function) {
+		return (req: any, res: any) => {
 			try {
-				const result = await controller(req.query);
-				if (result.exitCode) {
-					res.status(500).send(result)
-				}
-				console.log(result);
-				res.send(result)
+				this.paserParameter(req, async (param: Object) => {
+					const result = await controller(param);
+					if (result.exitCode) {
+						res.status(500).send(result)
+					}
+					console.log(result);
+					res.send(result)
+				})
 			} catch (error) {
 				res.status(500).send(error)
 			}
 		}
 	},
-	get(mapping: any, controller: any) {
+	get(mapping: any, controller: Function) {
 		app.get(mapping, this.handler(controller))
 	},
-	post(mapping: any, controller: any) {
+	post(mapping: any, controller: Function) {
 		app.post(mapping, this.handler(controller))
 	}
 }
