@@ -17,30 +17,48 @@
 				</List>
 			</div>
 			</Col>
-			<Col span="18" :style="{ padding: '10px' }">
+			<Col span="17" :style="{ padding: '10px' }">
 			<div class="git-work-url">
 				<h2>{{ currentProject.name }}</h2>
 				<span>工作目录:</span>
 				<span style="padding: 3px" v-text="currentProject.pwd"></span>
 			</div>
-			<Input v-model="commitMessage" maxlength="100" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
+			<Input v-model="commitInfo.message" maxlength="100" @on-blur="commitInfoUpdate()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
+			<div style="text-align: right">
+				<DatePicker v-model="commitInfo.date" type="date" placeholder="Commit date" style="width: 120px"></DatePicker>
+				<TimePicker v-model="commitInfo.time" format="HH:mm:ss" placeholder="Commit time" style="width: 120px"></TimePicker>
+				<Input v-model="commitInfo.zone" placeholder="Time zone" style="width: 85px" />
+				<Button shape="circle" icon="md-refresh" @click="commitInfoUpdate()" :disabled="commitInfo.pin" style="margin-left: 2px"></Button>
+				<Tooltip placement="bottom">
+					<CheckboxGroup>
+						<Checkbox label="Pin" border style="margin-left: 2px;padding: 0px 0px 0px 5px;margin-right:0px" v-model="commitInfo.pin"></Checkbox>
+					</CheckboxGroup>
+					<div slot="content">
+						<Icon type="ios-outlet-outline" />Synchronize real time
+					</div>
+				</Tooltip>
+			</div>
 			<div style="margin-top: 10px; text-align: right">
-				<Button type="success">
+				<Button type="success" @click="commit()">
 					<Icon type="md-checkmark" />Commit</Button>
 			</div>
 			<Divider />
-			<div id="main-control-button">
+			<div id="main-control-button" class="toolbar-buttons">
 				<ButtonGroup>
 					<Button type="success">
 						<Icon type="md-arrow-round-up" />Push</Button>
 					<Button type="info">
 						<Icon type="md-arrow-round-down" />Pull</Button>
 				</ButtonGroup>
-				<Button type="info">
+				<Button type="info" ghost>
 					<Icon type="md-arrow-round-down" />Fetch</Button>
 			</div>
 			<Divider />
-			<Button type="primary" @click="configModal = true">修改配置</Button>
+			<div class="toolbar-buttons">
+				<Button type="primary" @click="configModal = true">修改配置</Button>
+				<Button type="success">
+					<Icon type="md-refresh" />刷新</Button>
+			</div>
 			<Modal v-model="configModal" title="修改" @on-ok="updateConfig">
 				<Form :label-width="80">
 					<FormItem label="项目名">
@@ -53,7 +71,7 @@
 			</Modal>
 			<Divider />
 			</Col>
-			<Col span="3" :style="{ 'border-left': '1px solid #504c4c' }">
+			<Col span="4" :style="{ 'border-left': '1px solid #504c4c' }">
 			<Split mode="vertical">
 				<div slot="top" class="git-area work-area">
 					<Divider>工作区</Divider>
@@ -124,13 +142,15 @@
 		font-weight: bold;
 	}
 
-	#main-control-button>* {
+	.toolbar-buttons>* {
 		margin-right: 10px;
 	}
 
 </style>
 
 <script>
+	import moment from 'moment';
+
 	export default {
 		name: "GitList",
 		data() {
@@ -138,7 +158,13 @@
 				indexChanges: [],
 				workChanges: [],
 				configModal: false,
-				commitMessage: "",
+				commitInfo: {
+					message: "",
+					date: null,
+					time: null,
+					zone: null,
+					pin: false
+				},
 				currentProject: {
 					name: "Lyrieek-Git",
 					pwd: "Unselected",
@@ -168,6 +194,39 @@
 			updateConfig() {
 				console.log("update");
 			},
+			commitInfoUpdate() {
+				if (this.commitInfo.pin) {
+					return
+				}
+				this.commitInfo.date = new Date()
+				this.commitInfo.time = moment().format('HH:mm:ss')
+				this.commitInfo.zone = "+0800"
+			},
+			commit() {
+				fetch("http://localhost:3516/commit", {
+					method: 'POST',
+					body: JSON.stringify({
+						message: this.commitInfo.message,
+						date: moment(this.commitInfo.date).format('YYYY-MM-DD') + "T" + this.commitInfo.time + this.commitInfo.zone
+					})
+				}).then((e) => {
+					if (!e.ok) {
+						return e.json().then((res) => {
+							this.$Notice.error({
+								title: 'Commit',
+								desc: `<div style="white-space: pre;">${res.stdout}</div>`,
+								duration: 0
+							});
+						});
+					}
+					e.text().then((res) => {
+						this.$Notice.success({
+							title: 'Commit',
+							desc: res
+						});
+					});
+				});
+			}
 		},
 	};
 
