@@ -248,6 +248,7 @@
 							title: 'Commit',
 							desc: res
 						});
+						this.commitInfo = {}
 					});
 				});
 			}
