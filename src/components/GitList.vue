@@ -23,6 +23,16 @@
 				<span>工作目录:</span>
 				<span style="padding: 3px" v-text="currentProject.pwd"></span>
 			</div>
+			<ul class="config-list">
+				<li>
+					<span>user.name</span>
+					<span v-text="currentProject.userName"></span>
+				</li>
+				<li>
+					<span>user.email</span>
+					<span v-text="currentProject.userEmail"></span>
+				</li>
+			</ul>
 			<Input v-model="commitInfo.message" maxlength="100" @on-blur="commitInfoUpdate()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
 			<div style="text-align: right">
 				<DatePicker v-model="commitInfo.date" type="date" placeholder="Commit date" style="width: 120px"></DatePicker>
@@ -124,6 +134,27 @@
 		border: 1px solid gray;
 	}
 
+	.config-list {
+		list-style-type: none;
+		padding: 10px;
+		border: 1px solid teal;
+		width: auto;
+	}
+
+	.config-list>li>span:first-child {
+		width: 100px;
+		display: inline-block;
+		text-align: right;
+	}
+
+	.config-list>li>span:first-child::after {
+		content: ":";
+	}
+
+	.config-list>li>span:last-child {
+		padding-left: 3px;
+	}
+
 	.file-list {
 		list-style-type: none;
 	}
@@ -186,6 +217,14 @@
 				e.text().then((pwd) => {
 					this.$nextTick().then(() => {
 						this.currentProject.pwd = pwd;
+					});
+				});
+			});
+			fetch("http://localhost:3516/config").then((e) => {
+				e.json().then((config) => {
+					this.$nextTick().then(() => {
+						this.currentProject.userName = config.userName
+						this.currentProject.userEmail = config.userEmail
 					});
 				});
 			});

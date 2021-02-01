@@ -77,3 +77,11 @@ routes.post('/commit', async (query: any) => {
 	const res = await execa('git', commitArg)
 	return res.stdout
 })
+
+routes.get('/config', async () => {
+	const userName = (await execa('git', ['config', 'user.name'])).stdout
+	const userEmail = (await execa('git', ['config', 'user.email'])).stdout
+	return {
+		userName, userEmail
+	}
+})
