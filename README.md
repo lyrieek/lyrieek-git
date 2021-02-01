@@ -1,5 +1,7 @@
 # lyrieek-git
 
+lyrieek-git is a powerful visual tool for Git! Although Git can do a lot of work, but the work involved is much more difficult and error-prone. *lyrieek-git* makes this process incredibly easy and it changes the way developers work when they use it .
+
 ## Project setup
 ```
 yarn install
@@ -17,12 +19,5 @@ yarn run serve
 yarn run build
 ```
 
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
+## Announcements
+- Any version of Internet Explorer is not supported
