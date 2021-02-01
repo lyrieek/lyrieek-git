@@ -24,7 +24,8 @@
 				<span style="padding: 3px" v-text="currentProject.pwd"></span>
 			</div>
 			<ul class="config-list">
-				<li style="border-bottom: 1px solid black"><Icon type="md-build" />Git Config</li>
+				<li style="border-bottom: 1px solid black">
+					<Icon type="md-build" />Git Config</li>
 				<li>
 					<span>user.name</span>
 					<span v-text="currentProject.userName"></span>
@@ -54,22 +55,7 @@
 					<Icon type="md-checkmark" />Commit</Button>
 			</div>
 			<Divider />
-			<div id="main-control-button" class="toolbar-buttons">
-				<ButtonGroup>
-					<Button type="success">
-						<Icon type="md-arrow-round-up" />Push</Button>
-					<Button type="info">
-						<Icon type="md-arrow-round-down" />Pull</Button>
-				</ButtonGroup>
-				<Button type="info" ghost>
-					<Icon type="md-arrow-round-down" />Fetch</Button>
-				<Button type="info" ghost>
-					<Icon type="md-return-left" />Reset(soft)</Button>
-				<Button type="info" ghost>
-					<Icon type="md-redo" />Checkout</Button>
-				<Button type="info" ghost>
-					<Icon type="md-lock" />SSH Agent</Button>
-			</div>
+			<ToolButtons />
 			<Divider />
 			<div class="toolbar-buttons">
 				<Button type="primary" @click="configModal = true">修改配置</Button>
@@ -189,9 +175,13 @@
 
 <script>
 	import moment from 'moment';
+	import ToolButtons from './ToolButtons';
 
 	export default {
 		name: "GitList",
+		components: {
+			ToolButtons
+		},
 		data() {
 			return {
 				indexChanges: [],
