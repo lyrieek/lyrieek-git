@@ -55,6 +55,19 @@ routes.get('/ssh-agent', async () => {
 	}
 })
 
+routes.get('/pull', async () => {
+	const res = await execa('git', ['pull'])
+	return res.stdout
+})
+
+routes.get('/push', async () => {
+	const res = await execa('git', ['push'])
+	if (!res.stdout) {
+		res.stdout = res.stderr
+	}
+	return res.stdout
+})
+
 routes.get('/branch', async () => {
 	const res = await execa('git', ['branch'])
 	return res.stdout.split('\n')
