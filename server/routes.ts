@@ -28,7 +28,7 @@ app.ws('/', function (ws: any, req: any) {
 })
 
 export default {
-	paserParameter(req: any, next: Function){
+	paserParameter(req: any, next: Function) {
 		let param = req.query
 		if (req.method === 'GET') {
 			return next(param)
@@ -42,7 +42,9 @@ export default {
 				this.paserParameter(req, async (param: Object) => {
 					const result = await controller(param);
 					if (result.exitCode) {
-						res.status(500).send(result)
+						return res.status(500).send(result)
+					} else if(!result.stdout) {
+						res.status(202)
 					}
 					console.log(result);
 					res.send(result)
