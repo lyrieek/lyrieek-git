@@ -24,6 +24,7 @@
 				<span style="padding: 3px" v-text="currentProject.pwd"></span>
 			</div>
 			<ul class="config-list">
+				<li style="border-bottom: 1px solid black"><Icon type="md-build" />Git Config</li>
 				<li>
 					<span>user.name</span>
 					<span v-text="currentProject.userName"></span>
@@ -62,6 +63,12 @@
 				</ButtonGroup>
 				<Button type="info" ghost>
 					<Icon type="md-arrow-round-down" />Fetch</Button>
+				<Button type="info" ghost>
+					<Icon type="md-return-left" />Reset(soft)</Button>
+				<Button type="info" ghost>
+					<Icon type="md-redo" />Checkout</Button>
+				<Button type="info" ghost>
+					<Icon type="md-lock" />SSH Agent</Button>
 			</div>
 			<Divider />
 			<div class="toolbar-buttons">
@@ -138,6 +145,7 @@
 		list-style-type: none;
 		padding: 10px;
 		border: 1px solid teal;
+		border-radius: 5px;
 		width: auto;
 	}
 
@@ -202,32 +210,18 @@
 				},
 			};
 		},
-		mounted() {
-			fetch("http://localhost:3516/status").then((e) => {
-				e.json().then((data) => {
-					this.$nextTick().then(() => {
-						this.indexChanges = data.changes.filter(
-							(f) => !f.type.startsWith(" ")
-						);
-						this.workChanges = data.changes.filter((f) => f.type.startsWith(" "));
-					});
-				});
-			});
-			fetch("http://localhost:3516/pwd").then((e) => {
-				e.text().then((pwd) => {
-					this.$nextTick().then(() => {
-						this.currentProject.pwd = pwd;
-					});
-				});
-			});
-			fetch("http://localhost:3516/config").then((e) => {
-				e.json().then((config) => {
-					this.$nextTick().then(() => {
-						this.currentProject.userName = config.userName
-						this.currentProject.userEmail = config.userEmail
-					});
-				});
-			});
+		async mounted() {
+			const status = await (await fetch("http://localhost:3516/status")).json();
+			const pwd = await (await fetch("http://localhost:3516/pwd")).text();
+			const config = await (await fetch("http://localhost:3516/config")).json();
+			// await this.$nextTick()
+			this.currentProject.pwd = pwd;
+			this.currentProject.userName = config.userName
+			this.currentProject.userEmail = config.userEmail
+			this.indexChanges = status.changes.filter(
+				(f) => !f.type.startsWith(" ")
+			);
+			this.workChanges = status.changes.filter((f) => f.type.startsWith(" "));
 		},
 		methods: {
 			updateConfig() {
@@ -240,6 +234,7 @@
 				this.commitInfo.date = new Date()
 				this.commitInfo.time = moment().format('HH:mm:ss')
 				this.commitInfo.zone = "+0800"
+				this.commitInfo.pin = true
 			},
 			commit() {
 				fetch("http://localhost:3516/commit", {
