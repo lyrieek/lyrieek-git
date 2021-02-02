@@ -41,6 +41,7 @@ export default {
 			try {
 				this.paserParameter(req, async (param: Object) => {
 					const result = await controller(param);
+					console.log(result);
 					if (result.exitCode) {
 						return res.status(500).send(result)
 					} else if(!result.stdout) {
@@ -50,6 +51,7 @@ export default {
 					res.send(result)
 				})
 			} catch (error) {
+				console.log("error");
 				res.status(500).send(error)
 			}
 		}

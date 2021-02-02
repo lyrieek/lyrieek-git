@@ -35,6 +35,7 @@
 					<span v-text="currentProject.userEmail"></span>
 				</li>
 			</ul>
+			<GitLog />
 			<Input v-model="commitInfo.message" maxlength="100" @on-blur="commitInfoUpdate()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
 			<div style="text-align: right">
 				<DatePicker v-model="commitInfo.date" type="date" placeholder="Commit date" style="width: 120px"></DatePicker>
@@ -176,11 +177,13 @@
 <script>
 import moment from 'moment';
 import ToolButtons from './ToolButtons';
+import GitLog from './GitLog';
 
 export default {
 	name: "GitList",
 	components: {
-		ToolButtons
+		ToolButtons,
+		GitLog
 	},
 	data() {
 		return {
@@ -244,6 +247,7 @@ export default {
 					});
 				}
 				e.text().then((res) => {
+					this.$root.$emit("commit")
 					this.$Notice.success({
 						title: 'Commit',
 						desc: res

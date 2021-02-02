@@ -1,7 +1,7 @@
 <template>
 	<div class="layout">
 		<Layout>
-			<Header :style="{position: 'fixed', width: '100%'}">
+			<Header :style="{position: 'fixed', width: '100%', 'z-index': 99999}">
 				<Menu mode="horizontal" theme="dark" active-name="1">
 					<div class="layout-logo">
 						&nbsp;
@@ -24,7 +24,7 @@
 					</div>
 				</Menu>
 			</Header>
-			<Content :style="{margin: '88px 20px 0', background: '#fff', height: '500px'}">
+			<Content :style="{margin: '88px 20px 0', background: '#fff', 'min-height': '500px', 'max-height': maxHeight + 'px', 'overflow-y': 'auto'}">
 				<GitList />
 			</Content>
 			<Footer class="layout-footer-center">2021 &copy; Lyrieek</Footer>
@@ -70,6 +70,9 @@ import GitList from './components/GitList.vue'
 
 export default {
 	name: 'App',
+	data: () => ({
+		maxHeight: window.innerHeight - 88
+	}),
 	components: {
 		GitList
 	}
