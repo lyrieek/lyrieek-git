@@ -99,160 +99,160 @@
 </template>
 
 <style>
-	.project-item-label:hover {
-		background: rgb(197, 211, 224);
-	}
+.project-item-label:hover {
+	background: rgb(197, 211, 224);
+}
 
-	.add-project-item:hover {
-		font-weight: bold;
-		cursor: pointer;
-	}
+.add-project-item:hover {
+	font-weight: bold;
+	cursor: pointer;
+}
 
-	.git-area {
-		margin: 10px;
-	}
+.git-area {
+	margin: 10px;
+}
 
-	.git-work-url {
-		margin: 10px;
-		font-size: 16px;
-	}
+.git-work-url {
+	margin: 10px;
+	font-size: 16px;
+}
 
-	.git-work-url>h2 {
-		font-weight: bold;
-	}
+.git-work-url>h2 {
+	font-weight: bold;
+}
 
-	.git-work-url>span:last-child {
-		font-weight: bold;
-		margin-left: 5px;
-		border: 1px solid gray;
-	}
+.git-work-url>span:last-child {
+	font-weight: bold;
+	margin-left: 5px;
+	border: 1px solid gray;
+}
 
-	.config-list {
-		list-style-type: none;
-		padding: 10px;
-		border: 1px solid teal;
-		border-radius: 5px;
-		width: auto;
-	}
+.config-list {
+	list-style-type: none;
+	padding: 10px;
+	border: 1px solid teal;
+	border-radius: 5px;
+	width: auto;
+}
 
-	.config-list>li>span:first-child {
-		width: 100px;
-		display: inline-block;
-		text-align: right;
-	}
+.config-list>li>span:first-child {
+	width: 100px;
+	display: inline-block;
+	text-align: right;
+}
 
-	.config-list>li>span:first-child::after {
-		content: ":";
-	}
+.config-list>li>span:first-child::after {
+	content: ":";
+}
 
-	.config-list>li>span:last-child {
-		padding-left: 3px;
-	}
+.config-list>li>span:last-child {
+	padding-left: 3px;
+}
 
-	.file-list {
-		list-style-type: none;
-	}
+.file-list {
+	list-style-type: none;
+}
 
-	.file-list>li {
-		line-height: 27px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
+.file-list>li {
+	line-height: 27px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
-	.file-list>li:hover {
-		line-height: 25px;
-		border: 1px solid #504c4c;
-		cursor: pointer;
-		background: #fdecd3;
-		font-weight: bold;
-	}
+.file-list>li:hover {
+	line-height: 25px;
+	border: 1px solid #504c4c;
+	cursor: pointer;
+	background: #fdecd3;
+	font-weight: bold;
+}
 
-	.toolbar-buttons>* {
-		margin-right: 10px;
-	}
+.toolbar-buttons>* {
+	margin-right: 10px;
+}
 
 </style>
 
 <script>
-	import moment from 'moment';
-	import ToolButtons from './ToolButtons';
+import moment from 'moment';
+import ToolButtons from './ToolButtons';
 
-	export default {
-		name: "GitList",
-		components: {
-			ToolButtons
-		},
-		data() {
-			return {
-				indexChanges: [],
-				workChanges: [],
-				configModal: false,
-				commitInfo: {
-					message: "",
-					date: null,
-					time: null,
-					zone: null,
-					pin: false
-				},
-				currentProject: {
-					name: "Lyrieek-Git",
-					pwd: "Unselected",
-				},
-			};
-		},
-		async mounted() {
-			const status = await (await fetch("http://localhost:3516/status")).json();
-			const pwd = await (await fetch("http://localhost:3516/pwd")).text();
-			const config = await (await fetch("http://localhost:3516/config")).json();
-			// await this.$nextTick()
-			this.currentProject.pwd = pwd;
-			this.currentProject.userName = config.userName
-			this.currentProject.userEmail = config.userEmail
-			this.indexChanges = status.changes.filter(
-				(f) => !f.type.startsWith(" ")
-			);
-			this.workChanges = status.changes.filter((f) => f.type.startsWith(" "));
-		},
-		methods: {
-			updateConfig() {
-				console.log("update");
+export default {
+	name: "GitList",
+	components: {
+		ToolButtons
+	},
+	data() {
+		return {
+			indexChanges: [],
+			workChanges: [],
+			configModal: false,
+			commitInfo: {
+				message: "",
+				date: null,
+				time: null,
+				zone: null,
+				pin: false
 			},
-			commitInfoUpdate() {
-				if (this.commitInfo.pin) {
-					return
-				}
-				this.commitInfo.date = new Date()
-				this.commitInfo.time = moment().format('HH:mm:ss')
-				this.commitInfo.zone = "+0800"
-				this.commitInfo.pin = true
+			currentProject: {
+				name: "Lyrieek-Git",
+				pwd: "Unselected",
 			},
-			commit() {
-				fetch("http://localhost:3516/commit", {
-					method: 'POST',
-					body: JSON.stringify({
-						message: this.commitInfo.message,
-						date: moment(this.commitInfo.date).format('YYYY-MM-DD') + "T" + this.commitInfo.time + this.commitInfo.zone
-					})
-				}).then((e) => {
-					if (!e.ok) {
-						return e.json().then((res) => {
-							this.$Notice.error({
-								title: 'Commit',
-								desc: `<div style="white-space: pre;">${res.stdout}</div>`,
-								duration: 0
-							});
-						});
-					}
-					e.text().then((res) => {
-						this.$Notice.success({
-							title: 'Commit',
-							desc: res
-						});
-						this.commitInfo = {}
-					});
-				});
+		};
+	},
+	async mounted() {
+		const status = await (await fetch("http://localhost:3516/status")).json();
+		const pwd = await (await fetch("http://localhost:3516/pwd")).text();
+		const config = await (await fetch("http://localhost:3516/config")).json();
+		// await this.$nextTick()
+		this.currentProject.pwd = pwd;
+		this.currentProject.userName = config.userName
+		this.currentProject.userEmail = config.userEmail
+		this.indexChanges = status.changes.filter(
+			(f) => !f.type.startsWith(" ")
+		);
+		this.workChanges = status.changes.filter((f) => f.type.startsWith(" "));
+	},
+	methods: {
+		updateConfig() {
+			console.log("update");
+		},
+		commitInfoUpdate() {
+			if (this.commitInfo.pin) {
+				return
 			}
+			this.commitInfo.date = new Date()
+			this.commitInfo.time = moment().format('HH:mm:ss')
+			this.commitInfo.zone = "+0800"
+			this.commitInfo.pin = true
 		},
-	};
+		commit() {
+			fetch("http://localhost:3516/commit", {
+				method: 'POST',
+				body: JSON.stringify({
+					message: this.commitInfo.message,
+					date: moment(this.commitInfo.date).format('YYYY-MM-DD') + "T" + this.commitInfo.time + this.commitInfo.zone
+				})
+			}).then((e) => {
+				if (!e.ok) {
+					return e.json().then((res) => {
+						this.$Notice.error({
+							title: 'Commit',
+							desc: `<div style="white-space: pre;">${res.stdout}</div>`,
+							duration: 0
+						});
+					});
+				}
+				e.text().then((res) => {
+					this.$Notice.success({
+						title: 'Commit',
+						desc: res
+					});
+					this.commitInfo = {}
+				});
+			});
+		}
+	}
+}
 
 </script>
