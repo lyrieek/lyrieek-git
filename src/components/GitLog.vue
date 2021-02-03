@@ -56,6 +56,7 @@
 
 <script>
 import moment from 'moment'
+import http from '../common/services/http'
 
 export default {
 	name: "GitLog",
@@ -77,7 +78,7 @@ export default {
 			}
 			this.page = skip
 			skip = skip * this.pageSize
-			this.logArr = await (await fetch(`http://localhost:3516/log?skip=${skip}&size=${this.pageSize}`)).json()
+			this.logArr = await http.getJSON(`log?skip=${skip}&size=${this.pageSize}`)
 		},
 		displayDate(date) {
 			const unixDate = date.replace(/^Date: +/, '').split(' ')[0]

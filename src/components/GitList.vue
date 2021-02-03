@@ -175,9 +175,10 @@
 </style>
 
 <script>
-import moment from 'moment';
-import ToolButtons from './ToolButtons';
-import GitLog from './GitLog';
+import moment from 'moment'
+import ToolButtons from './ToolButtons'
+import GitLog from './GitLog'
+import http from '../common/services/http'
 
 export default {
 	name: "GitList",
@@ -204,10 +205,9 @@ export default {
 		};
 	},
 	async mounted() {
-		const status = await (await fetch("http://localhost:3516/status")).json();
-		const pwd = await (await fetch("http://localhost:3516/pwd")).text();
-		const config = await (await fetch("http://localhost:3516/config")).json();
-		// await this.$nextTick()
+		const status = await http.getJSON("status");
+		const pwd = await http.text("pwd");
+		const config = await http.getJSON("config");
 		this.currentProject.pwd = pwd;
 		this.currentProject.userName = config.userName
 		this.currentProject.userEmail = config.userEmail
