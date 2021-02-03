@@ -91,6 +91,22 @@ routes.post('/commit', async (query: any) => {
 	return res.stdout
 })
 
+routes.get('/log', async (query) => {
+	const command = ['log', '--date=raw', '--max-count=' + query.size]
+	if (query.skip) {
+		command.push('--skip=' + query.skip)
+	}
+	const res = await execa('git', command)
+	const logArr = res.stdout.split('\n');
+	return logArr.map((e, i) =>
+		e.startsWith('commit ') && {
+			commit: e,
+			author: logArr[i + 1],
+			date: logArr[i + 2],
+			msg: logArr[i + 4].replace(/^ +/, '')
+		}).filter((e) => e)
+})
+
 routes.get('/config', async () => {
 	const userName = (await execa('git', ['config', 'user.name'])).stdout
 	const userEmail = (await execa('git', ['config', 'user.email'])).stdout
