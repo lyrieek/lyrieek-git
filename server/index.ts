@@ -39,6 +39,16 @@ routes.get('/status', async () => {
 	return result
 })
 
+routes.get('/addAll', async () => {
+	const res = await execa('git', ['add', '.'])
+	return res.stdout.split('\n').splice(1)
+})
+
+routes.get('/undo', async () => {
+	const res = await execa('git', ['reset', 'HEAD'])
+	return res.stdout.split('\n').splice(1)
+})
+
 routes.get('/ls', async () => {
 	const res = await execa('ls', ['-o'])
 	return res.stdout.split('\n').splice(1)

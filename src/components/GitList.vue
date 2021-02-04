@@ -76,24 +76,7 @@
 			<Divider />
 			</Col>
 			<Col span="4" :style="{ 'border-left': '1px solid #504c4c' }">
-			<Split mode="vertical">
-				<div slot="top" class="git-area work-area">
-					<Divider>工作区</Divider>
-					<ul class="file-list">
-						<li v-for="item of workChanges" :key="item.fileName">
-							<span>{{ item.fileName }}</span>
-						</li>
-					</ul>
-				</div>
-				<div slot="bottom" class="git-area stage-area">
-					<Divider>暂存区</Divider>
-					<ul class="file-list">
-						<li v-for="item of indexChanges" :key="item.fileName">
-							<span>{{ item.fileName }}</span>
-						</li>
-					</ul>
-				</div>
-			</Split>
+			<StatusPanel />
 			</Col>
 		</Row>
 	</div>
@@ -107,10 +90,6 @@
 .add-project-item:hover {
 	font-weight: bold;
 	cursor: pointer;
-}
-
-.git-area {
-	margin: 10px;
 }
 
 .git-work-url {
@@ -179,17 +158,17 @@ import moment from 'moment'
 import ToolButtons from './ToolButtons'
 import GitLog from './GitLog'
 import http from '../common/services/http'
+import StatusPanel from './StatusPanel.vue'
 
 export default {
 	name: "GitList",
 	components: {
 		ToolButtons,
-		GitLog
+		GitLog,
+		StatusPanel
 	},
 	data() {
 		return {
-			indexChanges: [],
-			workChanges: [],
 			configModal: false,
 			commitInfo: {
 				message: "",
@@ -205,18 +184,21 @@ export default {
 		};
 	},
 	async mounted() {
-		const status = await http.getJSON("status");
-		const pwd = await http.text("pwd");
-		const config = await http.getJSON("config");
+		const pwd = await http.text("pwd")
+		const config = await http.getJSON("config")
 		this.currentProject.pwd = pwd;
 		this.currentProject.userName = config.userName
 		this.currentProject.userEmail = config.userEmail
-		this.indexChanges = status.changes.filter(
-			(f) => !f.type.startsWith(" ")
-		);
-		this.workChanges = status.changes.filter((f) => f.type.startsWith(" "));
+		this.refreshStatus()
 	},
 	methods: {
+		async refreshStatus() {
+			const status = await http.getJSON("status");
+			this.indexChanges = status.changes.filter(
+				(f) => !f.type.startsWith(" ")
+			);
+			this.workChanges = status.changes.filter((f) => f.type.startsWith(" "));
+		},
 		updateConfig() {
 			console.log("update");
 		},
