@@ -27,7 +27,7 @@ routes.get('/status', async () => {
 	result.branchHasUpdate = !~statusContent[1].indexOf('up to date')
 	const changeList = (await execa('git', ['status', '-s'])).stdout.split('\n')
 	result.changes = []
-	if (changeList.length > 1) {
+	if (changeList.length > 0) {
 		for (let index = 0; index < changeList.length; index++) {
 			const element = changeList[index].split(/(?<=\S)\ +/)
 			result.changes.push({

@@ -41,13 +41,12 @@ export default {
 			try {
 				this.paserParameter(req, async (param: Object) => {
 					const result = await controller(param);
-					console.log(result);
 					if (result.exitCode) {
+						console.log(result);
 						return res.status(500).send(result)
 					} else if(!result.stdout) {
 						res.status(202)
 					}
-					console.log(result);
 					res.send(result)
 				})
 			} catch (error) {
