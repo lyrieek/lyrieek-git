@@ -129,6 +129,12 @@
 	margin-right: 10px;
 }
 
+.preview-text {
+	white-space: pre-wrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
 </style>
 
 <script>

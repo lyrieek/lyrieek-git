@@ -8,7 +8,7 @@
 			<Table class="cwd-switch-files" size="small" :height="tableHeight" :columns="fileColumns" :data="fileData" @on-row-click="selectItem"></Table>
 		</Modal>
 		<Modal v-model="previewFileModal">
-			<div class="preview-file-text">{{previewFileText}}</div>
+			<div class="preview-text">{{previewFileText}}</div>
 			<Icon type="ios-more" />
 		</Modal>
 	</div>
@@ -38,12 +38,6 @@
 .preview-file-name {
 	font-weight: bold;
 	font-size: 14px;
-}
-
-.preview-file-text {
-	white-space: pre-wrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
 }
 
 </style>
