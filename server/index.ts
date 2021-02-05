@@ -139,3 +139,8 @@ routes.get('/viewFile', async (query: any) => {
 	const res = await execa('head', [query.file])
 	return res.stdout
 })
+
+routes.get('/gpg/view', async () => {
+	const res = await execa('gpg', ['--list-keys'])
+	return res.stdout
+})
