@@ -61,18 +61,18 @@ export default {
 		}
 	}),
 	async mounted() {
+		this.$root.$on("refreshStatus", this.refreshStatus)
 		this.refreshStatus()
 	},
 	methods: {
 		async refreshStatus() {
 			const status = await http.getJSON("status");
 			this.changesList.index = status.changes.filter(
-				(f) => !f.type.startsWith(" ") && !f.type.startsWith("??")
-			);
+				(f) => !f.type.startsWith(" ") && !f.type.startsWith("??"));
 			this.changesList.untracked = status.changes.filter(
-				(f) => f.type.startsWith("??")
-			);
-			this.changesList.work = status.changes.filter((f) => f.type.startsWith(" "));
+				(f) => f.type.startsWith("??"));
+			this.changesList.work = status.changes.filter(
+				(f) => f.type.startsWith(" "));
 		},
 		async addAll() {
 			await http.text("addAll");

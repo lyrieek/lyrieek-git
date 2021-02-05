@@ -32,7 +32,7 @@
 				</li>
 			</ul>
 			<GitLog />
-			<Input v-model="commitInfo.message" maxlength="100" @on-blur="commitInfoUpdate()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
+			<Input v-model="commitInfo.message" maxlength="100" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
 			<div style="text-align: right">
 				<DatePicker v-model="commitInfo.date" type="date" placeholder="Commit date" style="width: 120px"></DatePicker>
 				<TimePicker v-model="commitInfo.time" format="HH:mm:ss" placeholder="Commit time" style="width: 120px"></TimePicker>
@@ -56,7 +56,7 @@
 			<Divider />
 			<div class="toolbar-buttons">
 				<Button type="primary" @click="configModal = true">修改配置</Button>
-				<Button type="success">
+				<Button type="success" @click="refreshStatus()">
 					<Icon type="md-refresh" />刷新</Button>
 			</div>
 			<Modal v-model="configModal" title="修改" @on-ok="updateConfig">
@@ -172,11 +172,7 @@ export default {
 	},
 	methods: {
 		async refreshStatus() {
-			const status = await http.getJSON("status");
-			this.indexChanges = status.changes.filter(
-				(f) => !f.type.startsWith(" ")
-			);
-			this.workChanges = status.changes.filter((f) => f.type.startsWith(" "));
+			this.$root.$emit("refreshStatus")
 		},
 		updateConfig() {
 			console.log("update");
