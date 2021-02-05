@@ -1,12 +1,14 @@
 <template>
-	<div>
+	<div style="margin: 10px 0px">
 		<div>
 			<strong>Log:</strong>
-			<Button size="small" @click="gitLogModalDisplay=true">查看</Button>
+			<Button size="small" @click="gitLogModalDisplay=true">查看全部</Button>
+			<Icon type="ios-information-circle-outline" />
+			<span>双击复制 commit message</span>
 		</div>
 		<ul style="list-style: none;">
 			<li v-for="item of logArr.slice(0, 5)" :key="item.commit">
-				<span class="git-commit-label">{{item.msg}}</span>
+				<span class="git-commit-label" @dblclick="dbclickCommitInfo(item.msg)">{{item.msg}}</span>
 				<span style="padding-left: 30px">{{displayDate(item.date)}}</span>
 			</li>
 			<li v-if="!logArr.length">
@@ -46,10 +48,13 @@
 .git-commit-label {
     text-decoration: underline;
 	cursor: pointer;
+	padding: 0px 12px;
+    /* user-select: none; */
 }
 
 .git-commit-label:hover {
 	font-weight: bold;
+	padding: 0px 5px;
 }
 
 </style>
@@ -71,6 +76,19 @@ export default {
 		this.$root.$on("commit", () => this.refreshLog(0))
 	},
 	methods: {
+		dbclickCommitInfo(e) {
+			let transfer = document.createElement('input');
+			document.body.appendChild(transfer);
+			transfer.value = e;
+			// transfer.style.display = 'none';
+			// transfer.disabled = 'disabled';
+			transfer.focus();
+			transfer.select();
+			document.execCommand('copy');
+			transfer.blur();
+			console.log('复制成功');
+			document.body.removeChild(transfer);
+		},
 		async refreshLog(skip) {
 			if (skip < 0) {
 				this.$Message.info('没有上一页')
