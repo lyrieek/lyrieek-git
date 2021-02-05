@@ -205,6 +205,7 @@ export default {
 				}
 				e.text().then((res) => {
 					this.$root.$emit("commit")
+					this.refreshStatus()
 					this.$Notice.success({
 						title: 'Commit',
 						desc: res
