@@ -50,8 +50,18 @@ routes.get('/undo', async () => {
 })
 
 routes.get('/ls', async () => {
-	const res = await execa('ls', ['-o'])
-	return res.stdout.split('\n').splice(1)
+	const res = await execa('ls', ['-o', '-a', '-S', '--reverse', '--time-style=long-iso'])
+	const arr = res.stdout.split('\n').splice(1)
+	return arr.map((e) => {
+		const fileItem = e.split(/ +/)
+		return {
+			role: fileItem[0],
+			// user: fileItem[2],
+			size: fileItem[3],
+			date: fileItem[4] + ' ' + fileItem[5],
+			name: fileItem[6],
+		}
+	})
 })
 
 routes.get('/ssh-agent', async () => {
@@ -101,7 +111,7 @@ routes.post('/commit', async (query: any) => {
 	return res.stdout
 })
 
-routes.get('/log', async (query) => {
+routes.get('/log', async (query: any) => {
 	const command = ['log', '--date=raw', '--max-count=' + query.size]
 	if (query.skip) {
 		command.push('--skip=' + query.skip)
@@ -123,4 +133,9 @@ routes.get('/config', async () => {
 	return {
 		userName, userEmail
 	}
+})
+
+routes.get('/viewFile', async (query: any) => {
+	const res = await execa('head', [query.file])
+	return res.stdout
 })

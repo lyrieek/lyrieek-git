@@ -18,11 +18,7 @@
 			</div>
 			</Col>
 			<Col span="17" :style="{ padding: '10px' }">
-			<div class="git-work-url">
-				<h2>{{ currentProject.name }}</h2>
-				<span>工作目录:</span>
-				<span style="padding: 3px" v-text="currentProject.pwd"></span>
-			</div>
+			<WorkPath :projectName="currentProject.name" />
 			<ul class="config-list">
 				<li style="border-bottom: 1px solid black">
 					<Icon type="md-build" />Git Config</li>
@@ -68,9 +64,6 @@
 					<FormItem label="项目名">
 						<Input type="text" v-model="currentProject.name"></Input>
 					</FormItem>
-					<FormItem label="路径">
-						<Input type="text" v-model="currentProject.pwd"></Input>
-					</FormItem>
 				</Form>
 			</Modal>
 			<Divider />
@@ -90,21 +83,6 @@
 .add-project-item:hover {
 	font-weight: bold;
 	cursor: pointer;
-}
-
-.git-work-url {
-	margin: 10px;
-	font-size: 16px;
-}
-
-.git-work-url>h2 {
-	font-weight: bold;
-}
-
-.git-work-url>span:last-child {
-	font-weight: bold;
-	margin-left: 5px;
-	border: 1px solid gray;
 }
 
 .config-list {
@@ -159,13 +137,15 @@ import ToolButtons from './ToolButtons'
 import GitLog from './GitLog'
 import http from '../common/services/http'
 import StatusPanel from './StatusPanel.vue'
+import WorkPath from './WorkPath.vue'
 
 export default {
 	name: "GitList",
 	components: {
 		ToolButtons,
 		GitLog,
-		StatusPanel
+		StatusPanel,
+		WorkPath
 	},
 	data() {
 		return {
@@ -179,14 +159,13 @@ export default {
 			},
 			currentProject: {
 				name: "Lyrieek-Git",
-				pwd: "Unselected",
+				userName: "",
+				userEmail: ""
 			},
 		};
 	},
 	async mounted() {
-		const pwd = await http.text("pwd")
 		const config = await http.getJSON("config")
-		this.currentProject.pwd = pwd;
 		this.currentProject.userName = config.userName
 		this.currentProject.userEmail = config.userEmail
 		this.refreshStatus()
@@ -203,7 +182,7 @@ export default {
 			console.log("update");
 		},
 		commitInfoUpdate() {
-			if (this.commitInfo.pin) {
+			if (this.commitInfo.pin || !this.commitInfo.message) {
 				return
 			}
 			this.commitInfo.date = new Date()
