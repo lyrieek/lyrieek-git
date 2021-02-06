@@ -46,6 +46,24 @@
 	margin: 10px;
 }
 
+.file-list {
+	list-style-type: none;
+}
+
+.file-list>li {
+	line-height: 27px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.file-list>li:hover {
+	line-height: 25px;
+	border: 1px solid #504c4c;
+	cursor: pointer;
+	background: #fdecd3;
+	font-weight: bold;
+}
+
 </style>
 
 <script>

@@ -25,6 +25,13 @@
 	</div>
 </template>
 
+<style>
+.toolbar-buttons>* {
+	margin-right: 10px;
+}
+
+</style>
+
 <script>
 import http from '../common/services/http'
 
