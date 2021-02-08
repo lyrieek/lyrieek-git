@@ -85,6 +85,7 @@ export default {
 	methods: {
 		async refreshStatus() {
 			const status = await http.getJSON("status");
+			this.$root.$emit("statusUpdate", status)
 			this.changesList.index = status.changes.filter(
 				(f) => !f.type.startsWith(" ") && !f.type.startsWith("??"));
 			this.changesList.untracked = status.changes.filter(

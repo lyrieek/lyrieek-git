@@ -6,7 +6,7 @@
 				<List>
 					<ListItem class="project-item-label">
 						<ListItemMeta :title="currentProject.name"></ListItemMeta>
-						<Badge :count="10" slot="extra" />
+						<Badge :count="currentProject.notPushCommits" slot="extra" />
 					</ListItem>
 					<ListItem class="add-project-item">
 						<div style="text-align: center; width: 100%">
@@ -144,7 +144,8 @@ export default {
 			currentProject: {
 				name: "Lyrieek-Git",
 				userName: "",
-				userEmail: ""
+				userEmail: "",
+				notPushCommits: 0
 			},
 		};
 	},
@@ -153,6 +154,9 @@ export default {
 		this.currentProject.userName = config.userName
 		this.currentProject.userEmail = config.userEmail
 		this.refreshStatus()
+		this.$root.$on("statusUpdate", (e) => {
+			this.currentProject.notPushCommits = e.notPushCommits
+		})
 	},
 	methods: {
 		async refreshStatus() {

@@ -25,6 +25,11 @@ routes.get('/status', async () => {
 	const result = Object.create(null)
 	result.branch = statusContent[0].replace('On branch ', '')
 	result.branchHasUpdate = !~statusContent[1].indexOf('up to date')
+	result.notPushCommits = 0
+	const hasNotPushCommits = statusContent[1].match(/by \d+ commit./)[0]
+	if (hasNotPushCommits) {
+		result.notPushCommits = Number(hasNotPushCommits.match(/\d+/)[0])
+	}
 	const changeList = (await execa('git', ['status', '-s'])).stdout.split('\n')
 	result.changes = []
 	if (changeList.length > 0) {
