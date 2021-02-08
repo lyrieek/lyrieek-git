@@ -38,7 +38,8 @@ import http from '../common/services/http'
 export default {
 	name: "ToolButtons",
 	data: () => ({
-		GPGViewerModal: false
+		GPGViewerModal: false,
+		GPGViewerContent: ''
 	}),
 	methods: {
 		async sshAgent() {
