@@ -3,18 +3,22 @@
 		<Row style="height: 100%">
 			<Col span="3" :style="{ 'border-right': '1px solid #504c4c' }">
 			<div style="padding: 20px">
-				<List>
-					<ListItem class="project-item-label">
+				<ul class="project-list-view">
+					<li class="project-item-label" v-for="item of projects" :key="item.projectPath" @click="changeProject(item)" :style="{background: item.selected ? '#efebeb' : 'transparent'}">
+						<span>{{item.name}}</span>
+						<Badge :count="currentProject.notPushCommits" slot="extra" />
+					</li>
+					<!-- <ListItem class="project-item-label">
 						<ListItemMeta :title="currentProject.name"></ListItemMeta>
 						<Badge :count="currentProject.notPushCommits" slot="extra" />
-					</ListItem>
-					<ListItem class="add-project-item">
+					</ListItem> -->
+					<li class="add-project-item">
 						<div style="text-align: center; width: 100%">
 							<Icon type="md-add" />
 							添加新项目
 						</div>
-					</ListItem>
-				</List>
+					</li>
+				</ul>
 			</div>
 			</Col>
 			<Col span="17" :style="{ padding: '10px' }">
@@ -85,8 +89,11 @@
 	cursor: pointer;
 }
 
-.config-list {
+ul {
 	list-style-type: none;
+}
+
+.config-list {
 	padding: 10px;
 	border: 1px solid teal;
 	border-radius: 5px;
@@ -105,6 +112,11 @@
 
 .config-list>li>span:last-child {
 	padding-left: 3px;
+}
+
+.project-list-view>li {
+	padding: 5px 12px;
+	cursor: pointer;
 }
 
 .preview-text {
@@ -142,25 +154,55 @@ export default {
 				pin: false
 			},
 			currentProject: {
+				index: 0,
 				name: "Lyrieek-Git",
 				userName: "",
 				userEmail: "",
 				notPushCommits: 0
 			},
+			projects: []
 		};
 	},
 	async mounted() {
+		await this.getProjects()
+		this.refreshStatus()
+		this.$root.$on("statusUpdated", async (e) => {
+			await this.getProjects()
+			this.currentProject.notPushCommits = e.notPushCommits
+			// this.$nextTick().then(() => {
+			// 	if (!this.projects[this.currentProject.index]) {
+			// 		return
+			// 	}
+			// 	this.projects[this.currentProject.index].notPushCommits = e.notPushCommits
+			// })
+		})
 		const config = await http.getJSON("config")
 		this.currentProject.userName = config.userName
 		this.currentProject.userEmail = config.userEmail
-		this.refreshStatus()
-		this.$root.$on("statusUpdate", (e) => {
-			this.currentProject.notPushCommits = e.notPushCommits
-		})
 	},
 	methods: {
 		async refreshStatus() {
 			this.$root.$emit("refreshStatus")
+		},
+		async changeProject(e) {
+			this.currentProject.index = Number(e.index)
+			await http.text("cd?dir=" + e.projectPath)
+			this.refreshStatus()
+		},
+		async getProjects() {
+			const _projects = await http.getJSON("projects")
+			if (!_projects.length) {
+				return this.$message.error("Please check the configuration")
+			}
+			for (const index in _projects) {
+				_projects[index].index = index
+				_projects[index].name = _projects[index].projectPath.split(/\\|\//).pop()
+				if (Number(index) === this.currentProject.index) {
+					_projects[index].selected = true
+					this.currentProject.name = _projects[index].name
+				}
+			}
+			this.projects = _projects;
 		},
 		updateConfig() {
 			console.log("update");

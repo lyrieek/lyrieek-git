@@ -83,6 +83,7 @@ export default {
 	}),
 	async mounted() {
 		this.refresh()
+		this.$root.$on("refreshStatus", this.refresh)
 	},
 	methods: {
 		async refresh() {

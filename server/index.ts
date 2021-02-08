@@ -1,5 +1,6 @@
 import * as execa from 'execa';
 import routes from './routes';
+import setting from './setting';
 
 console.log("http://localhost:3516/");
 
@@ -148,4 +149,8 @@ routes.get('/viewFile', async (query: any) => {
 routes.get('/gpg/view', async () => {
 	const res = await execa('gpg', ['--list-keys'])
 	return res.stdout
+})
+
+routes.get('/projects', async () => {
+	return setting
 })

@@ -72,8 +72,9 @@ export default {
 		page: 1
 	}),
 	async mounted() {
-		this.refreshLog(0)
-		this.$root.$on("commit", () => this.refreshLog(0))
+		this.refreshLog()
+		this.$root.$on("commit", this.refreshLog)
+		this.$root.$on("refreshStatus", this.refreshLog)
 	},
 	methods: {
 		dbclickCommitInfo(e) {
@@ -94,7 +95,7 @@ export default {
 				this.$Message.info('没有上一页')
 				return
 			}
-			this.page = skip
+			this.page = skip || 0
 			skip = skip * this.pageSize
 			this.logArr = await http.getJSON(`log?skip=${skip}&size=${this.pageSize}`)
 		},
