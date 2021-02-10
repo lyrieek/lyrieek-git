@@ -2,9 +2,9 @@
 
 	<div style="height: 100%">
 		<div style="height: 100%">
-			<Split mode="vertical">
+			<Split v-model="externalSplit" mode="vertical">
 				<div slot="top" style="height: 100%" class="git-area work-area">
-					<Split mode="vertical">
+					<Split v-model="unindexedSplit" mode="vertical">
 						<div slot="top" class="git-area stage-area">
 							<div>
 								<Button size="small" @click="refreshStatus()" icon="md-refresh">刷新</Button>
@@ -43,7 +43,12 @@
 
 <style>
 .git-area {
-	margin: 10px;
+	margin-left: 10px;
+}
+
+.ivu-split-pane {
+    overflow: auto;
+    margin-bottom: 10px;
 }
 
 .file-list {
@@ -72,6 +77,8 @@ import http from '../common/services/http'
 export default {
 	name: "StatusPanel",
 	data: () => ({
+		externalSplit: 0.65,
+		unindexedSplit: 0.5,
 		changesList: {
 			index: [],
 			work: [],
