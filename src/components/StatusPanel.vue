@@ -8,8 +8,8 @@
 						<div slot="top" class="git-area stage-area">
 							<div>
 								<Button size="small" @click="refreshStatus()" icon="md-refresh">刷新</Button>
-								<Button size="small" @click="addAll()" icon="md-refresh">Add .</Button>
-								<Button size="small" @click="undo()" icon="md-refresh">Undo</Button>
+								<Button size="small" @click="addAll()" icon="md-add">Add .</Button>
+								<Button size="small" @click="undo()" icon="md-return-left">Undo</Button>
 							</div>
 							<Divider>新文件</Divider>
 							<ul class="file-list">
