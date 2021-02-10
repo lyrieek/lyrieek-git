@@ -23,18 +23,7 @@
 			</Col>
 			<Col span="17" :style="{ padding: '10px' }">
 			<WorkPath :projectName="currentProject.name" />
-			<ul class="config-list">
-				<li style="border-bottom: 1px solid black">
-					<Icon type="md-build" />Git Config</li>
-				<li>
-					<span>user.name</span>
-					<span v-text="currentProject.userName"></span>
-				</li>
-				<li>
-					<span>user.email</span>
-					<span v-text="currentProject.userEmail"></span>
-				</li>
-			</ul>
+			<GitConfig />
 			<GitLog />
 			<Input v-model="commitInfo.message" maxlength="100" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
 			<div style="text-align: right">
@@ -93,27 +82,6 @@ ul {
 	list-style-type: none;
 }
 
-.config-list {
-	padding: 10px;
-	border: 1px solid teal;
-	border-radius: 5px;
-	width: auto;
-}
-
-.config-list>li>span:first-child {
-	width: 100px;
-	display: inline-block;
-	text-align: right;
-}
-
-.config-list>li>span:first-child::after {
-	content: ":";
-}
-
-.config-list>li>span:last-child {
-	padding-left: 3px;
-}
-
 .project-list-view>li {
 	padding: 5px 12px;
 	cursor: pointer;
@@ -134,11 +102,13 @@ import GitLog from './GitLog'
 import http from '../common/services/http'
 import StatusPanel from './StatusPanel.vue'
 import WorkPath from './WorkPath.vue'
+import GitConfig from './GitConfig.vue'
 
 export default {
 	name: "GitList",
 	components: {
 		ToolButtons,
+		GitConfig,
 		GitLog,
 		StatusPanel,
 		WorkPath
@@ -156,8 +126,6 @@ export default {
 			currentProject: {
 				index: 0,
 				name: "Lyrieek-Git",
-				userName: "",
-				userEmail: "",
 				notPushCommits: 0
 			},
 			projects: []
@@ -176,9 +144,6 @@ export default {
 			// 	this.projects[this.currentProject.index].notPushCommits = e.notPushCommits
 			// })
 		})
-		const config = await http.getJSON("config")
-		this.currentProject.userName = config.userName
-		this.currentProject.userEmail = config.userEmail
 	},
 	methods: {
 		async refreshStatus() {

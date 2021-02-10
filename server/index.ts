@@ -136,8 +136,9 @@ routes.get('/log', async (query: any) => {
 routes.get('/config', async () => {
 	const userName = (await execa('git', ['config', 'user.name'])).stdout
 	const userEmail = (await execa('git', ['config', 'user.email'])).stdout
+	const autoCRLF = (await execa('git', ['config', 'core.autoCRLF'])).stdout
 	return {
-		userName, userEmail
+		userName, userEmail, autoCRLF
 	}
 })
 
