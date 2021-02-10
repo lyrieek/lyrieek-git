@@ -3,8 +3,12 @@
 		<div>
 			<strong>Log:</strong>
 			<Button size="small" @click="gitLogModalDisplay=true">查看全部</Button>
-			<Icon type="ios-information-circle-outline" />
-			<span>双击复制 commit message</span>
+			<Tooltip placement="right">
+				<Icon type="ios-information-circle-outline" style="margin-left: 5px" />
+				<div slot="content">
+					<span>双击commit message将自动复制</span>
+				</div>
+			</Tooltip>
 		</div>
 		<ul style="list-style: none;">
 			<li v-for="item of logArr.slice(0, 5)" :key="item.commit">
@@ -12,7 +16,7 @@
 				<span style="padding-left: 30px">{{displayDate(item.date)}}</span>
 			</li>
 			<li v-if="!logArr.length">
-				<span>No records were found!</span>
+				<span>No commit were found!</span>
 			</li>
 		</ul>
 		<Modal v-model="gitLogModalDisplay" title="Log" width="570">
@@ -20,7 +24,7 @@
 				<ListItem class="git-commit-label">{{item.msg}}</ListItem>
 			</List>
 			<List class="git-log-list" border v-show="!logArr.length">
-				<ListItem>No records were found!</ListItem>
+				<ListItem>No commit were found!</ListItem>
 			</List>
 			<div style="text-align: center; margin-top:2px;">
 				<Button @click="gitLogPrefix()" shape="circle" icon="ios-arrow-back" :disabled="page === 0">上一页</Button>
