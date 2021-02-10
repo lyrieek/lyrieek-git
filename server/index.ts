@@ -124,13 +124,19 @@ routes.get('/log', async (query: any) => {
 	}
 	const res = await execa('git', command)
 	const logArr = res.stdout.split('\n');
-	return logArr.map((e, i) =>
-		e.startsWith('commit ') && {
+	return logArr.map((e, i) => {
+		if (!e.startsWith('commit ')) {
+			return
+		}
+		const isMerge = logArr[i + 1].startsWith('Merge:')
+		return {
 			commit: e,
-			author: logArr[i + 1],
-			date: logArr[i + 2],
-			msg: logArr[i + 4].replace(/^ +/, '')
-		}).filter((e) => e)
+			isMerge,
+			author: logArr[i + (isMerge ? 2 : 1)],
+			date: logArr[i + (isMerge ? 3 : 2)],
+			msg: logArr[i + (isMerge ? 5 : 4)].replace(/^ +/, '')
+		}
+	}).filter((e) => e)
 })
 
 routes.get('/config', async () => {
