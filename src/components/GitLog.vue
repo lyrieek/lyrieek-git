@@ -12,7 +12,10 @@
 		</div>
 		<ul style="list-style: none;">
 			<li v-for="item of logArr.slice(0, 5)" :key="item.commit">
-				<span class="git-commit-label" @dblclick="dbclickCommitInfo(item.msg)">{{item.msg}}</span>
+				<span class="git-commit-label" @dblclick="dbclickCommitInfo(item.msg)">
+					<Icon v-if="item.isMerge" type="md-git-merge" style="margin-right: 2px" />
+					{{item.msg}}
+				</span>
 				<span style="padding-left: 30px">{{displayDate(item.date)}}</span>
 			</li>
 			<li v-if="!logArr.length">
@@ -21,7 +24,10 @@
 		</ul>
 		<Modal v-model="gitLogModalDisplay" title="Log" width="570">
 			<List class="git-log-list" :header="item.commit" :footer="displayDate(item.date)" border size="small" v-for="item of logArr" :key="item.commit">
-				<ListItem class="git-commit-label">{{item.msg}}</ListItem>
+				<ListItem class="git-commit-label">
+					<Icon v-if="item.isMerge" type="md-git-merge" style="margin-right: 2px" />
+					{{item.msg}}
+				</ListItem>
 			</List>
 			<List class="git-log-list" border v-show="!logArr.length">
 				<ListItem>No commit were found!</ListItem>
