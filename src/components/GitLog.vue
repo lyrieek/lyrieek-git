@@ -105,8 +105,8 @@ export default {
 				this.$Message.info('没有上一页')
 				return
 			}
-			this.page = (skip || 0)  * this.pageSize
-			this.logArr = await http.getJSON(`log?skip=${this.page}&size=${this.pageSize}`)
+			this.page = (skip || 0)
+			this.logArr = await http.getJSON(`log?skip=${this.page * this.pageSize}&size=${this.pageSize}`)
 		},
 		displayDate(date) {
 			const unixDate = date.replace(/^Date: +/, '').split(' ')[0]
