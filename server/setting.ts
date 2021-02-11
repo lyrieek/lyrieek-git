@@ -2,7 +2,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 
 let setting = [{
-    path: path.resolve(__dirname, '../')
+    projectPath: path.resolve(__dirname, '../')
 }]
 
 const customPath = path.resolve(__dirname, '../customSetting/index.json')

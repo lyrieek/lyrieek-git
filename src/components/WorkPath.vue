@@ -83,12 +83,12 @@ export default {
 	}),
 	async mounted() {
 		this.refresh()
+		this.fileData = await http.getJSON("ls")
 		this.$root.$on("refreshStatus", this.refresh)
 	},
 	methods: {
 		async refresh() {
 			this.currentPwd = await http.text("pwd")
-			this.fileData = await http.getJSON("ls")
 		},
 		async changePath() {},
 		async selectItem(e) {
@@ -97,6 +97,7 @@ export default {
 				this.previewFileModal = true
 				return
 			}
+			this.fileData = await http.getJSON("ls")
 			await http.text("cd?dir=" + e.name)
 			this.refresh()
 		}

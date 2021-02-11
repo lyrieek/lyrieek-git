@@ -5,13 +5,9 @@
 			<div style="padding: 20px">
 				<ul class="project-list-view">
 					<li class="project-item-label" v-for="item of projects" :key="item.projectPath" @click="changeProject(item)" :style="{background: item.selected ? '#efebeb' : 'transparent'}">
-						<span>{{item.name}}</span>
-						<Badge :count="currentProject.notPushCommits" slot="extra" />
+						<strong style="font-size: 15px">{{item.name}}</strong>
+						<Badge :count="item.notPushCommits" style="float: right" slot="extra" />
 					</li>
-					<!-- <ListItem class="project-item-label">
-						<ListItemMeta :title="currentProject.name"></ListItemMeta>
-						<Badge :count="currentProject.notPushCommits" slot="extra" />
-					</ListItem> -->
 					<li class="add-project-item">
 						<div style="text-align: center; width: 100%">
 							<Icon type="md-add" />
@@ -83,7 +79,7 @@ ul {
 }
 
 .project-list-view>li {
-	padding: 5px 12px;
+	padding: 7px 12px;
 	cursor: pointer;
 }
 

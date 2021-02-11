@@ -1,8 +1,10 @@
-import * as execa from 'execa';
-import routes from './routes';
-import setting from './setting';
+import * as execa from 'execa'
+import routes from './routes'
+import setting from './setting'
+import gitStatus from './gitStatus'
+import * as path from 'path'
 
-console.log("http://localhost:3516/");
+console.log("http://localhost:3516/")
 
 let currentWorkDir = process.cwd()
 
@@ -22,15 +24,7 @@ routes.get('/exclude', async () => {
 })
 
 routes.get('/status', async () => {
-	const statusContent = (await execa('git', ['status'])).stdout.split('\n')
-	const result = Object.create(null)
-	result.branch = statusContent[0].replace('On branch ', '')
-	result.branchHasUpdate = !~statusContent[1].indexOf('up to date')
-	result.notPushCommits = 0
-	const hasNotPushCommits = statusContent[1].match(/by \d+ commit./)
-	if (hasNotPushCommits && hasNotPushCommits.length) {
-		result.notPushCommits = Number(hasNotPushCommits[0].match(/\d+/)[0])
-	}
+	const result = await gitStatus()
 	const changeList = (await execa('git', ['status', '-s'])).stdout.split('\n')
 	result.changes = []
 	if (changeList.length > 0) {
@@ -159,5 +153,12 @@ routes.get('/gpg/view', async () => {
 })
 
 routes.get('/projects', async () => {
-	return setting
+	const result = []
+	for (const item of setting) {
+		const paramList = []
+		process.chdir(item.projectPath)
+		result.push(Object.assign(item, await gitStatus()))
+	}
+	process.chdir(currentWorkDir)
+	return result
 })
