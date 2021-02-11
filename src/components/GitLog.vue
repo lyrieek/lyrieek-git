@@ -98,6 +98,7 @@ export default {
 			document.execCommand('copy');
 			transfer.blur();
 			console.log('复制成功');
+			this.$Message.success('复制成功');
 			document.body.removeChild(transfer);
 		},
 		async refreshLog(skip) {
