@@ -1,11 +1,14 @@
-import * as express from 'express'
-import * as expressWs from 'express-ws'
+import express from 'express'
+import expressWs from 'express-ws'
+import { ExecaReturnBase } from 'execa'
+import { PathParams } from 'express-serve-static-core'
+import WebSocket from 'ws'
 
 const { app, getWss } = expressWs(express())
 app.listen(3516) //charCodeAt
 app.use(express.static('../dist'))
 
-app.all('*', function (req: any, res: any, next: any) {
+app.all('*', function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	res.header("Access-Control-Allow-Origin", "*")
 	res.header("Access-Control-Allow-Headers", "X-Requested-With")
 	res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS")
@@ -13,52 +16,60 @@ app.all('*', function (req: any, res: any, next: any) {
 	next()
 })
 
-app.get('/', function (req: any, res: any) {
+app.get('/', function (req: express.Request, res: express.Response) {
 	res.redirect('/index.html')
 })
 
 const _wss = getWss()
-app.ws('/', function (ws: any, req: any) {
-	ws.on('message', function (msg: any) {
-		const data = JSON.parse(msg);
-		_wss.clients.forEach((client: any) => {
+app.ws('/', function (w: WebSocket) {
+	w.on('message', function (msg: string) {
+		const data = JSON.parse(msg)
+		_wss.clients.forEach((client: WebSocket) => {
 			client.send(JSON.stringify(data))
-		});
+		})
 	})
 })
 
+interface Controller {
+	(query: any): ExecaReturnBase<string> | any
+}
+
 export default {
-	paserParameter(req: any, next: Function) {
-		let param = req.query
+	paserParameter(req: express.Request, next: (param: any) => void): void {
 		if (req.method === 'GET') {
-			return next(param)
+			return next(req.query)
 		}
-		req.on("data", (chunk: any) => param += chunk)
+		let param = ""
+		req.on("data", (chunk: string) => param += chunk)
 		req.on("end", () => next(JSON.parse(param.replace(/^\[object Object]/, ''))))
 	},
-	handler(controller: Function) {
-		return (req: any, res: any) => {
-			try {
-				this.paserParameter(req, async (param: Object) => {
-					const result = await controller(param);
+	handler(controller: Controller) {
+		return (req: express.Request, res: express.Response): void => {
+			this.paserParameter(req, async (param: any) => {
+				try {
+					const result = await controller(param)
+					if (!result) {
+						return res.status(204).send("")
+					}
 					if (result.exitCode) {
-						console.log(result);
+						console.log(result)
 						return res.status(500).send(result)
-					} else if(!result.stdout) {
+					} else if (!result.stdout) {
 						res.status(202)
 					}
 					res.send(result)
-				})
-			} catch (error) {
-				console.log("error");
-				res.status(500).send(error)
-			}
+				} catch (error) {
+					console.log("error")
+					console.log(error)
+					res.status(500).send(error)
+				}
+			})
 		}
 	},
-	get(mapping: any, controller: Function) {
+	get(mapping: PathParams, controller: Controller): void {
 		app.get(mapping, this.handler(controller))
 	},
-	post(mapping: any, controller: Function) {
+	post(mapping: PathParams, controller: Controller): void {
 		app.post(mapping, this.handler(controller))
 	}
 }

@@ -16,9 +16,9 @@ let setting: Array<ProjectSetting> = [{
 const customPath = path.resolve(__dirname, '../customSetting/index.json')
 const existsCustomSetting = fs.existsSync(customPath)
 if (!existsCustomSetting) {
-    console.warn("No custom Settings were detected!");
+    console.warn("No custom Settings were detected!")
 } else {
-    setting = require(customPath);
+    setting = require(customPath)
 }
 
 export default setting

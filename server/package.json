@@ -4,9 +4,9 @@
 	"private": true,
 	"bin": "app.js",
 	"scripts": {
-		"predev": "tsc index.ts",
-		"dev": "node index.js",
-		"prebuild": "tsc index.ts",
+		"predev": "tsc",
+		"dev": "node ../build/index.js",
+		"prebuild": "tsc",
 		"build": "pkg . --out-path=dist/ && echo ./dist/lyrieek-git-server.exe"
 	},
 	"dependencies": {

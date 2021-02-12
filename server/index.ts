@@ -1,8 +1,7 @@
-import * as execa from 'execa'
+import execa from 'execa'
 import routes from './routes'
 import setting from './setting'
 import gitStatus from './gitStatus'
-import * as path from 'path'
 
 console.log("http://localhost:3516/")
 
@@ -14,7 +13,7 @@ routes.get('/pwd', async () => {
 	return pwd.stdout
 })
 
-routes.get('/cd', async (query: any) => {
+routes.get('/cd', async (query: { dir: string, project: string }) => {
 	if (!query.project) {
 		process.chdir(query.dir)
 		return query.dir
@@ -31,6 +30,7 @@ routes.get('/cd', async (query: any) => {
 })
 
 routes.get('/exclude', async () => {
+	// add exclude file
 })
 
 routes.get('/status', async () => {
@@ -39,7 +39,7 @@ routes.get('/status', async () => {
 	result.changes = []
 	if (changeList.length > 0) {
 		for (let index = 0; index < changeList.length; index++) {
-			const element = changeList[index].split(/(?<=\S)\ +/)
+			const element = changeList[index].split(/(?<=\S) +/)
 			result.changes.push({
 				type: element[0],
 				fileName: element[1]
@@ -113,21 +113,21 @@ routes.get('/graph', async () => {
 	return res.stdout.split('\n')
 })
 
-routes.post('/commit', async (query: any) => {
+routes.post('/commit', async (query: { message: string, date: string }) => {
 	const commitArg = ['commit', '-m', query.message, '--date="' + query.date + '"']
-	console.log(commitArg);
+	console.log(commitArg)
 	// return commitArg
 	const res = await execa('git', commitArg)
 	return res.stdout
 })
 
-routes.get('/log', async (query: any) => {
+routes.get('/log', async (query: { size: number, skip: number }) => {
 	const command = ['log', '--date=raw', '--max-count=' + query.size]
 	if (query.skip) {
 		command.push('--skip=' + query.skip)
 	}
 	const res = await execa('git', command)
-	const logArr = res.stdout.split('\n');
+	const logArr = res.stdout.split('\n')
 	return logArr.map((e, i) => {
 		if (!e.startsWith('commit ')) {
 			return
@@ -152,7 +152,7 @@ routes.get('/config', async () => {
 	}
 })
 
-routes.get('/viewFile', async (query: any) => {
+routes.get('/viewFile', async (query: { file: string }) => {
 	const res = await execa('head', [query.file])
 	return res.stdout
 })
@@ -168,7 +168,7 @@ routes.get('/projects', async () => {
 		if (item.selected) {
 			currentWorkDir = item.projectPath
 		}
-		item.name = item.projectPath.split(/\\|\//).pop()
+		item.name = item.projectPath.split(/\\|\//).pop() || "Unnamed"
 		process.chdir(item.projectPath)
 		result.push(Object.assign(item, await gitStatus()))
 	}

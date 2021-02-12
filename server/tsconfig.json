@@ -1,0 +1,11 @@
+{
+
+	"compilerOptions": {
+		"strict": true,
+		"esModuleInterop": true,
+		"outDir": "../build"
+	},
+	"include": [
+		"index.ts"
+	]
+}

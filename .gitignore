@@ -6,3 +6,4 @@ server/*.js
 *.ignore
 yarn.lock
 /customSetting
+build
