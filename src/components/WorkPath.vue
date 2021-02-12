@@ -1,7 +1,7 @@
 <template>
 	<div class="git-work-url">
 		<h2>{{ projectName }}</h2>
-		<span>工作目录:</span>
+		<span @click="refresh()">工作目录:</span>
 		<span @click="currentPwdModal = true" style="padding: 3px" v-text="currentPwd"></span>
 		<Modal v-model="currentPwdModal" title="切换工作目录" :footer-hide=true width=570>
 			<Input type="text" v-model="currentPwd"></Input>
@@ -88,6 +88,7 @@ export default {
 	},
 	methods: {
 		async refresh() {
+			this.currentPwd = "Loading..."
 			this.currentPwd = await http.text("pwd")
 		},
 		async changePath() {},

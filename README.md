@@ -12,9 +12,14 @@ yran install
 create JSON customSetting/index.json
 
 format:
-``` json
+```
 [
-    {projectPath: [you project path]},
+    {
+        name: [custom name],
+        projectPath: [absolute disk path],
+        selected: [default select item],
+        tag: [used to classify]
+    },
     {projectPath: [other project path]}
     ...
 ]
