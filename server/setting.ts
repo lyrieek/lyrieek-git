@@ -1,8 +1,16 @@
 import * as path from 'path'
 import * as fs from 'fs'
 
-let setting = [{
-    projectPath: path.resolve(__dirname, '../')
+interface ProjectSetting {
+    name: string;
+    projectPath: string;
+    selected: boolean;
+}
+
+let setting: Array<ProjectSetting> = [{
+    name: "Lyrieek-git",
+    projectPath: path.resolve(__dirname, '../'),
+    selected: true
 }]
 
 const customPath = path.resolve(__dirname, '../customSetting/index.json')

@@ -15,9 +15,19 @@ routes.get('/pwd', async () => {
 })
 
 routes.get('/cd', async (query: any) => {
-	process.chdir(query.dir)
-	currentWorkDir = query.dir
-	return query.dir
+	if (!query.project) {
+		process.chdir(query.dir)
+		return query.dir
+	}
+	for (const item of setting) {
+		item.selected = false
+		if (item.name == query.project) {
+			item.selected = true
+			currentWorkDir = item.projectPath
+			process.chdir(currentWorkDir)
+		}
+	}
+	return setting
 })
 
 routes.get('/exclude', async () => {
@@ -155,7 +165,10 @@ routes.get('/gpg/view', async () => {
 routes.get('/projects', async () => {
 	const result = []
 	for (const item of setting) {
-		const paramList = []
+		if (item.selected) {
+			currentWorkDir = item.projectPath
+		}
+		item.name = item.projectPath.split(/\\|\//).pop()
 		process.chdir(item.projectPath)
 		result.push(Object.assign(item, await gitStatus()))
 	}

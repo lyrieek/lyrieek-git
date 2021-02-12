@@ -124,7 +124,8 @@ export default {
 				name: "Lyrieek-Git",
 				notPushCommits: 0
 			},
-			projects: []
+			projects: [],
+			projectsCache: null
 		};
 	},
 	async mounted() {
@@ -133,12 +134,6 @@ export default {
 		this.$root.$on("statusUpdated", async (e) => {
 			await this.getProjects()
 			this.currentProject.notPushCommits = e.notPushCommits
-			// this.$nextTick().then(() => {
-			// 	if (!this.projects[this.currentProject.index]) {
-			// 		return
-			// 	}
-			// 	this.projects[this.currentProject.index].notPushCommits = e.notPushCommits
-			// })
 		})
 	},
 	methods: {
@@ -147,23 +142,30 @@ export default {
 		},
 		async changeProject(e) {
 			this.currentProject.index = Number(e.index)
-			await http.text("cd?dir=" + e.projectPath)
+			this.projectsCache = await http.getJSON("cd?project=" + e.name)
 			this.refreshStatus()
 		},
 		async getProjects() {
-			const _projects = await http.getJSON("projects")
+			let _projects = this.projectsCache
+			if (!_projects) {
+				_projects = await http.getJSON("projects")
+			}
 			if (!_projects.length) {
 				return this.$message.error("Please check the configuration")
 			}
 			for (const index in _projects) {
 				_projects[index].index = index
-				_projects[index].name = _projects[index].projectPath.split(/\\|\//).pop()
-				if (Number(index) === this.currentProject.index) {
-					_projects[index].selected = true
+				// _projects[index].name = _projects[index].projectPath.split(/\\|\//).pop()
+				// if (Number(index) === this.currentProject.index) {
+					// _projects[index].selected = true
+					// this.currentProject.name = _projects[index].name
+				// }
+				if (_projects[index].selected) {
 					this.currentProject.name = _projects[index].name
 				}
 			}
-			this.projects = _projects;
+			this.projects = _projects
+			this.projectsCache = null
 		},
 		updateConfig() {
 			console.log("update");
