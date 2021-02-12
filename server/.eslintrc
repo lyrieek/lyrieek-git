@@ -1,26 +1,24 @@
 {
 	"extends": [
 		"eslint:recommended",
-		"plugin:vue/essential",
-		"plugin:vue/base"
+		"plugin:@typescript-eslint/recommended"
 	],
 	"root": true,
 	"env": {
 		"node": true
 	},
-	"parser": "vue-eslint-parser",
+	//@typescript-eslint/parser
 	"parserOptions": {
 		"parser": "babel-eslint",
 		"ecmaVersion": 2020,
 		"sourceType": "module"
 	},
 	"plugins": [
-		"vue"
+		"@typescript-eslint"
 	],
 	"rules": {
-		"vue/no-parsing-error": ["error", {
-			"x-invalid-end-tag": false
-		}],
-		"semi": ["warn", "never"]
+		"no-unused-vars": "warn",
+		"no-empty-function": "warn",
+		"@typescript-eslint/no-empty-function": "warn"
 	}
 }
