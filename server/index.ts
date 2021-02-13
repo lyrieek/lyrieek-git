@@ -100,7 +100,17 @@ routes.get('/push', async () => {
 
 routes.get('/branch', async () => {
 	const res = await execa('git', ['branch'])
-	return res.stdout.split('\n')
+	const branchs: {
+		current: string
+		all: Array<string>
+	} = { current: '', all: [] }
+	for (const item of res.stdout.split('\n')) {
+		if (item.startsWith("*")) {
+			branchs.current = item.substring(2)
+		}
+		branchs.all.push(item.substring(2))
+	}
+	return branchs
 })
 
 routes.get('/npmFund', async () => {

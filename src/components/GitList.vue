@@ -18,7 +18,7 @@
 			</div>
 			</Col>
 			<Col span="17" :style="{ padding: '10px' }">
-			<WorkPath :project="currentProject" />
+			<WorkPath :project="currentProject" :maxHeight="maxHeight" />
 			<GitConfig />
 			<GitLog />
 			<Input v-model="commitInfo.message" maxlength="100" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
@@ -125,7 +125,8 @@ export default {
 				notPushCommits: 0
 			},
 			projects: [],
-			projectsCache: null
+			projectsCache: null,
+			maxHeight: window.innerHeight - 300,
 		}
 	},
 	async mounted() {

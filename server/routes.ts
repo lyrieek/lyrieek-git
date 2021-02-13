@@ -31,11 +31,12 @@ app.ws('/', function (w: WebSocket) {
 })
 
 interface Controller {
-	(query: any): ExecaReturnBase<string> | any
+	/*eslint-disable @typescript-eslint/no-explicit-any */
+	(query: any): ExecaReturnBase<string> | Array<string | any> | Promise<any> | void
 }
 
 export default {
-	paserParameter(req: express.Request, next: (param: any) => void): void {
+	paserParameter(req: express.Request, next: (param: unknown) => void): void {
 		if (req.method === 'GET') {
 			return next(req.query)
 		}

@@ -1,7 +1,9 @@
 <template>
 	<div class="git-work-url">
 		<h2>{{ project.name }}
-			<Tag style="margin-left: 15px" color="gold">{{ project.branch }}</Tag>
+			<div @click="openBranchWin()" class="git-branch-label ivu-tag ivu-tag-gold ivu-tag-checked">
+				<span class="ivu-tag-text">{{ project.branch }}</span>
+			</div>
 		</h2>
 		<span @click="refresh()">工作目录:</span>
 		<span @click="currentPwdModal = true" class="pwd" v-text="currentPwd"></span>
@@ -15,19 +17,35 @@
 			<div v-for="item in project.languages">
 				<Tag color="purple">{{ item }}</Tag>
 			</div>
+			<div>
+				<Button icon="ios-add" type="dashed" size="small" @click="addTag()">添加标签</Button>
+			</div>
 		</div>
 		<Modal v-model="currentPwdModal" title="切换工作目录" :footer-hide=true width=570>
 			<Input type="text" v-model="currentPwd"></Input>
-			<Table class="cwd-switch-files" size="small" :height="tableHeight" :columns="fileColumns" :data="fileData" @on-row-click="selectItem"></Table>
+			<Table class="cwd-switch-files" size="small" :height="maxHeight" :columns="fileColumns" :data="fileData" @on-row-click="selectItem"></Table>
 		</Modal>
 		<Modal v-model="previewFileModal">
 			<div class="preview-text">{{previewFileText}}</div>
 			<Icon type="ios-more" />
 		</Modal>
+		<Modal title="所有分支" v-model="branchModal">
+			<div :style="{'max-height': maxHeight + 'px',overflow: 'auto'}">
+				<List border size="small" v-for="item in branch.all" :key="item">
+					<ListItem :style="branch.current === item ? {'font-weight': 'bold'} : {}">{{ item }}</ListItem>
+				</List>
+			</div>
+		</Modal>
 	</div>
 </template>
 
 <style>
+.git-branch-label {
+	display: inline;
+	margin-left: 15px;
+	cursor: pointer;
+}
+
 .git-work-url {
 	margin: 10px;
 	font-size: 16px;
@@ -65,14 +83,19 @@ export default {
 		project: {
 			name: String,
 			tag: Array
-		}
+		},
+		maxHeight: Number
 	},
 	data: () => ({
 		currentPwd: "",
 		previewFileText: "",
 		currentPwdModal: false,
 		previewFileModal: false,
-		tableHeight: window.innerHeight - 300,
+		branchModal: false,
+		branch: {
+			current: '',
+			all: []
+		},
 		fileColumns: [{
 			title: 'Name',
 			key: 'name',
@@ -118,6 +141,13 @@ export default {
 			this.fileData = await http.getJSON("ls")
 			await http.text("cd?dir=" + e.name)
 			this.refresh()
+		},
+		async openBranchWin() {
+			this.branch = await http.getJSON("branch")
+			this.branchModal = true
+		},
+		addTag() {
+
 		}
 	}
 }
