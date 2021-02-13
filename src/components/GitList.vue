@@ -18,7 +18,7 @@
 			</div>
 			</Col>
 			<Col span="17" :style="{ padding: '10px' }">
-			<WorkPath :projectName="currentProject.name" />
+			<WorkPath :project="currentProject" />
 			<GitConfig />
 			<GitLog />
 			<Input v-model="commitInfo.message" maxlength="100" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
@@ -161,7 +161,7 @@ export default {
 					// this.currentProject.name = _projects[index].name
 				// }
 				if (_projects[index].selected) {
-					this.currentProject.name = _projects[index].name
+					this.currentProject = _projects[index]
 				}
 			}
 			this.projects = _projects

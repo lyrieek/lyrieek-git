@@ -18,7 +18,9 @@ format:
         name: [custom name],
         projectPath: [absolute disk path],
         selected: [default select item],
-        tag: [used to classify]
+        tag: [used to classify],
+        languages: [programming language used],
+        lang: [main human language used]
     },
     {projectPath: [other project path]}
     ...

@@ -1,8 +1,14 @@
 <template>
 	<div class="git-work-url">
-		<h2>{{ projectName }}</h2>
+		<h2>{{ project.name }}</h2>
 		<span @click="refresh()">工作目录:</span>
 		<span @click="currentPwdModal = true" style="padding: 3px" v-text="currentPwd"></span>
+		<div>
+			<Tag color="gold" v-if="project.lang">{{ project.lang }}</Tag>
+			<span v-for="item in project.tag" style="padding: 7px">
+				<Tag color="default">{{ item }}</Tag>
+			</span>
+		</div>
 		<Modal v-model="currentPwdModal" title="切换工作目录" :footer-hide=true width=570>
 			<Input type="text" v-model="currentPwd"></Input>
 			<Table class="cwd-switch-files" size="small" :height="tableHeight" :columns="fileColumns" :data="fileData" @on-row-click="selectItem"></Table>
@@ -48,7 +54,10 @@ import http from '../common/services/http'
 export default {
 	name: "WorkPath",
 	props: {
-		projectName: String,
+		project: {
+			name: String,
+			tag: Array
+		}
 	},
 	data: () => ({
 		currentPwd: "",

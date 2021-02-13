@@ -1,11 +1,13 @@
 import execa from 'execa'
 
-export default async function (): Promise<{
+interface GitStatusInfo {
     branch: string
     branchHasUpdate: string
     notPushCommits: string
     changes: Array<{ type: string, fileName: string }>
-}> {
+}
+
+export default async function (): Promise<GitStatusInfo> {
     const result = Object.create(null)
     const statusContent = (await execa('git', ['status'])).stdout.split('\n')
     result.branch = statusContent[0].replace('On branch ', '')

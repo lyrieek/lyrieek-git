@@ -21,6 +21,7 @@
 		"vue/no-parsing-error": ["error", {
 			"x-invalid-end-tag": false
 		}],
+		"vue/require-v-for-key": 0,
 		"semi": ["warn", "never"]
 	}
 }
