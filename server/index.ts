@@ -39,10 +39,10 @@ routes.get('/status', async () => {
 	result.changes = []
 	if (changeList.length > 0) {
 		for (let index = 0; index < changeList.length; index++) {
-			const element = changeList[index].split(/(?<=\S) +/)
+			const data = changeList[index]
 			result.changes.push({
-				type: element[0],
-				fileName: element[1]
+				type: data.substring(0, 3),
+				fileName: data.substring(3)
 			})
 		}
 	}
