@@ -1,13 +1,20 @@
 <template>
 	<div class="git-work-url">
-		<h2>{{ project.name }}</h2>
+		<h2>{{ project.name }}
+			<Tag style="margin-left: 15px" color="gold">{{ project.branch }}</Tag>
+		</h2>
 		<span @click="refresh()">工作目录:</span>
-		<span @click="currentPwdModal = true" style="padding: 3px" v-text="currentPwd"></span>
-		<div>
-			<Tag color="gold" v-if="project.lang">{{ project.lang }}</Tag>
-			<span v-for="item in project.tag" style="padding: 7px">
+		<span @click="currentPwdModal = true" class="pwd" v-text="currentPwd"></span>
+		<div style="display: flex;flex-wrap: wrap">
+			<div>
+				<Tag color="gold" v-show="project.lang">{{ project.lang }}</Tag>
+			</div>
+			<div v-for="item in project.tag">
 				<Tag color="default">{{ item }}</Tag>
-			</span>
+			</div>
+			<div v-for="item in project.languages">
+				<Tag color="purple">{{ item }}</Tag>
+			</div>
 		</div>
 		<Modal v-model="currentPwdModal" title="切换工作目录" :footer-hide=true width=570>
 			<Input type="text" v-model="currentPwd"></Input>
@@ -30,9 +37,10 @@
 	font-weight: bold;
 }
 
-.git-work-url>span:last-child {
+.git-work-url>.pwd {
 	font-weight: bold;
 	margin-left: 5px;
+	padding: 3px;
 	border: 1px solid gray;
 	cursor: pointer;
 }
