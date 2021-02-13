@@ -88,18 +88,18 @@ export default {
 	},
 	methods: {
 		dbclickCommitInfo(e) {
-			let transfer = document.createElement('input');
-			document.body.appendChild(transfer);
-			transfer.value = e;
+			let transfer = document.createElement('input')
+			document.body.appendChild(transfer)
+			transfer.value = e
 			// transfer.style.display = 'none';
 			// transfer.disabled = 'disabled';
-			transfer.focus();
-			transfer.select();
-			document.execCommand('copy');
-			transfer.blur();
-			console.log('复制成功');
-			this.$Message.success('复制成功');
-			document.body.removeChild(transfer);
+			transfer.focus()
+			transfer.select()
+			document.execCommand('copy')
+			transfer.blur()
+			console.log('复制成功')
+			this.$Message.success('复制成功')
+			document.body.removeChild(transfer)
 		},
 		async refreshLog(skip) {
 			if (skip < 0) {

@@ -91,21 +91,21 @@ export default {
 	},
 	methods: {
 		async refreshStatus() {
-			const status = await http.getJSON("status");
+			const status = await http.getJSON("status")
 			this.$root.$emit("statusUpdated", status)
 			this.changesList.index = status.changes.filter(
-				(f) => !f.type.startsWith(" ") && !f.type.startsWith("??"));
+				(f) => !f.type.startsWith(" ") && !f.type.startsWith("??"))
 			this.changesList.untracked = status.changes.filter(
-				(f) => f.type.startsWith("??"));
+				(f) => f.type.startsWith("??"))
 			this.changesList.work = status.changes.filter(
-				(f) => f.type.startsWith(" "));
+				(f) => f.type.startsWith(" "))
 		},
 		async addAll() {
-			await http.text("addAll");
+			await http.text("addAll")
 			this.refreshStatus()
 		},
 		async undo() {
-			await http.text("undo");
+			await http.text("undo")
 			this.refreshStatus()
 		}
 	}

@@ -43,7 +43,7 @@ export default {
 	}),
 	methods: {
 		async sshAgent() {
-			const data = await http.getJSON("ssh-agent");
+			const data = await http.getJSON("ssh-agent")
 			this.$Notice.success({
 				title: 'SSH Agent',
 				desc: `<ul>
@@ -52,26 +52,26 @@ export default {
                         <li>${data.sshAdd.stdout}</li>
                     </ul>`,
 				duration: 0
-			});
+			})
 		},
 		async push() {
-			const content = await http.text("push");
+			const content = await http.text("push")
 			this.$Notice.success({
 				title: 'Push',
 				desc: content,
 				duration: 0
-			});
+			})
 		},
 		async pull() {
-			const content = await http.text("pull");
+			const content = await http.text("pull")
 			this.$Notice.success({
 				title: 'Pull',
 				desc: content,
 				duration: 0
-			});
+			})
 		},
 		async openGPGViewer() {
-			const content = await http.text("gpg/view");
+			const content = await http.text("gpg/view")
 			this.GPGViewerContent = content
 			this.GPGViewerModal = true
 		}

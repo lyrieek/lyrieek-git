@@ -126,7 +126,7 @@ export default {
 			},
 			projects: [],
 			projectsCache: null
-		};
+		}
 	},
 	async mounted() {
 		await this.getProjects()
@@ -155,11 +155,6 @@ export default {
 			}
 			for (const index in _projects) {
 				_projects[index].index = index
-				// _projects[index].name = _projects[index].projectPath.split(/\\|\//).pop()
-				// if (Number(index) === this.currentProject.index) {
-					// _projects[index].selected = true
-					// this.currentProject.name = _projects[index].name
-				// }
 				if (_projects[index].selected) {
 					this.currentProject = _projects[index]
 				}
@@ -168,7 +163,7 @@ export default {
 			this.projectsCache = null
 		},
 		updateConfig() {
-			console.log("update");
+			console.log("update")
 		},
 		commitInfoUpdate() {
 			if (this.commitInfo.pin || !this.commitInfo.message) {
@@ -193,8 +188,8 @@ export default {
 							title: 'Commit',
 							desc: `<div style="white-space: pre;">${res.stdout}</div>`,
 							duration: 0
-						});
-					});
+						})
+					})
 				}
 				e.text().then((res) => {
 					this.$root.$emit("commit")
@@ -202,10 +197,10 @@ export default {
 					this.$Notice.success({
 						title: 'Commit',
 						desc: res
-					});
+					})
 					this.commitInfo = {}
-				});
-			});
+				})
+			})
 		}
 	}
 }
