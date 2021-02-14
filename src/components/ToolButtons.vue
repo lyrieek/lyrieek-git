@@ -16,7 +16,7 @@
 			<Icon type="md-lock" />SSH Agent</Button>
 		<Button type="info" :ghost="!GPGEnable" @click="openGPGViewer()">
 			<Icon type="md-lock" />GPG</Button>
-		<Modal v-model="GPGViewerModal" title="GPG Setting" @on-ok="inputGPG">
+		<Modal v-model="GPGViewerModal" title="GPG Setting" @on-ok="updateCommitConfig">
             <Card>
                 <p slot="title">GPG Info</p>
 				<div class="preview-text">{{GPGViewerContent}}</div>
@@ -25,6 +25,9 @@
 				<Checkbox label="启用" v-model="GPGEnable" border></Checkbox>
 			</CheckboxGroup>
 		</Modal>
+		<CheckboxGroup style="display: inline-block; vertical-align: middle;" @on-change="updateCommitConfig">
+			<Checkbox label="Signed-off" v-model="SignedOffEnable" border></Checkbox>
+		</CheckboxGroup>
 	</div>
 </template>
 
@@ -43,7 +46,8 @@ export default {
 	data: () => ({
 		GPGViewerModal: false,
 		GPGViewerContent: '',
-		GPGEnable: false
+		GPGEnable: false,
+		SignedOffEnable: false
 	}),
 	methods: {
 		async sshAgent() {
@@ -79,8 +83,11 @@ export default {
 			this.GPGViewerContent = content
 			this.GPGViewerModal = true
 		},
-		inputGPG(){
-			this.$root.$emit("GPGEnable", this.GPGEnable)
+		updateCommitConfig(){
+			this.$root.$emit("updateCommitConfig", {
+				GPGEnable: this.GPGEnable,
+				SignedOffEnable: this.SignedOffEnable
+			})
 		}
 	}
 }

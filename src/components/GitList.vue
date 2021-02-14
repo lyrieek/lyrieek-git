@@ -79,7 +79,7 @@ ul {
 	list-style-type: none;
 }
 
-.project-list-view{
+.project-list-view {
 	margin-top: 10px;
 }
 
@@ -133,7 +133,10 @@ export default {
 			projectsCache: null,
 			maxHeight: window.innerHeight - 300,
 			searchProjectText: "",
-			GPGEnable: ""
+			CommitConfig: {
+				GPGEnable: false,
+				SignedOffEnable: false
+			}
 		}
 	},
 	async mounted() {
@@ -143,8 +146,9 @@ export default {
 			await this.getProjects()
 			this.currentProject.notPushCommits = e.notPushCommits
 		})
-		this.$root.$on("GPGEnable", (e) => {
-			this.GPGEnable = e
+		this.$root.$on("updateCommitConfig", (e) => {
+			this.GPGEnable = e.GPGEnable
+			this.SignedOffEnable = e.SignedOffEnable
 		})
 	},
 	methods: {
@@ -191,7 +195,8 @@ export default {
 				body: JSON.stringify({
 					message: this.commitInfo.message,
 					date: moment(this.commitInfo.date).format('YYYY-MM-DD') + "T" + this.commitInfo.time + this.commitInfo.zone,
-					gpg: this.GPGEnable
+					gpg: this.GPGEnable,
+					signOff: this.SignedOffEnable
 				})
 			}).then((e) => {
 				if (!e.ok) {

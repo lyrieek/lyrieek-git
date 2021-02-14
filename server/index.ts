@@ -123,14 +123,14 @@ routes.get('/graph', async () => {
 	return res.stdout.split('\n')
 })
 
-routes.post('/commit', async (query: { message: string, date: string, gpg: string,signoff: boolean }) => {
+routes.post('/commit', async (query: { message: string, date: string, gpg: string,signOff: boolean }) => {
 	const commitArg = ['commit', '-m', `"${query.message}"`, '--date="' + query.date + '"']
 	if (query.gpg) {
 		commitArg.push("-S")
 		//gpgconf --kill gpg-agent
 		//gpg-connect-agent /bye
 	}
-	if (query.signoff) {
+	if (query.signOff) {
 		commitArg.push("-s")
 	}
 	const [res, err] = await execa('git', commitArg, {timeout: 3000})
