@@ -3,8 +3,9 @@
 		<Row style="height: 100%">
 			<Col span="3" :style="{ 'border-right': '1px solid #504c4c' }">
 			<div style="padding: 20px">
+				<Input suffix="ios-search" v-model="searchProjectText" placeholder="Filter..." style="width: auto" />
 				<ul class="project-list-view">
-					<li class="project-item-label" v-for="item of projects" :key="item.projectPath" @click="changeProject(item)" :style="{background: item.selected ? '#efebeb' : 'transparent'}">
+					<li class="project-item-label" v-show="!searchProjectText || ~item.name.indexOf(searchProjectText)" v-for="item of projects" :key="item.projectPath" @click="changeProject(item)" :style="{background: item.selected ? '#efebeb' : 'transparent'}">
 						<strong style="font-size: 15px">{{item.name}}</strong>
 						<Badge :count="item.notPushCommits" style="float: right" slot="extra" />
 					</li>
@@ -78,6 +79,10 @@ ul {
 	list-style-type: none;
 }
 
+.project-list-view{
+	margin-top: 10px;
+}
+
 .project-list-view>li {
 	padding: 7px 12px;
 	cursor: pointer;
@@ -127,6 +132,7 @@ export default {
 			projects: [],
 			projectsCache: null,
 			maxHeight: window.innerHeight - 300,
+			searchProjectText: ""
 		}
 	},
 	async mounted() {
