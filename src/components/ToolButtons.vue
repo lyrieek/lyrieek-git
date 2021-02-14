@@ -14,12 +14,15 @@
 			<Icon type="md-redo" />Checkout</Button>
 		<Button type="info" ghost @click="sshAgent()">
 			<Icon type="md-lock" />SSH Agent</Button>
-		<Button type="info" ghost @click="openGPGViewer()">
+		<Button type="info" :ghost="!GPGEnable" @click="openGPGViewer()">
 			<Icon type="md-lock" />GPG</Button>
-		<Modal v-model="GPGViewerModal" title="GPG Setting">
-			<div class="preview-text">{{GPGViewerContent}}</div>
+		<Modal v-model="GPGViewerModal" title="GPG Setting" @on-ok="inputGPG">
+            <Card>
+                <p slot="title">GPG Info</p>
+				<div class="preview-text">{{GPGViewerContent}}</div>
+            </Card>
 			<CheckboxGroup style="text-align: right">
-				<Checkbox label="GPG" border></Checkbox>
+				<Checkbox label="启用" v-model="GPGEnable" border></Checkbox>
 			</CheckboxGroup>
 		</Modal>
 	</div>
@@ -39,7 +42,8 @@ export default {
 	name: "ToolButtons",
 	data: () => ({
 		GPGViewerModal: false,
-		GPGViewerContent: ''
+		GPGViewerContent: '',
+		GPGEnable: false
 	}),
 	methods: {
 		async sshAgent() {
@@ -74,6 +78,9 @@ export default {
 			const content = await http.text("gpg/view")
 			this.GPGViewerContent = content
 			this.GPGViewerModal = true
+		},
+		inputGPG(){
+			this.$root.$emit("GPGEnable", this.GPGEnable)
 		}
 	}
 }

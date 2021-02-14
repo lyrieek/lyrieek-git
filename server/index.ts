@@ -123,12 +123,24 @@ routes.get('/graph', async () => {
 	return res.stdout.split('\n')
 })
 
-routes.post('/commit', async (query: { message: string, date: string }) => {
-	const commitArg = ['commit', '-m', query.message, '--date="' + query.date + '"']
-	console.log(commitArg)
-	// return commitArg
-	const res = await execa('git', commitArg)
-	return res.stdout
+routes.post('/commit', async (query: { message: string, date: string, gpg: string,signoff: boolean }) => {
+	const commitArg = ['commit', '-m', `"${query.message}"`, '--date="' + query.date + '"']
+	if (query.gpg) {
+		commitArg.push("-S")
+		//gpgconf --kill gpg-agent
+		//gpg-connect-agent /bye
+	}
+	if (query.signoff) {
+		commitArg.push("-s")
+	}
+	const [res, err] = await execa('git', commitArg, {timeout: 3000})
+		.then(res => [res, null] ).catch(err => [null, err])
+	if (err) {
+		throw err
+	}
+	if (res) {
+		return res.stdout
+	}
 })
 
 routes.get('/log', async (query: { size: number, skip: number }) => {

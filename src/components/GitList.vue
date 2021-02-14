@@ -132,7 +132,8 @@ export default {
 			projects: [],
 			projectsCache: null,
 			maxHeight: window.innerHeight - 300,
-			searchProjectText: ""
+			searchProjectText: "",
+			GPGEnable: ""
 		}
 	},
 	async mounted() {
@@ -141,6 +142,9 @@ export default {
 		this.$root.$on("statusUpdated", async (e) => {
 			await this.getProjects()
 			this.currentProject.notPushCommits = e.notPushCommits
+		})
+		this.$root.$on("GPGEnable", (e) => {
+			this.GPGEnable = e
 		})
 	},
 	methods: {
@@ -186,7 +190,8 @@ export default {
 				method: 'POST',
 				body: JSON.stringify({
 					message: this.commitInfo.message,
-					date: moment(this.commitInfo.date).format('YYYY-MM-DD') + "T" + this.commitInfo.time + this.commitInfo.zone
+					date: moment(this.commitInfo.date).format('YYYY-MM-DD') + "T" + this.commitInfo.time + this.commitInfo.zone,
+					gpg: this.GPGEnable
 				})
 			}).then((e) => {
 				if (!e.ok) {
