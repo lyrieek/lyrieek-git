@@ -124,7 +124,7 @@ routes.get('/graph', async () => {
 })
 
 routes.post('/commit', async (query: { message: string, date: string, gpg: string,signOff: boolean }) => {
-	const commitArg = ['commit', '-m', `"${query.message}"`, '--date="' + query.date + '"']
+	const commitArg = ['commit', '-m', `${query.message}`, '--date="' + query.date + '"']
 	if (query.gpg) {
 		commitArg.push("-S")
 		//gpgconf --kill gpg-agent
