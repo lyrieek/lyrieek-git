@@ -56,6 +56,9 @@ export default {
 			this.commitInfo.zone = "+0800"
 			this.commitInfo.pin = true
 		},
+		refreshStatus() {
+			this.$root.$emit("refreshStatus")
+		},
 		commit() {
 			fetch("http://localhost:3516/commit", {
 				method: 'POST',
@@ -76,7 +79,7 @@ export default {
 					})
 				}
 				e.text().then((res) => {
-					this.$root.$emit("refreshStatus")
+					this.refreshStatus()
 					this.$Notice.success({
 						title: 'Commit',
 						desc: res
