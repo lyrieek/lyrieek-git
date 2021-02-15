@@ -83,7 +83,6 @@ export default {
 	}),
 	async mounted() {
 		this.refreshLog()
-		this.$root.$on("commit", this.refreshLog)
 		this.$root.$on("refreshStatus", this.refreshLog)
 	},
 	methods: {

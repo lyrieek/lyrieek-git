@@ -22,25 +22,7 @@
 			<WorkPath :project="currentProject" :maxHeight="maxHeight" />
 			<GitConfig />
 			<GitLog />
-			<Input v-model="commitInfo.message" maxlength="100" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
-			<div style="text-align: right">
-				<DatePicker v-model="commitInfo.date" type="date" placeholder="Commit date" style="width: 120px"></DatePicker>
-				<TimePicker v-model="commitInfo.time" format="HH:mm:ss" placeholder="Commit time" style="width: 120px"></TimePicker>
-				<Input v-model="commitInfo.zone" placeholder="Time zone" style="width: 85px" />
-				<Button shape="circle" icon="md-refresh" @click="commitInfoUpdate()" :disabled="commitInfo.pin" style="margin-left: 2px"></Button>
-				<Tooltip placement="bottom">
-					<CheckboxGroup>
-						<Checkbox label="Pin" border style="margin-left: 2px;padding: 0px 0px 0px 5px;margin-right:0px" v-model="commitInfo.pin"></Checkbox>
-					</CheckboxGroup>
-					<div slot="content">
-						<Icon type="ios-outlet-outline" />Synchronize real time
-					</div>
-				</Tooltip>
-			</div>
-			<div style="margin-top: 10px; text-align: right">
-				<Button type="success" @click="commit()">
-					<Icon type="md-checkmark" />Commit</Button>
-			</div>
+			<GitCommit />
 			<Divider />
 			<ToolButtons />
 			<Divider />
@@ -99,13 +81,13 @@ ul {
 </style>
 
 <script>
-import moment from 'moment'
 import ToolButtons from './ToolButtons'
 import GitLog from './GitLog'
 import http from '../common/services/http'
 import StatusPanel from './StatusPanel.vue'
 import WorkPath from './WorkPath.vue'
 import GitConfig from './GitConfig.vue'
+import GitCommit from './GitCommit.vue'
 
 export default {
 	name: "GitList",
@@ -113,19 +95,13 @@ export default {
 		ToolButtons,
 		GitConfig,
 		GitLog,
+		GitCommit,
 		StatusPanel,
 		WorkPath
 	},
 	data() {
 		return {
 			configModal: false,
-			commitInfo: {
-				message: "",
-				date: null,
-				time: null,
-				zone: null,
-				pin: false
-			},
 			currentProject: {
 				index: 0,
 				name: "Lyrieek-Git",
@@ -134,21 +110,13 @@ export default {
 			projects: [],
 			projectsCache: null,
 			maxHeight: window.innerHeight - 300,
-			searchProjectText: "",
-			CommitConfig: {
-				GPGEnable: false,
-				SignedOffEnable: false
-			}
+			searchProjectText: ""
 		}
 	},
 	created() {
 		this.$root.$on("statusUpdated", async (e) => {
 			await this.getProjects()
 			this.currentProject.notPushCommits = e.notPushCommits
-		})
-		this.$root.$on("updateCommitConfig", (e) => {
-			this.CommitConfig.GPGEnable = e.GPGEnable
-			this.CommitConfig.SignedOffEnable = e.SignedOffEnable
 		})
 	},
 	async mounted() {
@@ -183,45 +151,6 @@ export default {
 		},
 		updateConfig() {
 			console.log("update")
-		},
-		commitInfoUpdate() {
-			if (this.commitInfo.pin || !this.commitInfo.message) {
-				return
-			}
-			this.commitInfo.date = new Date()
-			this.commitInfo.time = moment().format('HH:mm:ss')
-			this.commitInfo.zone = "+0800"
-			this.commitInfo.pin = true
-		},
-		commit() {
-			fetch("http://localhost:3516/commit", {
-				method: 'POST',
-				body: JSON.stringify({
-					message: this.commitInfo.message,
-					date: moment(this.commitInfo.date).format('YYYY-MM-DD') + "T" + this.commitInfo.time + this.commitInfo.zone,
-					gpg: this.CommitConfig.GPGEnable,
-					signOff: this.CommitConfig.SignedOffEnable
-				})
-			}).then((e) => {
-				if (!e.ok) {
-					return e.json().then((res) => {
-						this.$Notice.error({
-							title: 'Commit',
-							desc: `<div style="white-space: pre;">${res.stdout}</div>`,
-							duration: 0
-						})
-					})
-				}
-				e.text().then((res) => {
-					this.$root.$emit("commit")
-					this.refreshStatus()
-					this.$Notice.success({
-						title: 'Commit',
-						desc: res
-					})
-					this.commitInfo = {}
-				})
-			})
 		},
 		openFolder() {
 			http.getJSON("explorer")
