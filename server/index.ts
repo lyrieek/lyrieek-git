@@ -179,6 +179,11 @@ routes.get('/viewFile', async (query: { file: string }) => {
 	return res.stdout
 })
 
+routes.get('/explorer', async () => {//query: { folder: string }
+	const res = execa(`explorer.exe "${currentWorkDir}"`)//"/select," + 
+	return res.stdout
+})
+
 routes.get('/gpg/view', async () => {
 	const res = await execa('gpg', ['--list-keys'])
 	return res.stdout

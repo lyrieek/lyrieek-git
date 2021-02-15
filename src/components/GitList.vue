@@ -46,8 +46,10 @@
 			<Divider />
 			<div class="toolbar-buttons">
 				<Button type="primary" @click="configModal = true">修改配置</Button>
-				<Button type="success" @click="refreshStatus()">
+				<Button type="primary" @click="refreshStatus()" ghost>
 					<Icon type="md-refresh" />刷新</Button>
+				<Button type="primary" @click="openFolder()" ghost>
+					<Icon type="ios-folder-open" />打开文件夹</Button>
 			</div>
 			<Modal v-model="configModal" title="修改" @on-ok="updateConfig">
 				<Form :label-width="80">
@@ -218,6 +220,9 @@ export default {
 					this.commitInfo = {}
 				})
 			})
+		},
+		openFolder() {
+			http.getJSON("explorer")
 		}
 	}
 }
