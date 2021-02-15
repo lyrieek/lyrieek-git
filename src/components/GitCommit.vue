@@ -14,7 +14,7 @@
 			<Button shape="circle" icon="md-refresh" @click="commitInfoUpdate()" style="margin-left: 2px"></Button>
 			<Tooltip placement="bottom">
 				<CheckboxGroup>
-					<Checkbox label="Pin" border style="margin: 0px 5px;padding: 0px 0px 0px 5px;" v-model="pin"></Checkbox>
+					<Checkbox label="Pin" border style="margin: 0px 5px;padding: 0px 0px 0px 5px;" v-model="pageContent.pin"></Checkbox>
 				</CheckboxGroup>
 				<div slot="content">
 					<Icon type="ios-outlet-outline" />Automatically synchronize time after writing commit message
@@ -24,6 +24,20 @@
 				<Icon type="ios-trash" />Clear</Button>
 		</div>
 		<div style="margin-top: 10px; text-align: right">
+			<Button type="info" :ghost="!GPGEnable" @click="openGPGViewer()">
+				<Icon type="md-lock" />GPG</Button>
+			<Modal v-model="pageContent.GPGViewerModal" title="GPG Setting">
+				<Card>
+					<p slot="title">GPG Info</p>
+					<div class="preview-text">{{pageContent.GPGViewerContent}}</div>
+				</Card>
+				<CheckboxGroup style="text-align: right">
+					<Checkbox label="启用" v-model="GPGEnable" border></Checkbox>
+				</CheckboxGroup>
+			</Modal>
+			<CheckboxGroup style="display: inline-block; vertical-align: middle;" :value="[SignedOffEnable && 'Signed-off']">
+				<Checkbox label="Signed-off" :value="true" border></Checkbox>
+			</CheckboxGroup>
 			<Button type="success" @click="commit()">
 				<Icon type="md-checkmark" />Commit</Button>
 		</div>
@@ -32,6 +46,7 @@
 
 <script>
 import moment from 'moment'
+import http from '../common/services/http'
 
 export default {
 	name: "GitCommit",
@@ -40,32 +55,30 @@ export default {
 		date: null,
 		time: null,
 		zone: null,
-		pin: false,
 		GPGEnable: true,
-		SignedOffEnable: true
+		SignedOffEnable: true,
+		pageContent: {
+			pin: false,
+			GPGViewerModal: false,
+			GPGViewerContent: ''
+		}
 	}),
-	created() {
-		this.$root.$on("updateCommitConfig", (e) => {
-			this.GPGEnable = e.GPGEnable
-			this.SignedOffEnable = e.SignedOffEnable
-		})
-	},
 	methods: {
 		commitInfoUpdate() {
-			if (this.pin || !this.message) {
+			if (this.pageContent.pin || !this.message) {
 				return
 			}
 			this.date = new Date()
 			this.time = moment().format('HH:mm:ss')
 			this.zone = "+0800"
-			this.pin = true
+			this.pageContent.pin = true
 		},
 		clearCommitInfo() {
 			this.message = ""
 			this.date = null
 			this.time = null
 			this.zone = ""
-			this.pin = false
+			this.pageContent.pin = false
 		},
 		refreshStatus() {
 			this.$root.$emit("refreshStatus")
@@ -104,6 +117,11 @@ export default {
 					this.clearCommitInfo()
 				})
 			})
+		},
+		async openGPGViewer() {
+			const content = await http.text("gpg/view")
+			this.pageContent.GPGViewerContent = content
+			this.pageContent.GPGViewerModal = true
 		}
 	}
 }
