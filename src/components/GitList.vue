@@ -141,17 +141,19 @@ export default {
 			}
 		}
 	},
-	async mounted() {
-		await this.getProjects()
-		this.refreshStatus()
+	created() {
 		this.$root.$on("statusUpdated", async (e) => {
 			await this.getProjects()
 			this.currentProject.notPushCommits = e.notPushCommits
 		})
 		this.$root.$on("updateCommitConfig", (e) => {
-			this.GPGEnable = e.GPGEnable
-			this.SignedOffEnable = e.SignedOffEnable
+			this.CommitConfig.GPGEnable = e.GPGEnable
+			this.CommitConfig.SignedOffEnable = e.SignedOffEnable
 		})
+	},
+	async mounted() {
+		await this.getProjects()
+		this.refreshStatus()
 	},
 	methods: {
 		async refreshStatus() {
@@ -197,8 +199,8 @@ export default {
 				body: JSON.stringify({
 					message: this.commitInfo.message,
 					date: moment(this.commitInfo.date).format('YYYY-MM-DD') + "T" + this.commitInfo.time + this.commitInfo.zone,
-					gpg: this.GPGEnable,
-					signOff: this.SignedOffEnable
+					gpg: this.CommitConfig.GPGEnable,
+					signOff: this.CommitConfig.SignedOffEnable
 				})
 			}).then((e) => {
 				if (!e.ok) {

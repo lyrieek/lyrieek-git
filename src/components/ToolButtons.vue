@@ -17,16 +17,16 @@
 		<Button type="info" :ghost="!GPGEnable" @click="openGPGViewer()">
 			<Icon type="md-lock" />GPG</Button>
 		<Modal v-model="GPGViewerModal" title="GPG Setting" @on-ok="updateCommitConfig">
-            <Card>
-                <p slot="title">GPG Info</p>
+			<Card>
+				<p slot="title">GPG Info</p>
 				<div class="preview-text">{{GPGViewerContent}}</div>
-            </Card>
+			</Card>
 			<CheckboxGroup style="text-align: right">
 				<Checkbox label="启用" v-model="GPGEnable" border></Checkbox>
 			</CheckboxGroup>
 		</Modal>
-		<CheckboxGroup style="display: inline-block; vertical-align: middle;" @on-change="updateCommitConfig">
-			<Checkbox label="Signed-off" v-model="SignedOffEnable" border></Checkbox>
+		<CheckboxGroup style="display: inline-block; vertical-align: middle;" @on-change="updateCommitConfig" :value="[SignedOffEnable && 'Signed-off']">
+			<Checkbox label="Signed-off" :value="true" border></Checkbox>
 		</CheckboxGroup>
 	</div>
 </template>
@@ -46,9 +46,12 @@ export default {
 	data: () => ({
 		GPGViewerModal: false,
 		GPGViewerContent: '',
-		GPGEnable: false,
-		SignedOffEnable: false
+		GPGEnable: true,
+		SignedOffEnable: true
 	}),
+	mounted() {
+		this.updateCommitConfig()
+	},
 	methods: {
 		async sshAgent() {
 			const data = await http.getJSON("ssh-agent")
@@ -83,7 +86,7 @@ export default {
 			this.GPGViewerContent = content
 			this.GPGViewerModal = true
 		},
-		updateCommitConfig(){
+		updateCommitConfig() {
 			this.$root.$emit("updateCommitConfig", {
 				GPGEnable: this.GPGEnable,
 				SignedOffEnable: this.SignedOffEnable
