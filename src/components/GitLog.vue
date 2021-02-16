@@ -16,14 +16,14 @@
 					<Icon v-if="item.isMerge" type="md-git-merge" style="margin-right: 2px" />
 					{{item.msg}}
 				</span>
-				<span style="padding-left: 30px">{{displayDate(item.date)}}</span>
+				<span style="padding-left: 30px">{{item.date}}</span>
 			</li>
 			<li v-if="!logArr.length">
 				<span>No commit were found!</span>
 			</li>
 		</ul>
 		<Modal v-model="gitLogModalDisplay" title="Log" width="570">
-			<List class="git-log-list" :header="item.commit" :footer="displayDate(item.date)" border size="small" v-for="item of logArr" :key="item.commit">
+			<List class="git-log-list" :header="item.commit" :footer="item.date" border size="small" v-for="item of logArr" :key="item.commit">
 				<ListItem class="git-commit-label">
 					<Icon v-if="item.isMerge" type="md-git-merge" style="margin-right: 2px" />
 					{{item.msg}}
@@ -107,10 +107,12 @@ export default {
 			}
 			this.page = (skip || 0)
 			this.logArr = await http.getJSON(`log?skip=${this.page * this.pageSize}&size=${this.pageSize}`)
-		},
-		displayDate(date) {
-			const unixDate = date.replace(/^Date: +/, '').split(' ')[0]
-			return moment(unixDate, 'X').format('YYYY-MM-DDTHH:mm:ssZZ')
+			this.logArr = this.logArr.map((e) => {
+				const unixDate = e.date.replace(/^Date: +/, '').split(' ')[0]
+				e.date = moment(unixDate, 'X').format('YYYY-MM-DDTHH:mm:ssZZ')
+				return e
+			})
+			this.$root.$emit("LogRefresh", this.logArr)
 		},
 		async gitLogPrefix() {
 			this.refreshLog(this.page - 1)

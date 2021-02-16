@@ -2,6 +2,8 @@
 	<div>
 		<Input v-model="message" maxlength="100" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
 		<div style="text-align: right">
+			<Button @click="setCommitTime(pageContent.lastCommitDate)" style="margin-right: 5px">设为上一次提交时间</Button>
+			<Button @click="appendTime()" style="margin-right: 5px">随机增加一些时间</Button>
 			<DatePicker v-model="date" type="date" placeholder="Commit date" style="width: 120px"></DatePicker>
 			<TimePicker v-model="time" format="HH:mm:ss" placeholder="Commit time" style="width: 120px"></TimePicker>
 			<Input v-model="zone" placeholder="Time zone" style="width: 85px" />
@@ -11,13 +13,16 @@
 					<span>{{ getCommitShortDate() }}</span>
 				</div>
 			</Tooltip>
-			<Button shape="circle" icon="md-refresh" @click="commitInfoUpdate()" style="margin-left: 2px"></Button>
+			<Tooltip placement="bottom">
+				<Button shape="circle" icon="md-refresh" @click="commitInfoUpdate()" style="margin-left: 2px"></Button>
+				<div slot="content">同步现在的时间</div>
+			</Tooltip>
 			<Tooltip placement="bottom">
 				<CheckboxGroup>
 					<Checkbox label="Pin" border style="margin: 0px 5px;padding: 0px 0px 0px 5px;" v-model="pageContent.pin"></Checkbox>
 				</CheckboxGroup>
-				<div slot="content">
-					<Icon type="ios-outlet-outline" />Automatically synchronize time after writing commit message
+				<div slot="content" style="white-space: pre-wrap;">
+					<Icon type="ios-outlet-outline" />选中后不再自动同步时间，未选中在写完commit message之后自动同步当前时间
 				</div>
 			</Tooltip>
 			<Button @click="clearCommitInfo()">
@@ -60,9 +65,15 @@ export default {
 		pageContent: {
 			pin: false,
 			GPGViewerModal: false,
-			GPGViewerContent: ''
+			GPGViewerContent: '',
+			lastCommitDate: null
 		}
 	}),
+	created() {
+		this.$root.$on("LogRefresh", (e) => {
+			this.pageContent.lastCommitDate = e[0].date
+		})
+	},
 	methods: {
 		commitInfoUpdate() {
 			if (this.pageContent.pin || !this.message) {
@@ -122,6 +133,22 @@ export default {
 			const content = await http.text("gpg/view")
 			this.pageContent.GPGViewerContent = content
 			this.pageContent.GPGViewerModal = true
+		},
+		setCommitTime(time) {
+			if (!time) {
+				return this.$Notice.error({
+					title: 'Commit',
+					desc: "Not Last Commit"
+				})
+			}
+			this.date = moment(time).toDate()
+			this.time = moment(time).format("HH:mm:ss")
+			if (!this.zone) {
+				this.zone = "+0800"
+			}
+		},
+		appendTime() {
+			this.setCommitTime(moment(this.getCommitShortDate()).add(parseInt(Math.random() * 0xf), "m").toDate())
 		}
 	}
 }
