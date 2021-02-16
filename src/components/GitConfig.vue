@@ -52,10 +52,7 @@ export default {
 		autoCRLF: ""
 	}),
 	mounted() {
-		this.refresh()
-		this.$root.$on("statusUpdated", async () => {
-			await this.refresh()
-		})
+		this.$root.$on("statusUpdated", this.refresh)
 	},
 	methods: {
 		async refresh() {

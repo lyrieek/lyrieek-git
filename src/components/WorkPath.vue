@@ -122,8 +122,6 @@ export default {
 		fileData: []
 	}),
 	async mounted() {
-		this.refresh()
-		this.fileData = await http.getJSON("ls")
 		this.$root.$on("refreshStatus", this.refresh)
 	},
 	methods: {
@@ -133,12 +131,12 @@ export default {
 		},
 		async changePath() {},
 		async selectItem(e) {
+			this.fileData = await http.getJSON("ls")
 			if (Number(e.size)) {
 				this.previewFileText = await http.text("viewFile?file=" + e.name)
 				this.previewFileModal = true
 				return
 			}
-			this.fileData = await http.getJSON("ls")
 			await http.text("cd?dir=" + e.name)
 			this.refresh()
 		},

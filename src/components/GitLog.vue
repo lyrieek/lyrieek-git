@@ -82,7 +82,6 @@ export default {
 		page: 1
 	}),
 	async mounted() {
-		this.refreshLog()
 		this.$root.$on("refreshStatus", this.refreshLog)
 	},
 	methods: {
