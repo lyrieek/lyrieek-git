@@ -4,7 +4,7 @@ interface GitStatusInfo {
     branch: string
     branchHasUpdate: string
     notPushCommits: string
-    changes: Array<{ type: string, fileName: string }>
+    changes: Array<{ type: string, fileName: string, selected: boolean }>
 }
 
 export default async function (): Promise<GitStatusInfo> {

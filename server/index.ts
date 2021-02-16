@@ -42,7 +42,8 @@ routes.get('/status', async () => {
 			const data = changeList[index]
 			result.changes.push({
 				type: data.substring(0, 3),
-				fileName: data.substring(3)
+				fileName: data.substring(3),
+				selected: false
 			})
 		}
 	}
@@ -51,6 +52,16 @@ routes.get('/status', async () => {
 
 routes.get('/addAll', async () => {
 	const res = await execa('git', ['add', '.'])
+	return res.stdout.split('\n').splice(1)
+})
+
+routes.post('/addItem', async (query: { item: string}) => {
+	const res = await execa('git', ['add', query.item])
+	return res.stdout.split('\n').splice(1)
+})
+
+routes.post('/recallItem', async (query: { item: string}) => {
+	const res = await execa('git', ['reset', '-q', 'HEAD', '--', query.item])
 	return res.stdout.split('\n').splice(1)
 })
 

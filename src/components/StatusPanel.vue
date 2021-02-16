@@ -3,38 +3,26 @@
 	<div style="height: 100%">
 		<div style="height: 100%">
 			<Split v-model="externalSplit" mode="vertical">
-				<div slot="top" style="height: 100%" class="git-area work-area">
+				<div slot="top" style="height: 100%">
 					<Split v-model="unindexedSplit" mode="vertical">
-						<div slot="top" class="git-area stage-area">
+						<div slot="top" class="git-area">
 							<div>
 								<Button size="small" @click="refreshStatus()" icon="md-refresh">刷新</Button>
 								<Button size="small" @click="addAll()" icon="md-add">Add .</Button>
 								<Button size="small" @click="undo()" icon="md-return-left">Undo</Button>
 							</div>
 							<Divider>新文件</Divider>
-							<ul class="file-list">
-								<li v-for="item of changesList.untracked" :key="item.fileName">
-									<span>{{ item.fileName }}</span>
-								</li>
-							</ul>
+							<StatusFileItem :list="changesList.untracked" />
 						</div>
-						<div slot="bottom" class="git-area work-area">
+						<div slot="bottom" class="git-area">
 							<Divider>工作区</Divider>
-							<ul class="file-list">
-								<li v-for="item of changesList.work" :key="item.fileName">
-									<span>{{ item.fileName }}</span>
-								</li>
-							</ul>
+							<StatusFileItem :list="changesList.work" />
 						</div>
 					</Split>
 				</div>
-				<div slot="bottom" class="git-area stage-area">
+				<div slot="bottom" class="git-area">
 					<Divider>暂存区</Divider>
-					<ul class="file-list">
-						<li v-for="item of changesList.index" :key="item.fileName">
-							<span>{{ item.fileName }}</span>
-						</li>
-					</ul>
+					<StatusFileItem recall :list="changesList.index" icon="md-arrow-round-up" />
 				</div>
 			</Split>
 		</div>
@@ -51,31 +39,17 @@
     margin-bottom: 10px;
 }
 
-.file-list {
-	list-style-type: none;
-}
-
-.file-list>li {
-	line-height: 27px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.file-list>li:hover {
-	line-height: 25px;
-	border: 1px solid #504c4c;
-	cursor: pointer;
-	background: #fdecd3;
-	font-weight: bold;
-}
-
 </style>
 
 <script>
 import http from '../common/services/http'
+import StatusFileItem from './StatusFileItem'
 
 export default {
 	name: "StatusPanel",
+	components: {
+		StatusFileItem
+	},
 	data: () => ({
 		externalSplit: 0.65,
 		unindexedSplit: 0.5,

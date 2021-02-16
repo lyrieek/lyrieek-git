@@ -12,8 +12,8 @@ const _fetch = (url, data, method) => {
 export default {
 	fetchFn: (url, data, successFn) => {
         if (typeof data === 'function') {
-            successFn = data;
-            data = null;
+            successFn = data
+            data = null
         }
 		return _fetch(url, data).then(successFn && ((e) => {
 			e.json().then(successFn)
@@ -21,6 +21,9 @@ export default {
 	},
 	get: async (url) => {
 		return await _fetch(url, null, "GET")
+	},
+	post: async (url, data) => {
+		return await _fetch(url, data, "POST")
 	},
 	getJSON: async (url) => {
 		return await (await _fetch(url, null, "GET")).json()
