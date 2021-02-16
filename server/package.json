@@ -2,6 +2,7 @@
 	"name": "lyrieek-git-server",
 	"version": "0.1.0",
 	"private": true,
+	"type": "module",
 	"bin": "app.js",
 	"scripts": {
 		"predev": "tsc",
