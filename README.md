@@ -21,10 +21,22 @@ format:
         tag: [used to classify],
         languages: [programming language used],
         lang: [main human language used]
+        ...
     },
     {projectPath: [other project path]}
     ...
 ]
+```
+
+### Use GPG
+Suggest enable no-tty, set it in `gpg.conf` file
+
+- If you're using GPG that comes with git-bash, The file path is `%USERPROFILE%\.gnupg\gpg.conf`
+- If it is GPG4Win, its default directory is in `%USERPROFILE%\AppData\Roaming\gnupg\gpg.conf`
+
+Open it, and write or append a line of text
+```
+no-tty
 ```
 
 ### Compiles and hot-reloads for development
@@ -38,4 +50,5 @@ yarn run build
 ```
 
 ## Announcements
+- Only for Windows
 - Any version of Internet Explorer is not supported
