@@ -20,7 +20,7 @@ routes.get('/cd', async (query: { dir: string, project: string }) => {
 	}
 	for (const item of setting) {
 		item.selected = false
-		if (item.name == query.project) {
+		if (item.name === query.project) {
 			item.selected = true
 			currentWorkDir = item.projectPath
 			process.chdir(currentWorkDir)
@@ -144,7 +144,7 @@ routes.post('/commit', async (query: { message: string, date: string, gpg: strin
 	if (query.signOff) {
 		commitArg.push("-s")
 	}
-	const [res, err] = await execa('git', commitArg, {timeout: 3000})
+	const [res, err] = await execa('git', commitArg, {timeout: 8000})
 		.then(res => [res, null] ).catch(err => [null, err])
 	if (err) {
 		throw err
