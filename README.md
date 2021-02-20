@@ -39,6 +39,17 @@ Open it, and write or append a line of text
 no-tty
 ```
 
+FRI
+> https://gist.github.com/BoGnY/f9b1be6393234537c3e247f33e74094a
+
+### About emoji
+
+The library I'm using is
+> https://github.com/carloscuesta/gitmoji
+
+I'm looking at
+> https://gist.github.com/parmentf/035de27d6ed1dce0b36a
+
 ### Compiles and hot-reloads for development
 ```
 yarn run dev
