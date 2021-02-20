@@ -71,7 +71,7 @@ import GitList from './components/GitList.vue'
 export default {
 	name: 'App',
 	data: () => ({
-		maxHeight: window.innerHeight - 88
+		maxHeight: window.innerHeight - 80
 	}),
 	components: {
 		GitList

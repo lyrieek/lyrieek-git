@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<Input v-model="message" maxlength="100" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
+		<GitEmoji @on-select="selectEmoji" />
+		<Input v-model="message" maxlength="100" @on-change="unscrambleMsg" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
 		<div style="text-align: right">
 			<Button @click="setCommitTime(pageContent.lastCommitDate)" style="margin-right: 5px">设为上一次提交时间</Button>
 			<Button @click="appendTime()" style="margin-right: 5px">随机增加一些时间</Button>
@@ -52,9 +53,13 @@
 <script>
 import moment from 'moment'
 import http from '../common/services/http'
+import GitEmoji from './GitEmoji'
 
 export default {
 	name: "GitCommit",
+	components: {
+		GitEmoji
+	},
 	data: () => ({
 		message: "",
 		date: null,
@@ -149,6 +154,23 @@ export default {
 		},
 		appendTime() {
 			this.setCommitTime(moment(this.getCommitShortDate()).add(parseInt(Math.random() * 0xf), "m").toDate())
+		},
+		selectEmoji(emoji) {
+			const regex = /^:[a-z_]+:/
+			if (this.message.match(regex)) {
+				// when emoji exist, replace it
+				this.message = this.message.replace(regex, '')
+				if (!this.message.startsWith(" ")) {
+					this.message = " " + this.message
+				}
+				this.message = emoji.code + this.message.replace(regex, '')
+				return
+			}
+			this.message = emoji.code + " " + this.message
+		},
+		unscrambleMsg() {
+			// this.message
+			this.$root.$emit("messageChange", this.message)
 		}
 	}
 }
