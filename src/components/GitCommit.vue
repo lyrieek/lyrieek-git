@@ -153,7 +153,7 @@ export default {
 			}
 		},
 		appendTime() {
-			this.setCommitTime(moment(this.getCommitShortDate()).add(parseInt(Math.random() * 0xf), "m").toDate())
+			this.setCommitTime(moment(this.getCommitShortDate()).add(parseInt(Math.random() * 0xf), "m").add(parseInt(Math.random() * 0xff), "s").toDate())
 		},
 		selectEmoji(emoji) {
 			const regex = /^:[a-z_]+:/
