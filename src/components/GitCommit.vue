@@ -95,6 +95,7 @@ export default {
 			this.time = null
 			this.zone = ""
 			this.pageContent.pin = false
+			this.$root.$emit("messageChange", "")
 		},
 		refreshStatus() {
 			this.$root.$emit("refreshStatus")

@@ -66,8 +66,8 @@ export default {
 	created() {
 		this.$root.$on("messageChange", (e) => {
 			const arr = e.match(/^:[a-z_]+:/)
+			this.selectedEmoji = ""
 			if (arr) {
-				this.selectedEmoji = ""
 				const searchRes = this.emojis.gitmojis.filter(e => e.code === arr[0])
 				if (searchRes && searchRes.length) {
 					this.selectedEmoji = searchRes[0]
