@@ -24,7 +24,7 @@
 			<GitLog />
 			<GitCommit />
 			<Divider />
-			<ToolButtons />
+			<ToolButtons :maxHeight="maxHeight" />
 			<Divider />
 			<div class="toolbar-buttons">
 				<Button type="primary" @click="refreshStatus()" ghost>

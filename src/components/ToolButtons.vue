@@ -10,10 +10,11 @@
 			<Icon type="md-arrow-round-down" />Fetch</Button>
 		<Button type="info" ghost>
 			<Icon type="md-return-left" />Reset(soft)</Button>
-		<Button type="info" ghost>
+		<Button type="info" ghost @click="checkout()">
 			<Icon type="md-redo" />Checkout</Button>
 		<Button type="info" ghost @click="sshAgent()">
 			<Icon type="md-lock" />SSH Agent</Button>
+		<BranchWindow v-bind:visible.sync="branchModal" :maxHeight="maxHeight" />
 	</div>
 </template>
 
@@ -26,9 +27,19 @@
 
 <script>
 import http from '../common/services/http'
+import BranchWindow from './BranchWindow'
 
 export default {
 	name: "ToolButtons",
+	components: {
+		BranchWindow
+	},
+	props: {
+		maxHeight: Number
+	},
+	data: () => ({
+		branchModal: false
+	}),
 	methods: {
 		async sshAgent() {
 			const data = await http.getJSON("ssh-agent")
@@ -57,6 +68,9 @@ export default {
 				desc: content,
 				duration: 0
 			})
+		},
+		async checkout(){
+			this.branchModal = true
 		}
 	}
 }

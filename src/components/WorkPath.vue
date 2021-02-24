@@ -29,13 +29,7 @@
 			<div class="preview-text">{{previewFileText}}</div>
 			<Icon type="ios-more" />
 		</Modal>
-		<Modal title="所有分支" v-model="branchModal">
-			<div :style="{'max-height': maxHeight + 'px',overflow: 'auto'}">
-				<List border size="small" v-for="item in branch.all" :key="item">
-					<ListItem :style="branch.current === item ? {'font-weight': 'bold'} : {}">{{ item }}</ListItem>
-				</List>
-			</div>
-		</Modal>
+		<BranchWindow  v-bind:visible.sync="branchModal" :maxHeight="maxHeight" />
 	</div>
 </template>
 
@@ -76,9 +70,13 @@
 
 <script>
 import http from '../common/services/http'
+import BranchWindow from './BranchWindow'
 
 export default {
 	name: "WorkPath",
+	components: {
+		BranchWindow
+	},
 	props: {
 		project: {
 			name: String,
@@ -92,10 +90,6 @@ export default {
 		currentPwdModal: false,
 		previewFileModal: false,
 		branchModal: false,
-		branch: {
-			current: '',
-			all: []
-		},
 		fileColumns: [{
 			title: 'Name',
 			key: 'name',
@@ -141,7 +135,6 @@ export default {
 			this.refresh()
 		},
 		async openBranchWin() {
-			this.branch = await http.getJSON("branch")
 			this.branchModal = true
 		},
 		addTag() {
