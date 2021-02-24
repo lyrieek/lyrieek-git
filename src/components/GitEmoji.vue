@@ -3,13 +3,13 @@
 		<Poptip title="Title" content="content" placement="bottom-start" v-model="visible">
 			<Button size="small">😎Git Emoji选择</Button>
 			<div slot="title">
-				<Input placeholder="Search emoji" size="small" style="width: 300px">
+				<Input v-model="searchEmojiText" @on-change="search()" placeholder="Search emoji" size="small" style="width: 300px">
 				<Icon type="ios-search" slot="suffix" />
 				</Input>
 			</div>
 			<div slot="content">
 				<div class="git-emojis">
-					<template v-for="item of emojis.gitmojis">
+					<template v-for="item of emojisDisplay">
 						<div @click="selected(item)">
 							<div>{{item.emoji}} <strong class="emojis-code">{{item.code}}</strong></div>
 							<div class="description">{{item.description}}</div>
@@ -54,21 +54,23 @@
 </style>
 
 <script>
-import gitmojis from 'gitmojis'
+import mojisData from 'gitmojis'
 
 export default {
 	name: "GitCommit",
 	data: () => ({
-		emojis: gitmojis,
+		emojis: mojisData.gitmojis,
+		emojisDisplay: mojisData.gitmojis,
 		visible: false,
-		selectedEmoji: {}
+		selectedEmoji: {},
+		searchEmojiText: ""
 	}),
 	created() {
 		this.$root.$on("messageChange", (e) => {
 			const arr = e.match(/^:[a-z_]+:/)
 			this.selectedEmoji = ""
 			if (arr) {
-				const searchRes = this.emojis.gitmojis.filter(e => e.code === arr[0])
+				const searchRes = this.emojis.filter(e => e.code === arr[0])
 				if (searchRes && searchRes.length) {
 					this.selectedEmoji = searchRes[0]
 				}
@@ -76,6 +78,16 @@ export default {
 		})
 	},
 	methods: {
+		exists(str) {
+			return ~str.toUpperCase().indexOf(this.searchEmojiText.toUpperCase())
+		},
+		search() {
+			if (!this.searchEmojiText) {
+				this.emojisDisplay = this.emojis
+				return
+			}
+			this.emojisDisplay = this.emojis.filter((e) => this.exists(e.code) || this.exists(e.description))
+		},
 		selected(item) {
 			this.$emit("on-select", item)
 			this.selectedEmoji = item
