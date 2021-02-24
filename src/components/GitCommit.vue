@@ -30,20 +30,22 @@
 				<Icon type="ios-trash" />Clear</Button>
 		</div>
 		<div style="margin-top: 10px; text-align: right">
-			<Button type="info" :ghost="!GPGEnable" @click="openGPGViewer()">
-				<Icon type="md-lock" />GPG</Button>
-			<Modal v-model="pageContent.GPGViewerModal" title="GPG Setting">
-				<Card>
-					<p slot="title">GPG Info</p>
-					<div class="preview-text">{{pageContent.GPGViewerContent}}</div>
-				</Card>
-				<CheckboxGroup style="text-align: right">
-					<Checkbox label="启用" v-model="GPGEnable" border></Checkbox>
+			<Tooltip placement="bottom" @on-popper-show="openGPGViewer" max-width="390">
+				<CheckboxGroup style="display: inline-block; vertical-align: middle;" :value="[GPGEnable && 'GPG']">
+					<Checkbox label="GPG" border></Checkbox>
 				</CheckboxGroup>
-			</Modal>
-			<CheckboxGroup style="display: inline-block; vertical-align: middle;" :value="[SignedOffEnable && 'Signed-off']">
-				<Checkbox label="Signed-off" :value="true" border></Checkbox>
-			</CheckboxGroup>
+				<div slot="content" style="white-space: pre-wrap;">
+					<div class="preview-text">{{pageContent.GPGViewerContent}}</div>
+				</div>
+			</Tooltip>
+			<Tooltip placement="bottom-end" @on-popper-show="openGPGViewer" max-width="480">
+				<CheckboxGroup style="display: inline-block; vertical-align: middle;" :value="[SignedOffEnable && 'Signed-off']">
+					<Checkbox label="Signed-off" :value="true" border></Checkbox>
+				</CheckboxGroup>
+				<div slot="content">
+					<div class="preview-text">{{pageContent.signOffLabel}}</div>
+				</div>
+			</Tooltip>
 			<Button type="success" @click="commit()">
 				<Icon type="md-checkmark" />Commit</Button>
 		</div>
@@ -69,14 +71,17 @@ export default {
 		SignedOffEnable: true,
 		pageContent: {
 			pin: false,
-			GPGViewerModal: false,
 			GPGViewerContent: '',
-			lastCommitDate: null
+			lastCommitDate: null,
+			signOffLabel: null
 		}
 	}),
 	created() {
 		this.$root.$on("LogRefresh", (e) => {
 			this.pageContent.lastCommitDate = e[0].date
+		})
+		this.$root.$on("ConfigUpdate", (e) => {
+			this.pageContent.signOffLabel = `Signed-off-by: ${e.userName} <${e.userEmail}>`
 		})
 	},
 	methods: {
@@ -138,7 +143,6 @@ export default {
 		async openGPGViewer() {
 			const content = await http.text("gpg/view")
 			this.pageContent.GPGViewerContent = content
-			this.pageContent.GPGViewerModal = true
 		},
 		setCommitTime(time) {
 			if (!time) {

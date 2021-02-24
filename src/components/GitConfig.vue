@@ -52,7 +52,7 @@ export default {
 		autoCRLF: ""
 	}),
 	mounted() {
-		this.$root.$on("statusUpdated", this.refresh)
+		this.$root.$on("refreshStatus", this.refresh)
 	},
 	methods: {
 		async refresh() {
@@ -60,6 +60,7 @@ export default {
 			this.userName = config.userName
 			this.userEmail = config.userEmail
 			this.autoCRLF = config.autoCRLF
+			this.$root.$emit("ConfigUpdate", config)
 		}
 	}
 }
