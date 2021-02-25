@@ -55,12 +55,12 @@ routes.get('/addAll', async () => {
 	return res.stdout.split('\n').splice(1)
 })
 
-routes.post('/addItem', async (query: { item: string}) => {
+routes.post('/addItem', async (query: { item: string }) => {
 	const res = await execa('git', ['add', query.item])
 	return res.stdout.split('\n').splice(1)
 })
 
-routes.post('/recallItem', async (query: { item: string}) => {
+routes.post('/recallItem', async (query: { item: string }) => {
 	const res = await execa('git', ['reset', '-q', 'HEAD', '--', query.item])
 	return res.stdout.split('\n').splice(1)
 })
@@ -134,7 +134,7 @@ routes.get('/graph', async () => {
 	return res.stdout.split('\n')
 })
 
-routes.post('/commit', async (query: { message: string, date: string, gpg: string,signOff: boolean }) => {
+routes.post('/commit', async (query: { message: string, date: string, gpg: string, signOff: boolean }) => {
 	const commitArg = ['commit', '-m', `${query.message}`, '--date="' + query.date + '"']
 	if (query.gpg) {
 		commitArg.push("-S")
@@ -144,8 +144,8 @@ routes.post('/commit', async (query: { message: string, date: string, gpg: strin
 	if (query.signOff) {
 		commitArg.push("-s")
 	}
-	const [res, err] = await execa('git', commitArg, {timeout: 8000})
-		.then(res => [res, null] ).catch(err => [null, err])
+	const [res, err] = await execa('git', commitArg, { timeout: 8000 })
+		.then(res => [res, null]).catch(err => [null, err])
 	if (err) {
 		throw err
 	}
@@ -212,4 +212,16 @@ routes.get('/projects', async () => {
 	}
 	process.chdir(currentWorkDir)
 	return result
+})
+
+routes.post('/checkout', async (query: { item: string, control: string }) => {
+	let commandRes = Object.create(null)
+	if (query.control === 'create') {
+		commandRes = await execa('git checkout', ['-b', query.item])
+	} else if (query.control === 'remove') {
+		commandRes = await execa('git branch', ['-d', query.item])
+	} else {
+		commandRes = await execa('git checkout', [query.item])
+	}
+	return commandRes.stdout
 })
