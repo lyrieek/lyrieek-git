@@ -2,7 +2,7 @@
 	<div>
 		<GitEmoji @on-select="selectEmoji" />
 		<Input v-model="message" maxlength="100" @on-change="unscrambleMsg" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
-		<div style="text-align: right">
+		<div style="text-align: right" v-show="dateSetEnable">
 			<Button @click="setCommitTime(pageContent.lastCommitDate)" style="margin-right: 5px">设为上一次提交时间</Button>
 			<Button @click="appendTime()" style="margin-right: 5px">随机增加一些时间</Button>
 			<DatePicker v-model="date" type="date" placeholder="Commit date" style="width: 120px"></DatePicker>
@@ -26,10 +26,16 @@
 					<Icon type="ios-outlet-outline" />选中后不再自动同步时间，未选中在写完commit message之后自动同步当前时间
 				</div>
 			</Tooltip>
-			<Button @click="clearCommitInfo()">
-				<Icon type="ios-trash" />Clear</Button>
+			<Button @click="dateSetEnable = false">
+				<Icon type="md-close" />不设定日期</Button>
+		</div>
+		<div style="text-align: right" v-show="!dateSetEnable">
+			<Button @click="dateSetEnable = true">
+				<Icon type="ios-clock-outline" />设定日期</Button>
 		</div>
 		<div style="margin-top: 10px; text-align: right">
+			<Button @click="clearCommitInfo()" style="margin-right: 8px">
+				<Icon type="ios-trash" />Clear</Button>
 			<Tooltip placement="bottom" @on-popper-show="openGPGViewer" max-width="390">
 				<CheckboxGroup style="display: inline-block; vertical-align: middle;" :value="[GPGEnable && 'GPG']">
 					<Checkbox label="GPG" border></Checkbox>
@@ -68,6 +74,7 @@ export default {
 		time: null,
 		zone: null,
 		GPGEnable: true,
+		dateSetEnable: true,
 		SignedOffEnable: true,
 		pageContent: {
 			pin: false,
@@ -106,6 +113,9 @@ export default {
 			this.$root.$emit("refreshStatus")
 		},
 		getCommitShortDate() {
+			if (!this.dateSetEnable) {
+				return null
+			}
 			if (!this.date) {
 				return 'Not filled'
 			}
