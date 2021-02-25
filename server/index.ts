@@ -216,12 +216,24 @@ routes.get('/projects', async () => {
 
 routes.post('/checkout', async (query: { item: string, control: string }) => {
 	let commandRes = Object.create(null)
-	if (query.control === 'create') {
-		commandRes = await execa('git checkout', ['-b', query.item])
-	} else if (query.control === 'remove') {
-		commandRes = await execa('git branch', ['-d', query.item])
-	} else {
-		commandRes = await execa('git checkout', [query.item])
+	switch (query.control) {
+		case 'create':
+			commandRes = await execa('git checkout', ['-b', query.item])
+			break
+		case 'remove':
+			commandRes = await execa('git branch', ['-d', query.item])
+			break
+		case 'rename': {
+			const branchNames = query.item.split(":=")
+			if (branchNames.length !== 2) {
+				throw new Error("Checkout rename failure! branch name error")
+			}
+			commandRes = await execa('git branch', ['-m', branchNames[0], branchNames[1]])
+			break
+		}
+		default:
+			commandRes = await execa('git checkout', [query.item])
+			break
 	}
 	return commandRes.stdout
 })
