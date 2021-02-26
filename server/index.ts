@@ -169,9 +169,9 @@ routes.get('/log', async (query: { size: number, skip: number }) => {
 		}
 		const isMerge = logArr[i + 1].startsWith('Merge:')
 		return {
-			commit: e,
+			commit: e.replace(/^commit /, ""),
 			isMerge,
-			author: logArr[i + (isMerge ? 2 : 1)],
+			author: logArr[i + (isMerge ? 2 : 1)].replace(/^Author: /, ""),
 			date: logArr[i + (isMerge ? 3 : 2)],
 			msg: logArr[i + (isMerge ? 5 : 4)].replace(/^ +/, '')
 		}

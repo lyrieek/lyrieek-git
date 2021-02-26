@@ -22,11 +22,34 @@
 				<span>No commit were found!</span>
 			</li>
 		</ul>
-		<Modal v-model="gitLogModalDisplay" title="Log" width="570">
-			<List class="git-log-list" :header="item.commit" :footer="item.date" border size="small" v-for="item of logArr" :key="item.commit">
-				<ListItem class="git-commit-label">
-					<Icon v-if="item.isMerge" type="md-git-merge" style="margin-right: 2px" />
-					{{item.msg}}
+		<Modal footer-hide v-model="gitLogModalDisplay" title="Log" width="650" @on-cancel="refreshLog(1)">
+			<List class="git-log-list" border size="small">
+				<ListItem v-for="item of logArr" :key="item.commit">
+					<div style="width: 100%">
+						<!-- #0366D6 href text color -->
+						<Icon v-if="item.isMerge" type="md-git-merge" size="18" color="#0366D6" style="margin-top: 3px;position: absolute; left: 2px" />
+						<Tooltip placement="bottom-end" max-width="480">
+							<span class="git-commit-label">{{item.msg}}</span>
+							<div slot="content">
+								<div>短ID: <strong>{{item.commit.substring(0, 7)}}</strong></div>
+								<div>长ID: <span>{{item.commit}}</span></div>
+							</div>
+						</Tooltip>
+						<div class="git-commit-occurrence">
+							<Tooltip placement="bottom">
+								<strong>{{getAuthorLabel(item.author, 'name')}}</strong>
+								<div slot="content">
+									<span>{{getAuthorLabel(item.author)}}</span>
+								</div>
+							</Tooltip>
+							<Tooltip placement="right">
+								<span>{{getDateLabel(item.date)}}</span>
+								<div slot="content">
+									<span>{{item.date}}</span>
+								</div>
+							</Tooltip>
+						</div>
+					</div>
 				</ListItem>
 			</List>
 			<List class="git-log-list" border v-show="!logArr.length">
@@ -51,20 +74,27 @@
 }
 
 .git-log-list .ivu-list-item {
-	padding-top: 3px !important;
-	padding-bottom: 3px !important;
+	padding: 2px 3px !important;
 }
 
 .git-commit-label {
-    text-decoration: underline;
+	text-decoration: underline;
 	cursor: pointer;
-	padding: 0px 12px;
-    /* user-select: none; */
+	/* padding: 0px 12px; */
+	/* user-select: none; */
 }
 
 .git-commit-label:hover {
 	font-weight: bold;
 	padding: 0px 5px;
+}
+
+.git-commit-occurrence {
+	text-align: right;
+}
+
+.git-commit-occurrence strong {
+	margin-right: 10px;
 }
 
 </style>
@@ -78,7 +108,7 @@ export default {
 	data: () => ({
 		logArr: [],
 		gitLogModalDisplay: false,
-		pageSize: 7,
+		pageSize: 12,
 		page: 1
 	}),
 	async mounted() {
@@ -118,6 +148,15 @@ export default {
 		},
 		async gitLogForward() {
 			this.refreshLog(this.page + 1)
+		},
+		getDateLabel(date) {
+			return date.replace('T', ' / ').replace("+", " +")
+		},
+		getAuthorLabel(author, type) {
+			if (type === "name") {
+				return author.split(" <")[0]
+			}
+			return author.replace(/^\S+ </, '').replace(/>$/, '')
 		}
 	}
 }
