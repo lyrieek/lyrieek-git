@@ -5,8 +5,11 @@
 				<span class="ivu-tag-text">{{ project.branch }}</span>
 			</div>
 		</h2>
-		<span @click="refresh()">工作目录:</span>
-		<span @click="currentPwdModal = true" class="pwd" v-text="currentPwd"></span>
+		<div style="font-size: 12px;padding-left: 7px">{{ $root.config.get("remote.origin.url") }}</div>
+		<div style="margin-top: 12px;">
+			<span @click="refresh()">工作目录:</span>
+			<span @click="currentPwdModal = true" class="pwd" v-text="currentPwd"></span>
+		</div>
 		<div style="display: flex;flex-wrap: wrap">
 			<div>
 				<Tag color="gold" v-show="project.lang">{{ project.lang }}</Tag>

@@ -41,6 +41,8 @@
 					<Checkbox label="GPG" border></Checkbox>
 				</CheckboxGroup>
 				<div slot="content" style="white-space: pre-wrap;">
+					<div>Signing key: <span>{{$root.config.get("user.signingkey")}}</span></div>
+					<Divider />
 					<div class="preview-text">{{pageContent.GPGViewerContent}}</div>
 				</div>
 			</Tooltip>
