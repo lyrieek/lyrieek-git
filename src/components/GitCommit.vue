@@ -2,36 +2,38 @@
 	<div>
 		<GitEmoji @on-select="selectEmoji" />
 		<Input v-model="message" maxlength="100" @on-change="unscrambleMsg" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
-		<div style="text-align: right" v-show="dateSetEnable">
-			<Button @click="setCommitTime(pageContent.lastCommitDate)" style="margin-right: 5px">设为上一次提交时间</Button>
-			<Button @click="appendTime()" style="margin-right: 5px">随机增加一些时间</Button>
-			<DatePicker v-model="date" type="date" placeholder="Commit date" style="width: 120px"></DatePicker>
-			<TimePicker v-model="time" format="HH:mm:ss" placeholder="Commit time" style="width: 120px"></TimePicker>
-			<Input v-model="zone" placeholder="Time zone" style="width: 85px" />
-			<Tooltip placement="bottom">
-				<Icon type="ios-information-circle-outline" style="vertical-align: bottom; margin-bottom: -5px;" />
-				<div slot="content">
-					<span>{{ getCommitShortDate() }}</span>
-				</div>
-			</Tooltip>
-			<Tooltip placement="bottom">
-				<Button shape="circle" icon="md-refresh" @click="commitInfoUpdate()" style="margin-left: 2px"></Button>
-				<div slot="content">同步现在的时间</div>
-			</Tooltip>
-			<Tooltip placement="bottom">
-				<CheckboxGroup>
-					<Checkbox label="Pin" border style="margin: 0px 5px;padding: 0px 0px 0px 5px;" v-model="pageContent.pin"></Checkbox>
-				</CheckboxGroup>
-				<div slot="content" style="white-space: pre-wrap;">
-					<Icon type="ios-outlet-outline" />选中后不再自动同步时间，未选中在写完commit message之后自动同步当前时间
-				</div>
-			</Tooltip>
-			<Button @click="dateSetEnable = false">
-				<Icon type="md-close" />不设定日期</Button>
-		</div>
-		<div style="text-align: right" v-show="!dateSetEnable">
-			<Button @click="dateSetEnable = true">
-				<Icon type="ios-clock-outline" />设定日期</Button>
+		<div id="dateSetControl">
+			<span v-show="dateSetEnable">
+				<Button @click="setCommitTime(pageContent.lastCommitDate)" style="margin-right: 5px">设为上一次提交时间</Button>
+				<Button @click="appendTime()" style="margin-right: 5px">随机增加一些时间</Button>
+				<DatePicker v-model="date" type="date" placeholder="Commit date" style="width: 120px"></DatePicker>
+				<TimePicker v-model="time" format="HH:mm:ss" placeholder="Commit time" style="width: 120px"></TimePicker>
+				<Input v-model="zone" placeholder="Time zone" style="width: 85px" />
+				<Tooltip placement="bottom">
+					<Icon type="ios-information-circle-outline" style="vertical-align: bottom; margin-bottom: -5px;" />
+					<div slot="content">
+						<span>{{ getCommitShortDate() }}</span>
+					</div>
+				</Tooltip>
+				<Tooltip placement="bottom">
+					<Button shape="circle" icon="md-refresh" @click="commitInfoUpdate()" style="margin-left: 2px"></Button>
+					<div slot="content">同步现在的时间</div>
+				</Tooltip>
+				<Tooltip placement="bottom">
+					<CheckboxGroup>
+						<Checkbox label="Pin" border style="margin: 0px 5px;padding: 0px 0px 0px 5px;vertical-align: middle;" v-model="pageContent.pin"></Checkbox>
+					</CheckboxGroup>
+					<div slot="content" style="white-space: pre-wrap;">
+						<Icon type="ios-outlet-outline" />选中后不再自动同步时间，未选中在写完commit message之后自动同步当前时间
+					</div>
+				</Tooltip>
+			</span>
+			<i-switch v-model="dateSetEnable" size="large">
+				<span slot="open">
+					<Icon type="ios-clock-outline" />设定日期</span>
+				<span slot="close">
+					<Icon type="md-close" />设定日期</span>
+			</i-switch>
 		</div>
 		<div style="margin-top: 10px; text-align: right">
 			<Button @click="clearCommitInfo()" style="margin-right: 8px">
@@ -59,6 +61,31 @@
 		</div>
 	</div>
 </template>
+
+<style>
+#dateSetControl {
+	text-align: right;
+	padding-top: 5px;
+}
+
+#dateSetControl .ivu-switch {
+	width: 90px;
+	height: 30px;
+	line-height: 30px;
+	vertical-align: middle;
+	margin-top: 3px;
+}
+
+#dateSetControl .ivu-switch-checked:after {
+	left: 70px !important;
+	top: 5px !important;
+}
+
+#dateSetControl .ivu-switch:after {
+	top: 5px !important;
+}
+
+</style>
 
 <script>
 import moment from 'moment'
