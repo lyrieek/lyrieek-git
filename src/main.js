@@ -7,5 +7,8 @@ Vue.config.productionTip = false
 
 Vue.use(ViewUI)
 new Vue({
-  render: h => h(App),
+	data: () => ({
+		config: new Map()
+	}),
+	render: h => h(App),
 }).$mount('#app')

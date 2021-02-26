@@ -4,15 +4,15 @@
 			<Icon type="md-build" />Git Config</li>
 		<li>
 			<span>user.name</span>
-			<span v-text="userName"></span>
+			<span v-text="config.get('user.name')"></span>
 		</li>
 		<li>
 			<span>user.email</span>
-			<span v-text="userEmail"></span>
+			<span v-text="config.get('user.email')"></span>
 		</li>
 		<li>
 			<span>core.autocrlf</span>
-			<span v-text="autoCRLF"></span>
+			<span v-text="config.get('core.autocrlf')"></span>
 		</li>
 	</ul>
 </template>
@@ -47,19 +47,16 @@ import http from '../common/services/http'
 export default {
 	name: "GitConfig",
 	data: () => ({
-		userName: "",
-		userEmail: "",
-		autoCRLF: ""
+		config: new Map()
 	}),
 	mounted() {
 		this.$root.$on("refreshStatus", this.refresh)
 	},
 	methods: {
 		async refresh() {
-			const config = await http.getJSON("config")
-			this.userName = config.userName
-			this.userEmail = config.userEmail
-			this.autoCRLF = config.autoCRLF
+			const config = new Map(Object.entries(await http.getJSON("config")))
+			this.config = config
+			this.$root.config = config
 			this.$root.$emit("ConfigUpdate", config)
 		}
 	}

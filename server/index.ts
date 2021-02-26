@@ -179,12 +179,10 @@ routes.get('/log', async (query: { size: number, skip: number }) => {
 })
 
 routes.get('/config', async () => {
-	const userName = (await execa('git', ['config', 'user.name'])).stdout
-	const userEmail = (await execa('git', ['config', 'user.email'])).stdout
-	const autoCRLF = (await execa('git', ['config', 'core.autoCRLF'])).stdout
-	return {
-		userName, userEmail, autoCRLF
-	}
+	const config = await execa('git', ['config', '-l'])
+	const configArr = config.stdout.split('\n').map((e) =>
+		({ [e.split('=')[0]]: e.replace(/[a-z.]+=/, '') }))
+	return Object.assign(Object.create(null), ...configArr)
 })
 
 routes.get('/viewFile', async (query: { file: string }) => {
