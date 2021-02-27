@@ -59,7 +59,7 @@ export default {
 			untracked: []
 		}
 	}),
-	async mounted() {
+	mounted() {
 		this.$root.$on("refreshStatus", this.refreshStatus)
 	},
 	methods: {

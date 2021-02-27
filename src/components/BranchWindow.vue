@@ -6,7 +6,7 @@
 					<ListItemMeta v-if="branch.current !== item" :title="item"></ListItemMeta>
 					<ListItemMeta v-if="branch.current === item" v-show="!editBranchVisible" style="font-weight: bold" :title="item"></ListItemMeta>
 					<div class="ivu-list-item-meta-content" v-if="branch.current === item" v-show="editBranchVisible">
-						<Input type="text" v-model="newBranchName" :placeholder="输入要修正的分支名"></Input>
+						<Input type="text" v-model="newBranchName" placeholder="输入要修正的分支名"></Input>
 					</div>
 					<template slot="action">
 						<li v-if="branch.current === item" v-show="!editBranchVisible">

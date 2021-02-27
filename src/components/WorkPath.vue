@@ -126,7 +126,6 @@ export default {
 			this.currentPwd = "Loading..."
 			this.currentPwd = await http.text("pwd")
 		},
-		async changePath() {},
 		async selectItem(e) {
 			this.fileData = await http.getJSON("ls")
 			if (Number(e.size)) {
