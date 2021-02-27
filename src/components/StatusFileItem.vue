@@ -1,10 +1,7 @@
 <template>
 	<ul class="file-list">
 		<li v-for="item of list" :key="item.fileName" @mouseenter="item.selected = true" @mouseleave="item.selected = false">
-			<span style="width: 75%;
-				overflow: hidden;
-				display: inline-block;
-				text-overflow: ellipsis;">{{ item.fileName }}</span>
+			<span class="git-file-name">{{ item.fileName }}</span>
 			<span class="status-control-btn">
 				<span v-show="item.selected" @click="diff(item.fileName)">
 					<Icon type="ios-eye" /></span>
@@ -33,6 +30,15 @@
 	cursor: pointer;
 	background: #fdecd3;
 	font-weight: bold;
+}
+
+.git-file-name {
+	width: 75%;
+	overflow: hidden;
+	display: inline-block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	word-break: break-all;
 }
 
 .status-control-btn {
