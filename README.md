@@ -4,9 +4,9 @@ lyrieek-git is a powerful visual tool for Git! Although Git can do a lot of work
 
 ## Project setup
 ``` bash
-yarn install
+npm i
 cd server
-yran install
+npm i
 ```
 Copy server/node_modules to build/node_module
 
@@ -56,9 +56,9 @@ I'm looking at
 
 ### Compiles and hot-reloads for development
 ```
-yarn run dev
+npm run dev
 cd server
-yarn run dev
+npm run dev
 ```
 
 ## Announcements
