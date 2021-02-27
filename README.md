@@ -8,10 +8,14 @@ yarn install
 cd server
 yran install
 ```
+Copy server/node_modules to build/node_module
 
+### Making configuration files
 create JSON customSetting/index.json
 
-format:
+Configure any Git projects you use
+
+### Config Format:
 ```
 [
     {
@@ -53,11 +57,8 @@ I'm looking at
 ### Compiles and hot-reloads for development
 ```
 yarn run dev
-```
-
-### Compiles and minifies for production
-```
-yarn run build
+cd server
+yarn run dev
 ```
 
 ## Announcements
