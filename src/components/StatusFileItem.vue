@@ -75,13 +75,8 @@ export default {
 		},
 		async diff(file) {
 			const diffContent = await http.postText("diff", { file })
-			this.$Modal.info({
-				title: "Diff",
-				width: "900px",
-				render: (h) =>
-					h('div', {
-						style: { 'white-space': 'pre-wrap', 'word-break': 'break-word', 'font-size': '16px', 'max-height': window.innerHeight - 300 + 'px', overflow: "auto" }
-					}, diffContent)
+			this.$GWinBox.info("Diff", diffContent, {
+				width: "1200px"
 			})
 		}
 	}

@@ -23,13 +23,7 @@ const _fetch = (url, data, method) => {
 					style: { float: 'right' },
 					on: {
 						click() {
-							Vue.prototype.$Modal.error({
-								title: "Error",
-								render: (h) =>
-									h('div', {
-										style: { 'white-space': 'pre-wrap', 'word-break': 'break-word', 'font-size': '16px' }
-									}, JSON.stringify(errorData, null, 2))
-							})
+							Vue.prototype.$GWinBox.error(JSON.stringify(errorData, null, 2))
 						}
 					}
 				}, '展开')
