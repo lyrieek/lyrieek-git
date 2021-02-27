@@ -117,8 +117,8 @@ export default {
 		}
 	},
 	created() {
-		this.$root.$on("statusUpdated", async (e) => {
-			await this.getProjects()
+		this.$root.$on("statusUpdated", (e) => {
+			this.getProjects()
 			this.currentProject.notPushCommits = e.notPushCommits
 		})
 	},
@@ -132,7 +132,7 @@ export default {
 		},
 		async changeProject(e) {
 			this.currentProject.index = Number(e.index)
-			this.projectsCache = await http.getJSON("cd?project=" + e.name)
+			this.projectsCache = await http.getPost("cd", { project: e.name })
 			this.refreshStatus()
 		},
 		async getProjects() {

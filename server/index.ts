@@ -13,7 +13,7 @@ routes.get('/pwd', async () => {
 	return pwd.stdout
 })
 
-routes.get('/cd', async (query: { dir: string, project: string }) => {
+routes.post('/cd', async (query: { dir: string, project: string }) => {
 	if (!query.project) {
 		process.chdir(query.dir)
 		return query.dir

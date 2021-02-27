@@ -32,7 +32,7 @@
 			<div class="preview-text">{{previewFileText}}</div>
 			<Icon type="ios-more" />
 		</Modal>
-		<BranchWindow  v-bind:visible.sync="branchModal" :maxHeight="maxHeight" />
+		<BranchWindow v-bind:visible.sync="branchModal" :maxHeight="maxHeight" />
 	</div>
 </template>
 
@@ -134,7 +134,7 @@ export default {
 				this.previewFileModal = true
 				return
 			}
-			await http.text("cd?dir=" + e.name)
+			await http.postText("cd", { dir: e.name })
 			this.refresh()
 		},
 		async openBranchWin() {

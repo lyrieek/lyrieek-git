@@ -33,6 +33,12 @@ const _fetch = (url, data, method) => {
 		console.error(err)
 	})
 }
+const _get = async (url) => {
+	return await _fetch(url, null, "GET")
+}
+const _post = async (url, data) => {
+	return await _fetch(url, data, "POST")
+}
 export default {
 	fetchFn: (url, data, successFn) => {
 		if (typeof data === 'function') {
@@ -43,19 +49,17 @@ export default {
 			e.json().then(successFn)
 		}))
 	},
-	get: async (url) => {
-		return await _fetch(url, null, "GET")
-	},
-	post: async (url, data) => {
-		return await _fetch(url, data, "POST")
-	},
-	getJSON: async (url) => {
-		return await (await _fetch(url, null, "GET")).json()
-	},
-	text: async (url) => {
-		return await (await _fetch(url, null, "GET")).text()
+	getPost: async (url, data) => {
+		return await (await _post(url, data)).json()
 	},
 	postText: async (url, data) => {
-		return await (await _fetch(url, data, "POST")).text()
+		return await (await _post(url, data)).text()
+	},
+	post: _post,
+	getJSON: async (url) => {
+		return await (await _get(url)).json()
+	},
+	text: async (url) => {
+		return await (await _get(url)).text()
 	}
 }
