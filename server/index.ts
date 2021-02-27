@@ -190,6 +190,11 @@ routes.get('/viewFile', async (query: { file: string }) => {
 	return res.stdout
 })
 
+routes.post('/diff', async (query: { file: string }) => {
+	const res = await execa('git', ['diff', query.file])
+	return res.stdout
+})
+
 routes.get('/explorer', async () => {//query: { folder: string }
 	const res = execa(`explorer.exe "${currentWorkDir}"`)//"/select," + 
 	return res.stdout

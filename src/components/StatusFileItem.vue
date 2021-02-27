@@ -1,9 +1,16 @@
 <template>
 	<ul class="file-list">
 		<li v-for="item of list" :key="item.fileName" @mouseenter="item.selected = true" @mouseleave="item.selected = false">
-			<span>{{ item.fileName }}</span>
-			<span class="status-control-btn" v-show="item.selected" @click="select(item)">
-				<Icon :type="icon" /></span>
+			<span style="width: 75%;
+				overflow: hidden;
+				display: inline-block;
+				text-overflow: ellipsis;">{{ item.fileName }}</span>
+			<span class="status-control-btn">
+				<span v-show="item.selected" @click="diff(item.fileName)">
+					<Icon type="ios-eye" /></span>
+				<span v-show="item.selected" @click="select(item)">
+					<Icon :type="icon" /></span>
+			</span>
 		</li>
 	</ul>
 </template>
@@ -14,6 +21,7 @@
 }
 
 .file-list>li {
+	height: 27px;
 	line-height: 27px;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -29,11 +37,16 @@
 
 .status-control-btn {
 	float: right;
-	padding-right: 10px;
 }
 
-.status-control-btn:hover {
+.status-control-btn>span {
+	padding: 4px 5px;
 	font-size: 16px;
+}
+
+.status-control-btn>span:hover {
+	font-size: 18px;
+	padding: 3px 2px;
 }
 
 </style>
@@ -47,7 +60,7 @@ export default {
 		list: Array,
 		icon: {
 			type: String,
-			default: "md-add-circle"
+			default: "md-add"
 		},
 		recall: Boolean
 	},
@@ -59,6 +72,17 @@ export default {
 				await http.post("addItem", { item: item.fileName })
 			}
 			this.$root.$emit("refreshStatus")
+		},
+		async diff(file) {
+			const diffContent = await http.postText("diff", { file })
+			this.$Modal.info({
+				title: "Diff",
+				width: "900px",
+				render: (h) =>
+					h('div', {
+						style: { 'white-space': 'pre-wrap', 'word-break': 'break-word', 'font-size': '16px', 'max-height': window.innerHeight - 300 + 'px', overflow: "auto" }
+					}, diffContent)
+			})
 		}
 	}
 }

@@ -60,5 +60,8 @@ export default {
 	},
 	text: async (url) => {
 		return await (await _fetch(url, null, "GET")).text()
+	},
+	postText: async (url, data) => {
+		return await (await _fetch(url, data, "POST")).text()
 	}
 }
