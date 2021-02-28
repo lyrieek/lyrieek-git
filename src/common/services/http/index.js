@@ -49,7 +49,7 @@ export default {
 			e.json().then(successFn)
 		}))
 	},
-	getPost: async (url, data) => {
+	postData: async (url, data) => {
 		return await (await _post(url, data)).json()
 	},
 	postText: async (url, data) => {

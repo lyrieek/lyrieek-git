@@ -132,7 +132,7 @@ export default {
 		},
 		async changeProject(e) {
 			this.currentProject.index = Number(e.index)
-			this.projectsCache = await http.getPost("cd", { project: e.name })
+			this.projectsCache = await http.postData("cd", { project: e.name })
 			this.refreshStatus()
 		},
 		async getProjects() {

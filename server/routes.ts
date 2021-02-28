@@ -42,7 +42,16 @@ export default {
 		}
 		let param = ""
 		req.on("data", (chunk: string) => param += chunk)
-		req.on("end", () => next(JSON.parse(param.replace(/^\[object Object]/, ''))))
+		req.on("end", () => {
+			try {
+				if (!param) {
+					return next(Object.create(null))
+				}
+				next(JSON.parse(param))
+			} catch (error) {
+				console.error("Data processing error")
+			}
+		})
 	},
 	handler(controller: Controller) {
 		return (req: express.Request, res: express.Response): void => {
