@@ -101,6 +101,26 @@ routes.get('/pull', async () => {
 	return res.stdout
 })
 
+routes.post('/update-index', async (query: { item: string, control: string }) => {
+	const command = ['update-index']
+	switch (query.control) {
+		case "hide":
+			command.push("--assume-unchanged")
+			break
+		case "show":
+			command.push("--no-assume-unchanged")
+			break
+
+		default: {
+			const res = await execa('git ls-files -v | grep "^h"', { shell: true })
+			return res.stdout.split("\n").map(e => e.substring(2))
+		}
+	}
+	command.push(query.item)
+	const res = await execa('git', command)
+	return res.stdout
+})
+
 routes.get('/push', async () => {
 	const res = await execa('git', ['push'])
 	if (!res.stdout) {

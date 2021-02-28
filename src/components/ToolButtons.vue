@@ -14,7 +14,37 @@
 			<Icon type="md-redo" />Checkout</Button>
 		<Button type="info" ghost @click="sshAgent()">
 			<Icon type="md-lock" />SSH Agent</Button>
+		<Button type="info" ghost @click="assumeUnchangedWin = true">
+			<Icon type="md-eye-off" />Assume Unchanged List</Button>
 		<BranchWindow v-bind:visible.sync="branchModal" :maxHeight="maxHeight" />
+		<Modal title="Assume Unchange(假定不变)" v-model="assumeUnchangedWin" @on-visible-change="AURefresh">
+			<List border size="small">
+				<ListItem v-for="item of assumeUnchangedList" :key="item">
+					<span class="ivu-list-item-meta-content">{{item}}</span>
+					<template slot="action">
+						<li>
+							<Button icon="ios-trash" type="error" size="small" @click="AUControl(item, 'show')">移出列表</Button>
+						</li>
+					</template>
+				</ListItem>
+				<ListItem v-show="addAUVisible">
+					<span class="ivu-list-item-meta-content">
+						<Input type="text" v-model="newAUName" placeholder="输入新的假定项"></Input>
+					</span>
+					<template slot="action">
+						<li>
+							<Button icon="ios-trash" type="success" size="small" @click="AUControl(newAUName, 'hide')">添加</Button>
+						</li>
+						<li>
+							<Button icon="ios-close-circle" size="small" @click="addAUVisible = false">取消</Button>
+						</li>
+					</template>
+				</ListItem>
+			</List>
+			<div style="text-align: center;margin-top: 10px">
+				<Button v-show="!addAUVisible" icon="md-add" type="success" @click="inputNewAU()">添加新的假定项</Button>
+			</div>
+		</Modal>
 	</div>
 </template>
 
@@ -38,7 +68,11 @@ export default {
 		maxHeight: Number
 	},
 	data: () => ({
-		branchModal: false
+		branchModal: false,
+		assumeUnchangedWin: false,
+		assumeUnchangedList: [],
+		addAUVisible: false,
+		newAUName: ""
 	}),
 	methods: {
 		async sshAgent() {
@@ -69,8 +103,21 @@ export default {
 				duration: 0
 			})
 		},
-		async checkout(){
+		async checkout() {
 			this.branchModal = true
+		},
+		async AURefresh() {
+			this.newAUName = ""
+			this.assumeUnchangedList = await http.postData("update-index")
+		},
+		async AUControl(item, control) {
+			await http.post("update-index", { item, control })
+			this.AURefresh()
+			this.$root.$emit("refreshStatus")
+		},
+		inputNewAU() {
+			this.AURefresh()
+			this.addAUVisible = true
 		}
 	}
 }
