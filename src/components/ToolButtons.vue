@@ -12,8 +12,13 @@
 			<Icon type="md-return-left" />Reset(soft)</Button>
 		<Button type="info" ghost @click="checkout()">
 			<Icon type="md-redo" />Checkout</Button>
-		<Button type="info" ghost @click="sshAgent()">
-			<Icon type="md-lock" />SSH Agent</Button>
+
+		<Poptip v-model="sshAgentVisible">
+			<Button type="info" ghost @click="sshAgent()">
+				<Icon type="md-lock" />SSH Agent</Button>
+			<div slot="title"><i>SSH Agent info</i></div>
+			<div slot="content" style="white-space: pre;">{{ sshAgentInfo }}</div>
+		</Poptip>
 		<Button type="info" ghost @click="assumeUnchangedWin = true">
 			<Icon type="md-eye-off" />Assume Unchanged List</Button>
 		<BranchWindow v-bind:visible.sync="branchModal" :maxHeight="maxHeight" />
@@ -72,20 +77,17 @@ export default {
 		assumeUnchangedWin: false,
 		assumeUnchangedList: [],
 		addAUVisible: false,
-		newAUName: ""
+		newAUName: "",
+		sshAgentVisible: false,
+		sshAgentInfo: ""
 	}),
 	methods: {
 		async sshAgent() {
 			const data = await http.getJSON("ssh-agent")
-			this.$Notice.success({
-				title: 'SSH Agent',
-				desc: `<ul>
-                        <li>${data.agentPid.stdout}</li>
-                        <li>${data.id_ed25519.stdout || data.id_ed25519.stderr}</li>
-                        <li>${data.sshAdd.stdout}</li>
-                    </ul>`,
-				duration: 0
-			})
+			this.sshAgentInfo = data.agentPid.stdout + "\n"
+                        + (data.id_ed25519.stdout || data.id_ed25519.stderr) + "\n"
+                        + data.sshAdd.stdout
+			this.sshAgentVisible = true
 		},
 		async push() {
 			const content = await http.text("push")
