@@ -2,21 +2,7 @@
 	<div style="height: 100%">
 		<Row style="height: 100%">
 			<Col span="3" :style="{ 'border-right': '1px solid #504c4c' }">
-			<div style="padding: 20px">
-				<Input suffix="ios-search" v-model="searchProjectText" placeholder="Filter..." style="width: auto" />
-				<ul class="project-list-view">
-					<li class="project-item-label" v-show="!searchProjectText || ~item.name.indexOf(searchProjectText)" v-for="item of projects" :key="item.projectPath" @click="changeProject(item)" :style="{background: item.selected ? '#efebeb' : 'transparent'}">
-						<strong style="font-size: 15px">{{item.name}}</strong>
-						<Badge :count="item.notPushCommits" style="float: right" slot="extra" />
-					</li>
-					<li class="add-project-item">
-						<div style="text-align: center; width: 100%">
-							<Icon type="md-add" />
-							添加新项目
-						</div>
-					</li>
-				</ul>
-			</div>
+			<ProjectList :project="currentProject" />
 			</Col>
 			<Col span="17" :style="{ padding: '10px' }">
 			<WorkPath :project="currentProject" :maxHeight="maxHeight" />
@@ -53,26 +39,8 @@
 </template>
 
 <style>
-.project-item-label:hover {
-	background: rgb(197, 211, 224);
-}
-
-.add-project-item:hover {
-	font-weight: bold;
-	cursor: pointer;
-}
-
 ul {
 	list-style-type: none;
-}
-
-.project-list-view {
-	margin-top: 10px;
-}
-
-.project-list-view>li {
-	padding: 7px 12px;
-	cursor: pointer;
 }
 
 .preview-text {
@@ -84,6 +52,7 @@ ul {
 </style>
 
 <script>
+import ProjectList from './ProjectList.vue'
 import ToolButtons from './ToolButtons'
 import GitLog from './GitLog'
 import http from '../common/services/http'
@@ -95,6 +64,7 @@ import GitCommit from './GitCommit.vue'
 export default {
 	name: "GitList",
 	components: {
+		ProjectList,
 		ToolButtons,
 		GitConfig,
 		GitLog,
@@ -107,50 +77,15 @@ export default {
 			configModal: false,
 			currentProject: {
 				index: 0,
-				name: "Lyrieek-Git",
-				notPushCommits: 0
+				name: "Loading..."
 			},
-			projects: [],
-			projectsCache: null,
 			maxHeight: window.innerHeight - 300,
 			searchProjectText: ""
 		}
 	},
-	created() {
-		this.$root.$on("statusUpdated", (e) => {
-			this.getProjects()
-			this.currentProject.notPushCommits = e.notPushCommits
-		})
-	},
-	async mounted() {
-		await this.getProjects()
-		this.refreshStatus()
-	},
 	methods: {
 		async refreshStatus() {
 			this.$root.$emit("refreshStatus")
-		},
-		async changeProject(e) {
-			this.currentProject.index = Number(e.index)
-			this.projectsCache = await http.postData("cd", { project: e.name })
-			this.refreshStatus()
-		},
-		async getProjects() {
-			let _projects = this.projectsCache
-			if (!_projects) {
-				_projects = await http.getJSON("projects")
-			}
-			if (!_projects.length) {
-				return this.$message.error("Please check the configuration")
-			}
-			for (const index in _projects) {
-				_projects[index].index = index
-				if (_projects[index].selected) {
-					this.currentProject = _projects[index]
-				}
-			}
-			this.projects = _projects
-			this.projectsCache = null
 		},
 		updateConfig() {
 			console.log("update")
