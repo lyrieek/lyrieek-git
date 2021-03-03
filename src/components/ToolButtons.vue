@@ -96,6 +96,7 @@ export default {
 				desc: content,
 				duration: 0
 			})
+			this.$root.$emit("statusUpdated")
 		},
 		async pull() {
 			const content = await http.text("pull")
