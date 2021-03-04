@@ -32,6 +32,13 @@ Configure any Git projects you use
 ]
 ```
 
+### hot-reloads for development
+``` cmd
+npm run dev
+cd server
+npm run dev
+```
+
 ### Use GPG
 Suggest enable no-tty, set it in `gpg.conf` file
 
@@ -54,11 +61,13 @@ The library I'm using is
 I'm looking at
 > https://gist.github.com/parmentf/035de27d6ed1dce0b36a
 
-### Compiles and hot-reloads for development
-```
-npm run dev
+## Compiles
+``` cmd
+npm run build
 cd server
-npm run dev
+npm run build
+cd ../dist
+node index
 ```
 
 ## Announcements

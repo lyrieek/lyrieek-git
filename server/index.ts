@@ -51,7 +51,8 @@ routes.get('/status', async () => {
 })
 
 routes.get('/addAll', async () => {
-	const res = await execa('git', ['add', '.'])
+	/*eslint-disable */
+	const res = await execa('git', ['add', '.']);
 	return res.stdout.split('\n').splice(1)
 })
 
