@@ -42,15 +42,16 @@ import http from '../common/services/http'
 
 export default {
 	name: "ProjectList",
-    props: {
-        currentProject: {
-            index: Number,
-            name: String
-        }
-    },
+	props: {
+		currentProject: {
+			index: Number,
+			name: String
+		}
+	},
 	data: () => ({
 		projects: [],
 		projectsCache: null,
+		searchProjectText: "",
 	}),
 	async created() {
 		this.$root.$on("statusUpdated", () => {

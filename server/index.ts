@@ -112,8 +112,13 @@ routes.post('/update-index', async (query: { item: string, control: string }) =>
 			break
 
 		default: {
-			const res = await execa('git ls-files -v | grep "^h"', { shell: true })
-			return res.stdout.split("\n").map(e => e.substring(2))
+			try {
+				const res = await execa('git ls-files -v | grep "^h"', { shell: true })
+				return res.stdout.split("\n").map(e => e.substring(2))
+			} catch (error) {
+				//no match error code == 1
+				return ""
+			}
 		}
 	}
 	command.push(query.item)

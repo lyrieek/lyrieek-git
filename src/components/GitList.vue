@@ -79,8 +79,7 @@ export default {
 				index: 0,
 				name: "Loading..."
 			},
-			maxHeight: window.innerHeight - 300,
-			searchProjectText: ""
+			maxHeight: window.innerHeight - 300
 		}
 	},
 	methods: {
