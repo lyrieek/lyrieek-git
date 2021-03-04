@@ -117,7 +117,7 @@ export default {
 			this.pageContent.lastCommitDate = e[0].date
 		})
 		this.$root.$on("ConfigUpdate", (e) => {
-			this.pageContent.signOffLabel = `Signed-off-by: ${e.userName} <${e.userEmail}>`
+			this.pageContent.signOffLabel = `Signed-off-by: ${e.get('user.name')} <${e.get('user.email')}>`
 		})
 	},
 	methods: {
