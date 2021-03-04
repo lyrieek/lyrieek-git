@@ -43,7 +43,7 @@ import http from '../common/services/http'
 export default {
 	name: "ProjectList",
 	props: {
-		currentProject: {
+		project: {
 			index: Number,
 			name: String
 		}
@@ -52,8 +52,13 @@ export default {
 		projects: [],
 		projectsCache: null,
 		searchProjectText: "",
+		currentProject: {
+			index: Number,
+			name: String
+		}
 	}),
 	async created() {
+		this.currentProject = this.project
 		this.$root.$on("statusUpdated", () => {
 			this.getProjects()
 		})
@@ -82,8 +87,9 @@ export default {
 			}
 			this.projects = _projects
 			this.projectsCache = null
+			this.$emit("projectUpdated", this.currentProject)
 		},
-		async refreshStatus() {
+		refreshStatus() {
 			this.$root.$emit("refreshStatus")
 		}
 	}
