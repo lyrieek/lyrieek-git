@@ -29,7 +29,7 @@
 			<Table class="cwd-switch-files" size="small" :height="maxHeight" :columns="fileColumns" :data="fileData" @on-row-click="selectItem"></Table>
 		</Modal>
 		<Modal v-model="previewFileModal">
-			<div class="preview-text">{{previewFileText}}</div>
+			<div class="preview-text">{{ previewFileText }}</div>
 			<Icon type="ios-more" />
 		</Modal>
 		<BranchWindow v-bind:visible.sync="branchModal" :maxHeight="maxHeight" />

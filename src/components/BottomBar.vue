@@ -5,6 +5,8 @@
 				<Icon type="md-refresh" />刷新</Button>
 			<Button type="primary" @click="openFolder()" ghost>
 				<Icon type="ios-folder-open" />打开文件夹</Button>
+			<Button type="primary" @click="openHostingSite()" ghost>
+				<Icon type="ios-cloud" />打开{{ getHostingSite(this.$root.config.get("remote.origin.url")) }}</Button>
 		</div>
 		<div class="toolbar-buttons" style="margin-top: 10px">
 			<Button type="primary" @click="configModal = true">
@@ -32,7 +34,9 @@ export default {
 		}
 	},
 	data: () => ({
-		configModal: false
+		configModal: false,
+		hostingSiteURL: "",
+		hostingSiteName: ""
 	}),
 	methods: {
 		updateConfig() {
@@ -40,6 +44,29 @@ export default {
 		},
 		openFolder() {
 			http.getJSON("explorer")
+		},
+		getHostingSite(url) {
+			if (!url) {
+				return ""
+			}
+			if (url.startsWith("http")) {
+				let notHeader = url.replace(/^http(s)?:\/\//, '')
+				notHeader = notHeader.replace(/\.\S+$/, '')
+				if (~notHeader.indexOf("@")) {
+					notHeader = notHeader.replace(/^\S+@/, '')
+				}
+				this.hostingSiteName = notHeader
+				this.hostingSiteURL = url.replace(/\.git$/, '')
+			} else if (url.startsWith("git@")) {
+				const noHeader = url.replace(/^git@/, '')
+				this.hostingSiteName = noHeader.replace(/\.\S+$/, '')
+				this.hostingSiteURL = 'https://' + url.replace(/^git@/, '').replace(/(?<=[a-zA-Z.]):/, '/').replace(/\.git$/, '')
+			}
+			// this.hostingSiteURL = this.hostingSiteURL.replace(/.git/, '')
+			return this.hostingSiteName
+		},
+		openHostingSite() {
+			window.open(this.hostingSiteURL)
 		}
 	}
 }
