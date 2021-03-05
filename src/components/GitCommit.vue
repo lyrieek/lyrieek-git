@@ -40,7 +40,7 @@
 				<Icon type="ios-trash" />Clear</Button>
 			<Tooltip placement="bottom" @on-popper-show="openGPGViewer" max-width="390">
 				<CheckboxGroup style="display: inline-block; vertical-align: middle;" :value="[GPGEnable && 'GPG']">
-					<Checkbox label="GPG" border></Checkbox>
+					<Checkbox label="GPG" border v-model="GPGEnable"></Checkbox>
 				</CheckboxGroup>
 				<div slot="content" style="white-space: pre-wrap;">
 					<div>Signing key: <span>{{$root.config.get("user.signingkey")}}</span></div>
@@ -50,7 +50,7 @@
 			</Tooltip>
 			<Tooltip placement="bottom-end" @on-popper-show="openGPGViewer" max-width="480">
 				<CheckboxGroup style="display: inline-block; vertical-align: middle;" :value="[SignedOffEnable && 'Signed-off']">
-					<Checkbox label="Signed-off" :value="true" border></Checkbox>
+					<Checkbox label="Signed-off" :value="true" border v-model="SignedOffEnable"></Checkbox>
 				</CheckboxGroup>
 				<div slot="content">
 					<div class="preview-text">{{pageContent.signOffLabel}}</div>
