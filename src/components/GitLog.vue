@@ -16,7 +16,7 @@
 					<Icon v-if="item.isMerge" type="md-git-merge" style="margin-right: 2px" />
 					{{item.msg}}
 				</span>
-				<span style="padding-left: 30px">{{item.date}}</span>
+				<span style="padding-left: 30px">{{getDateLabel(item.date)}}</span>
 			</li>
 			<li v-if="!logArr.length">
 				<span>No commit were found!</span>
@@ -102,6 +102,7 @@
 <script>
 import moment from 'moment'
 import http from '../common/services/http'
+import dateUtil from '../common/services/dateUtil'
 
 export default {
 	name: "GitLog",
@@ -113,6 +114,7 @@ export default {
 	}),
 	async mounted() {
 		this.$root.$on("refreshStatus", this.refreshLog)
+		console.log(dateUtil)
 	},
 	methods: {
 		dbclickCommitInfo(e) {
@@ -149,9 +151,7 @@ export default {
 		async gitLogForward() {
 			this.refreshLog(this.page + 1)
 		},
-		getDateLabel(date) {
-			return date.replace('T', ' / ').replace("+", " +")
-		},
+		getDateLabel: dateUtil.getDateLabel,
 		getAuthorLabel(author, type) {
 			if (type === "name") {
 				return author.split(" <")[0]
