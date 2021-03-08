@@ -13,10 +13,6 @@
 </template>
 
 <style>
-.file-list {
-	list-style-type: none;
-}
-
 .file-list>li {
 	height: 27px;
 	line-height: 27px;

@@ -14,7 +14,6 @@ export default {
 			}, content)
 	}, options),
 	install: function(Vue) {
-		// console.log(this.$Modal)
 		Vue.prototype.$GWinBox = {
 			modal: Vue.prototype.$Modal,
 			parameter: this.parameter,

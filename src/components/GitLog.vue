@@ -114,15 +114,12 @@ export default {
 	}),
 	async mounted() {
 		this.$root.$on("refreshStatus", this.refreshLog)
-		console.log(dateUtil)
 	},
 	methods: {
 		dbclickCommitInfo(e) {
 			let transfer = document.createElement('input')
 			document.body.appendChild(transfer)
 			transfer.value = e
-			// transfer.style.display = 'none';
-			// transfer.disabled = 'disabled';
 			transfer.focus()
 			transfer.select()
 			document.execCommand('copy')
