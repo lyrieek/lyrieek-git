@@ -53,8 +53,9 @@ export default {
 		projectsCache: null,
 		searchProjectText: "",
 		currentProject: {
-			index: Number,
-			name: String
+			index: 0,
+			name: "Loading",
+			selected: false
 		}
 	}),
 	async created() {
@@ -84,6 +85,10 @@ export default {
 				if (_projects[index].selected) {
 					this.currentProject = _projects[index]
 				}
+			}
+			if (!this.currentProject.selected) {
+				this.changeProject(_projects[0])
+				this.$Message.info('没有默认选中项，自动选中第一个项目' + this.currentProject.name)
 			}
 			this.projects = _projects
 			this.projectsCache = null
