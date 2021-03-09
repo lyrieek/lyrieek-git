@@ -7,7 +7,7 @@
 	"scripts": {
 		"predev": "tsc",
 		"dev": "node ../build",
-		"build": "rollup -c && echo node ../dist/lyrieek-git-server",
+		"build": "rollup -c",
 		"pkg": "pkg . --out-path=dist/ && echo ../dist/lyrieek-git-server.exe"
 	},
 	"dependencies": {
@@ -38,6 +38,7 @@
 		"@rollup/plugin-json": "^4.1.0",
 		"@rollup/plugin-node-resolve": "^11.2.0",
 		"@rollup/plugin-typescript": "^8.2.0",
-		"@types/express-ws": "^3.0.0"
+		"@types/express-ws": "^3.0.0",
+		"rollup-plugin-add-shebang": "^0.3.1"
 	}
 }
