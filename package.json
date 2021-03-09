@@ -2,6 +2,7 @@
 	"name": "lyrieek-git",
 	"version": "0.1.0",
 	"private": true,
+	"bin": "dist/index.js",
 	"scripts": {
 		"dev": "vue-cli-service serve",
 		"build": "vue-cli-service build",
@@ -23,8 +24,7 @@
 		"babel-eslint": "^10.1.0",
 		"eslint": "^6.8.0",
 		"eslint-plugin-vue": "^6.2.2",
-		"typescript": "^4.1.5",
-		"vue-template-compiler": "^2.6.11"
+		"typescript": "^4.1.5"
 	},
 	"browserslist": [
 		"> 1%",
