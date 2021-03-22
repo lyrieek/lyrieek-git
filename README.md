@@ -2,7 +2,13 @@
 
 lyrieek-git is a powerful visual tool for Git! Although Git can do a lot of work, but the work involved is much more difficult and error-prone. *lyrieek-git* makes this process incredibly easy and it changes the way developers work when they use it .
 
+<img src="https://badgen.net/npm/v/lyrieek-git">
 <img src="https://badgen.net/github/license/lyrieek/lyrieek-git">
+
+## Install
+```
+npm i lyrieek-git
+```
 
 ## Project setup
 ``` bash
