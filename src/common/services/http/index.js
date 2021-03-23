@@ -17,7 +17,7 @@ const _fetch = (url, data, method) => {
 		Vue.prototype.$Notice.error({
 			title: "Error",
 			render: (h) => h('div', [
-				h('div', [errorData.stderr]),
+				h('div', [errorData.stderr || errorData.stdout]),
 				h('Button', {
 					attrs: { size: 'small' },
 					style: { float: 'right' },

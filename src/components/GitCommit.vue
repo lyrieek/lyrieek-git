@@ -150,34 +150,19 @@ export default {
 			}
 			return moment(this.date).format('YYYY-MM-DD') + "T" + this.time + this.zone
 		},
-		commit() {
-			fetch("http://localhost:3516/commit", {
-				method: 'POST',
-				body: JSON.stringify({
-					message: this.message,
-					date: this.getCommitShortDate(),
-					gpg: this.GPGEnable,
-					signOff: this.SignedOffEnable
-				})
-			}).then((e) => {
-				if (!e.ok) {
-					return e.json().then((res) => {
-						this.$Notice.error({
-							title: 'Commit',
-							desc: `<div style="white-space: pre;">${res.stdout}</div>`,
-							duration: 0
-						})
-					})
-				}
-				e.text().then((res) => {
-					this.refreshStatus()
-					this.$Notice.success({
-						title: 'Commit',
-						desc: res
-					})
-					this.clearCommitInfo()
-				})
+		async commit() {
+			const res = await http.postText('commit', {
+				message: this.message,
+				date: this.getCommitShortDate(),
+				gpg: this.GPGEnable,
+				signOff: this.SignedOffEnable
 			})
+			this.refreshStatus()
+			this.$Notice.success({
+				title: 'Commit',
+				desc: res
+			})
+			this.clearCommitInfo()
 		},
 		async openGPGViewer() {
 			const content = await http.text("gpg/view")
