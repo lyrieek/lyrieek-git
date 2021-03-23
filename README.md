@@ -11,6 +11,11 @@ npm i lyrieek-git
 ```
 
 ## Project setup
+First, you need to install Vue globally ahead of time
+```
+npm i @vue/cli -g
+```
+Then install node_modules
 ``` bash
 npm i
 cd server
