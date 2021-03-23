@@ -87,14 +87,12 @@ routes.get('/ls', async () => {
 })
 
 routes.get('/ssh-agent', async () => {
-	const agentPid = await execa('bash', ['-c', 'eval $(ssh-agent -s)'])
-	const id_ed25519 = await execa('ssh-add', ['~/.ssh/id_ed25519'])
-	const sshAdd = await execa('ssh-add', ['-l', '-E', 'sha256'])
-	return {
-		agentPid,
-		id_ed25519,
-		sshAdd
-	}
+	// const agentPid = await execa('bash', ['-c', 'eval $(ssh-agent -s)'])
+	// const id_ed25519 = await execa('ssh-add', ['~/.ssh/id_ed25519'])
+	// const sshAdd = await execa('ssh-add', ['-l', '-E', 'sha256'])
+	const val = await execa('eval $(ssh-agent -s) && ssh-add ~/.ssh/id_ed25519', { shell: 'bash' })
+	
+	return val
 })
 
 routes.get('/pull', async () => {

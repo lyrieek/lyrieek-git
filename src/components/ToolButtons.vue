@@ -84,9 +84,8 @@ export default {
 	methods: {
 		async sshAgent() {
 			const data = await http.getJSON("ssh-agent")
-			this.sshAgentInfo = data.agentPid.stdout + "\n"
-                        + (data.id_ed25519.stdout || data.id_ed25519.stderr) + "\n"
-                        + data.sshAdd.stdout
+			this.sshAgentInfo = data.stdout + "\n"
+                        + (data.stderr)
 			this.sshAgentVisible = true
 		},
 		async push() {
