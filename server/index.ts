@@ -86,17 +86,36 @@ routes.get('/ls', async () => {
 	})
 })
 
+// loss session
 routes.get('/ssh-agent', async () => {
 	// const agentPid = await execa('bash', ['-c', 'eval $(ssh-agent -s)'])
 	// const id_ed25519 = await execa('ssh-add', ['~/.ssh/id_ed25519'])
 	// const sshAdd = await execa('ssh-add', ['-l', '-E', 'sha256'])
 	const val = await execa('eval $(ssh-agent -s) && ssh-add ~/.ssh/id_ed25519', { shell: 'bash' })
-	
+
 	return val
 })
 
-routes.get('/pull', async () => {
+const sshAgent = function (param: string) {
+	return execa('eval $(ssh-agent -s) && ssh-add ~/.ssh/id_ed25519 && ' + param, { shell: 'bash' })
+}
+
+routes.post('/pull', async (query: { needSSHAgent: boolean }) => {
+	if (query.needSSHAgent) {
+		return await sshAgent("git pull")
+	}
 	const res = await execa('git', ['pull'])
+	return res.stdout
+})
+
+routes.post('/push', async (query: { needSSHAgent: boolean }) => {
+	if (query.needSSHAgent) {
+		return await sshAgent("git push")
+	}
+	const res = await execa('git', ['push'])
+	if (!res.stdout) {
+		res.stdout = res.stderr
+	}
 	return res.stdout
 })
 
@@ -122,14 +141,6 @@ routes.post('/update-index', async (query: { item: string, control: string }) =>
 	}
 	command.push(query.item)
 	const res = await execa('git', command)
-	return res.stdout
-})
-
-routes.get('/push', async () => {
-	const res = await execa('git', ['push'])
-	if (!res.stdout) {
-		res.stdout = res.stderr
-	}
 	return res.stdout
 })
 

@@ -6,6 +6,19 @@
 			<Button type="info" @click="pull()">
 				<Icon type="md-arrow-round-down" />Pull</Button>
 		</ButtonGroup>
+		<span style="border-bottom: 1px solid;
+			vertical-align: bottom;
+			padding: 2px;
+			border-radius: 3px;
+			color: #57c5f7;">
+			<Checkbox v-model="needSSHAgent" />SSH Agent</Checkbox>
+		</span>
+		<!-- <Poptip v-model="sshAgentVisible">
+			<Button type="info" ghost @click="sshAgent()">
+				<Icon type="md-lock" />SSH Agent</Button>
+			<div slot="title"><i>SSH Agent info</i></div>
+			<div slot="content" style="white-space: pre;">{{ sshAgentInfo }}</div>
+		</Poptip> -->
 		<Button type="info" ghost>
 			<Icon type="md-arrow-round-down" />Fetch</Button>
 		<Button type="info" ghost>
@@ -13,12 +26,6 @@
 		<Button type="info" ghost @click="checkout()">
 			<Icon type="md-redo" />Checkout</Button>
 
-		<Poptip v-model="sshAgentVisible">
-			<Button type="info" ghost @click="sshAgent()">
-				<Icon type="md-lock" />SSH Agent</Button>
-			<div slot="title"><i>SSH Agent info</i></div>
-			<div slot="content" style="white-space: pre;">{{ sshAgentInfo }}</div>
-		</Poptip>
 		<Button type="info" ghost @click="assumeUnchangedWin = true">
 			<Icon type="md-eye-off" />Assume Unchanged List</Button>
 		<BranchWindow v-bind:visible.sync="branchModal" :maxHeight="maxHeight" />
@@ -79,17 +86,18 @@ export default {
 		addAUVisible: false,
 		newAUName: "",
 		sshAgentVisible: false,
-		sshAgentInfo: ""
+		sshAgentInfo: "",
+		needSSHAgent: true
 	}),
 	methods: {
 		async sshAgent() {
 			const data = await http.getJSON("ssh-agent")
 			this.sshAgentInfo = data.stdout + "\n"
-                        + (data.stderr)
+				+ (data.stderr)
 			this.sshAgentVisible = true
 		},
 		async push() {
-			const content = await http.text("push")
+			const content = await http.postText("push", { needSSHAgent: this.needSSHAgent })
 			this.$Notice.success({
 				title: 'Push',
 				desc: content,
@@ -98,7 +106,7 @@ export default {
 			this.$root.$emit("statusUpdated")
 		},
 		async pull() {
-			const content = await http.text("pull")
+			const content = await http.postText("pull", { needSSHAgent: this.needSSHAgent })
 			this.$Notice.success({
 				title: 'Pull',
 				desc: content,
