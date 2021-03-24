@@ -87,7 +87,7 @@ export default {
 		newAUName: "",
 		sshAgentVisible: false,
 		sshAgentInfo: "",
-		needSSHAgent: true
+		needSSHAgent: false
 	}),
 	methods: {
 		async sshAgent() {
