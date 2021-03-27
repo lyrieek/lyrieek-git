@@ -127,8 +127,13 @@ export default {
 			}
 			this.date = new Date()
 			this.time = moment().format('HH:mm:ss')
-			this.zone = "+0800"
 			this.pageContent.pin = true
+			// get current zone
+			let zone = (0 - new Date().getTimezoneOffset() / 60).toFixed(2).replace('.', ':')
+			// complement 800 => 0800
+			zone = Math.abs(zone.length) < 1000 ? zone.replace(/(?<=-?)\b/, '0') : zone
+			// add '+' symbol
+			this.zone = zone.replace(/^(?!-)\b/, '+')
 		},
 		clearCommitInfo() {
 			this.message = ""
