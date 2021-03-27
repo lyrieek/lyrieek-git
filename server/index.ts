@@ -174,7 +174,7 @@ routes.post('/commit', async (query: { message: string, date: string, gpg: strin
 	if (query.date) {
 		commitArg.push('--date="' + query.date + '"')
 		if (query.alsoReviseCommitTime) {
-			await execa('set', [`GIT_COMMITTER_DATE="${query.date}"`], { shell: 'bash' })
+			await execa('SET', [`GIT_COMMITTER_DATE="${query.date}"`])
 		}
 	}
 	if (query.gpg) {
