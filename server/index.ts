@@ -169,10 +169,13 @@ routes.get('/graph', async () => {
 	return res.stdout.split('\n')
 })
 
-routes.post('/commit', async (query: { message: string, date: string, gpg: string, signOff: boolean }) => {
+routes.post('/commit', async (query: { message: string, date: string, gpg: string, signOff: boolean, alsoReviseCommitTime: true }) => {
 	const commitArg = ['commit', '-m', `${query.message}`]
 	if (query.date) {
 		commitArg.push('--date="' + query.date + '"')
+		if (query.alsoReviseCommitTime) {
+			await execa('set', [`GIT_COMMITTER_DATE="${query.date}"`], { shell: 'bash' })
+		}
 	}
 	if (query.gpg) {
 		commitArg.push("-S")

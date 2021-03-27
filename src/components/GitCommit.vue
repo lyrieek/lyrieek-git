@@ -27,6 +27,14 @@
 						<Icon type="ios-outlet-outline" />选中后不再自动同步时间，未选中在写完commit message之后自动同步当前时间
 					</div>
 				</Tooltip>
+				<Tooltip placement="bottom">
+					<CheckboxGroup>
+						<Checkbox label="Also revise commit time" border style="margin: 0px 5px;padding: 0px 0px 0px 5px;vertical-align: middle;" v-model="pageContent.alsoReviseCommitTime"></Checkbox>
+					</CheckboxGroup>
+					<div slot="content" style="white-space: pre-wrap;">
+						默认只修改GIT_AUTHOR_DATE，勾选此选项时，连同修改GIT_COMMITTER_DATE
+					</div>
+				</Tooltip>
 			</span>
 			<i-switch v-model="dateSetEnable" size="large">
 				<span slot="open">
@@ -109,7 +117,8 @@ export default {
 			pin: false,
 			GPGViewerContent: '',
 			lastCommitDate: null,
-			signOffLabel: null
+			signOffLabel: null,
+			alsoReviseCommitTime: false
 		}
 	}),
 	created() {
@@ -160,7 +169,8 @@ export default {
 				message: this.message,
 				date: this.getCommitShortDate(),
 				gpg: this.GPGEnable,
-				signOff: this.SignedOffEnable
+				signOff: this.SignedOffEnable,
+				alsoReviseCommitTime: this.pageContent.alsoReviseCommitTime
 			})
 			this.refreshStatus()
 			this.$Notice.success({
