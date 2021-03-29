@@ -19,9 +19,9 @@
 			<div slot="title"><i>SSH Agent info</i></div>
 			<div slot="content" style="white-space: pre;">{{ sshAgentInfo }}</div>
 		</Poptip> -->
-		<Button type="info" ghost>
+		<Button type="info" ghost @click="fetch()">
 			<Icon type="md-arrow-round-down" />Fetch</Button>
-		<Button type="info" ghost>
+		<Button type="info" ghost @click="reset()">
 			<Icon type="md-return-left" />Reset(soft)</Button>
 		<Button type="info" ghost @click="checkout()">
 			<Icon type="md-redo" />Checkout</Button>
@@ -115,6 +115,12 @@ export default {
 		},
 		async checkout() {
 			this.branchModal = true
+		},
+		async fetch() {
+			await http.post("fetch")
+		},
+		async reset() {
+			await http.post("reset")
 		},
 		async AURefresh() {
 			this.newAUName = ""

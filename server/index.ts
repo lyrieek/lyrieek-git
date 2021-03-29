@@ -100,6 +100,19 @@ const sshAgent = function (param: string) {
 	return execa('eval $(ssh-agent -s) && ssh-add ~/.ssh/id_ed25519 && ' + param, { shell: 'bash' })
 }
 
+routes.post('/fetch', async (query: { needSSHAgent: boolean }) => {
+	if (query.needSSHAgent) {
+		return await sshAgent("git fetch")
+	}
+	const res = await execa('git', ['fetch'])
+	return res.stdout
+})
+
+routes.post('/reset', async () => {
+	const res = await execa('git', ['reset' , 'HEAD^'])
+	return res.stdout
+})
+
 routes.post('/pull', async (query: { needSSHAgent: boolean }) => {
 	if (query.needSSHAgent) {
 		return await sshAgent("git pull")
