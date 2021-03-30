@@ -7,9 +7,9 @@ interface GitStatusInfo {
     changes: Array<{ type: string, fileName: string, selected: boolean }>
 }
 
-export default async function (): Promise<GitStatusInfo> {
+export default async function (cwd?: string): Promise<GitStatusInfo> {
     const result = Object.create(null)
-    const statusContent = (await execa('git', ['status'])).stdout.split('\n')
+    const statusContent = (await execa('git', ['status'], {cwd: cwd || process.cwd()})).stdout.split('\n')
     result.branch = statusContent[0].replace('On branch ', '')
     result.branchHasUpdate = !~statusContent[1].indexOf('up to date')
     result.notPushCommits = 0

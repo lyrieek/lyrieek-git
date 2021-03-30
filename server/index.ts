@@ -263,10 +263,10 @@ routes.get('/projects', async () => {
 			currentWorkDir = item.projectPath
 		}
 		item.name = item.projectPath.split(/\\|\//).pop() || "Unnamed"
-		process.chdir(item.projectPath)
-		result.push(Object.assign(item, await gitStatus()))
+		// process.chdir(item.projectPath)
+		result.push(Object.assign(item, await gitStatus(item.projectPath)))
 	}
-	process.chdir(currentWorkDir)
+	// process.chdir(currentWorkDir)
 	return result
 })
 
