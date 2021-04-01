@@ -5,6 +5,8 @@ import gitStatus from './gitStatus'
 
 console.log("http://localhost:3516/")
 
+const defaultSSHKeyPath = '~/.ssh/id_ed25519'
+let currentProject = Object.create(null)
 let currentWorkDir = process.cwd()
 
 routes.get('/pwd', async () => {
@@ -22,6 +24,7 @@ routes.post('/cd', async (query: { dir: string, project: string }) => {
 		item.selected = false
 		if (item.name === query.project) {
 			item.selected = true
+			currentProject = item
 			currentWorkDir = item.projectPath
 			process.chdir(currentWorkDir)
 		}
@@ -97,8 +100,22 @@ routes.get('/ssh-agent', async () => {
 })
 
 const sshAgent = function (param: string) {
-	return execa('eval $(ssh-agent -s) && ssh-add ~/.ssh/id_ed25519 && ' + param, { shell: 'bash' })
+	const addKeyPath = currentProject.sshKeyPath || defaultSSHKeyPath
+	return execa(`eval $(ssh-agent -s) && ssh-add ${addKeyPath} && ${param}`, { shell: 'bash' })
 }
+
+routes.post('/testSSHKey', async () => {
+	return (await sshAgent('echo !')).stdout
+})
+
+routes.post('/sshKeyPath', async (query: { sshKeyPath: string }) => {
+	currentProject.sshKeyPath = query.sshKeyPath
+	return "success"
+})
+
+routes.get('/sshKeyPath', async () => {
+	return defaultSSHKeyPath
+})
 
 routes.post('/fetch', async (query: { needSSHAgent: boolean }) => {
 	if (query.needSSHAgent) {
@@ -109,7 +126,7 @@ routes.post('/fetch', async (query: { needSSHAgent: boolean }) => {
 })
 
 routes.post('/reset', async () => {
-	const res = await execa('git', ['reset' , 'HEAD^'])
+	const res = await execa('git', ['reset', 'HEAD^'])
 	return res.stdout
 })
 

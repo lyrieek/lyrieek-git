@@ -60,8 +60,9 @@ export default {
 	}),
 	async created() {
 		this.currentProject = this.project
-		this.$root.$on("statusUpdated", () => {
-			this.getProjects()
+		this.$root.$on("statusUpdated", async (callback) => {
+			await this.getProjects()
+			typeof callback === 'function' && callback()
 		})
 		await this.getProjects()
 		this.refreshStatus()

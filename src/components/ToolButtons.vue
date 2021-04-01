@@ -6,13 +6,27 @@
 			<Button type="info" @click="pull()">
 				<Icon type="md-arrow-round-down" />Pull</Button>
 		</ButtonGroup>
-		<span style="border-bottom: 1px solid;
+		<Tooltip placement="bottom" @on-popper-show="showSSHKeyPath" max-width="390">
+			<span style="border-bottom: 1px solid;
 			vertical-align: bottom;
 			padding: 2px;
 			border-radius: 3px;
 			color: #57c5f7;">
-			<Checkbox v-model="needSSHAgent" />SSH Agent</Checkbox>
-		</span>
+				<Checkbox v-model="needSSHAgent" />SSH Agent</Checkbox>
+			</span>
+			<div slot="content" style="width: 210px;">
+				<i style="display: block;border-bottom: 1px solid gray;line-height: 26px">
+					SSH Key Path
+					<span style="float: right;">
+						<Button style="margin-right: 5px;" size="small" v-show="!sshKeyPathEditing" @click="testSSH()">Test</Button>
+						<Button size="small" v-show="!sshKeyPathEditing" @click="sshKeyPathEditing = true" icon="md-create" shape="circle"></Button>
+						<Button size="small" v-show="sshKeyPathEditing" @click="saveSSHKeyPath()" icon="md-checkmark-circle" shape="circle"></Button>
+					</span>
+				</i>
+				<div style="padding-top: 15px" v-show="!sshKeyPathEditing">{{ sshKeyPath }}</div>
+				<Input v-show="sshKeyPathEditing" v-model="editSSHKeyPath" size="small" placeholder="SSH Key Path" />
+			</div>
+		</Tooltip>
 		<!-- <Poptip v-model="sshAgentVisible">
 			<Button type="info" ghost @click="sshAgent()">
 				<Icon type="md-lock" />SSH Agent</Button>
@@ -77,7 +91,8 @@ export default {
 		BranchWindow
 	},
 	props: {
-		maxHeight: Number
+		maxHeight: Number,
+		project: Object
 	},
 	data: () => ({
 		branchModal: false,
@@ -86,15 +101,16 @@ export default {
 		addAUVisible: false,
 		newAUName: "",
 		sshAgentVisible: false,
-		sshAgentInfo: "",
-		needSSHAgent: false
+		sshKeyPath: "",
+		needSSHAgent: false,
+		sshKeyPathEditing: false,
+		editSSHKeyPath: ""
 	}),
 	methods: {
-		async sshAgent() {
-			const data = await http.getJSON("ssh-agent")
-			this.sshAgentInfo = data.stdout + "\n"
-				+ (data.stderr)
-			this.sshAgentVisible = true
+		async showSSHKeyPath() {
+			this.sshKeyPathEditing = false
+			this.sshKeyPath = this.project.sshKeyPath || await http.text('sshKeyPath')
+			this.editSSHKeyPath = this.sshKeyPath
 		},
 		async push() {
 			const content = await http.postText("push", { needSSHAgent: this.needSSHAgent })
@@ -134,6 +150,13 @@ export default {
 		inputNewAU() {
 			this.AURefresh()
 			this.addAUVisible = true
+		},
+		async saveSSHKeyPath() {
+			await http.post('sshKeyPath', { sshKeyPath: this.editSSHKeyPath })
+			this.$root.$emit("statusUpdated", this.showSSHKeyPath)
+		},
+		async testSSH() {
+			this.$Message.success(await http.postText('testSSHKey'))
 		}
 	}
 }

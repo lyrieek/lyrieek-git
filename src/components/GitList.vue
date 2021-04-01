@@ -10,7 +10,7 @@
 			<GitLog />
 			<GitCommit />
 			<Divider />
-			<ToolButtons :maxHeight="maxHeight" />
+			<ToolButtons :project="currentProject" :maxHeight="maxHeight" />
 			<Divider />
 			<BottomBar :project="currentProject" />
 			<Divider />
