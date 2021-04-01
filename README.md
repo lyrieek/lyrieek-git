@@ -5,6 +5,8 @@ lyrieek-git is a powerful visual tool for Git! Although Git can do a lot of work
 <img src="https://badgen.net/npm/v/lyrieek-git">
 <img src="https://badgen.net/github/license/lyrieek/lyrieek-git">
 
+![](https://repository-images.githubusercontent.com/333126168/4b914880-933e-11eb-9938-d49c502a34b1)
+
 ## Install
 ```
 npm i lyrieek-git

@@ -1,6 +1,6 @@
 {
 	"name": "lyrieek-git",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"bin": "dist/index.js",
 	"scripts": {
 		"dev": "vue-cli-service serve",
