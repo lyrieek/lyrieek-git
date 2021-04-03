@@ -200,11 +200,12 @@ routes.get('/graph', async () => {
 })
 
 routes.post('/commit', async (query: { message: string, date: string, gpg: string, signOff: boolean, alsoReviseCommitTime: true }) => {
-	const commitArg = ['commit', '-m', `${query.message}`]
+	const commitArg = ['commit', '-m', `"${query.message}"`]
+	let preCmd = ""
 	if (query.date) {
 		commitArg.push('--date="' + query.date + '"')
 		if (query.alsoReviseCommitTime) {
-			await execa('SET', [`GIT_COMMITTER_DATE="${query.date}"`])
+			preCmd = `export GIT_COMMITTER_DATE="${query.date}";\\`
 		}
 	}
 	if (query.gpg) {
@@ -214,7 +215,7 @@ routes.post('/commit', async (query: { message: string, date: string, gpg: strin
 	if (query.signOff) {
 		commitArg.push("-s")
 	}
-	const [res, err] = await execa('git', commitArg, { timeout: 8000 })
+	const [res, err] = await execa(preCmd + 'git', commitArg, { shell: 'bash', timeout: 8000 })
 		.then(res => [res, null]).catch(err => [null, err])
 	if (err) {
 		throw err
