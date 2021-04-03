@@ -1,5 +1,5 @@
 <template>
-	<div style="padding: 20px">
+	<div style="padding: 10px;">
 		<Input suffix="ios-search" v-model="searchProjectText" placeholder="Filter..." style="width: auto" />
 		<ul class="project-list-view">
 			<li class="project-item-label" v-show="!searchProjectText || ~item.name.indexOf(searchProjectText)" v-for="item of projects" :key="item.projectPath" @click="changeProject(item)" :style="{background: item.selected ? '#efebeb' : 'transparent'}">
@@ -31,7 +31,7 @@
 }
 
 .project-list-view>li {
-	padding: 7px 12px;
+	padding: 6px 1px 6px 2px;
 	cursor: pointer;
 }
 
