@@ -66,12 +66,13 @@ export default {
 		async refreshStatus() {
 			const status = await http.getJSON("status")
 			this.$root.$emit("statusUpdated")
-			this.changesList.index = status.changes.filter(
-				(f) => !f.type.startsWith(" ") && !f.type.startsWith("??"))
 			this.changesList.untracked = status.changes.filter(
 				(f) => f.type.startsWith("??"))
 			this.changesList.work = status.changes.filter(
-				(f) => f.type.startsWith(" "))
+				(f) => f.type.substring(1, 2).trim())
+			this.changesList.index = status.changes.filter(
+				(f) => !f.type.startsWith(" "))
+			status.changes.filter((f) => console.log(f.type.startsWith(" ")))
 		},
 		async addAll() {
 			await http.text("addAll")
