@@ -2,7 +2,7 @@
 	<div style="padding: 10px;">
 		<Input suffix="ios-search" v-model="searchProjectText" placeholder="Filter..." style="width: auto" />
 		<ul class="project-list-view">
-			<li class="project-item-label" v-show="!searchProjectText || ~item.name.indexOf(searchProjectText)" v-for="item of projects" :key="item.projectPath" @click="changeProject(item)" :style="{background: item.selected ? '#efebeb' : 'transparent'}">
+			<li class="project-item-label" v-show="!searchProjectText || ~item.name.indexOf(searchProjectText)" v-for="item of projects" :key="item.projectPath" @click="changeProject(item)" :class="item.selected ? 'project-item-select' : ''">
 				<strong style="font-size: 15px">{{item.name}}</strong>
 				<Badge :count="item.notPushCommits" style="float: right" slot="extra" />
 			</li>
@@ -18,7 +18,12 @@
 
 <style>
 .project-item-label:hover {
-	background: rgb(197, 211, 224);
+	background-color: #efebeb;
+}
+
+.project-item-select {
+	background-color: rgb(197, 211, 224);
+	cursor: pointer;
 }
 
 .add-project-item:hover {
@@ -32,7 +37,7 @@
 
 .project-list-view>li {
 	padding: 6px 1px 6px 2px;
-	cursor: pointer;
+	cursor: default;
 }
 
 </style>
