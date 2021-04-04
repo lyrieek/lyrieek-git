@@ -1,13 +1,17 @@
 <template>
 	<ul class="file-list">
 		<li v-for="item of list" :key="item.fileName" @mouseenter="item.selected = true" @mouseleave="item.selected = false">
-			<span class="git-file-name">{{ item.fileName }}</span>
-			<span class="status-control-btn">
-				<span v-show="item.selected" @click="diff(item.fileName)">
-					<Icon type="ios-eye" /></span>
-				<span v-show="item.selected" @click="select(item)">
-					<Icon :type="icon" /></span>
-			</span>
+			<Tooltip placement="bottom" style="width: 100%;">
+				<span class="git-file-name">{{ getPathTree(item.fileName).pop() }}</span>
+				<span class="status-control-btn">
+					<span v-show="item.selected" @click="diff(item.fileName)">
+						<Icon type="ios-eye" /></span>
+					<span v-show="item.selected" @click="select(item)">
+						<Icon :type="icon" /></span>
+				</span>
+				<div slot="content" style="white-space: pre;line-clamp: 10;text-overflow: ellipsis;" v-html="displayPath(item.fileName)">
+				</div>
+			</Tooltip>
 		</li>
 	</ul>
 </template>
@@ -80,6 +84,12 @@ export default {
 			this.$GWinBox.info("Diff", diffContent, {
 				width: "1200px"
 			})
+		},
+		displayPath(path) {
+			return path.replace(/\//g, '<br>/')
+		},
+		getPathTree(path) {
+			return path.split(/\//g)
 		}
 	}
 }
