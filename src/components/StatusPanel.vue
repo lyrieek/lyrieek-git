@@ -72,7 +72,6 @@ export default {
 				(f) => f.type.substring(1, 2).trim())
 			this.changesList.index = status.changes.filter(
 				(f) => !f.type.startsWith(" "))
-			status.changes.filter((f) => console.log(f.type.startsWith(" ")))
 		},
 		async addAll() {
 			await http.text("addAll")
