@@ -247,8 +247,12 @@ routes.get('/log', async (query: { size: number, skip: number }) => {
 	}).filter((e) => e)
 })
 
-routes.get('/config', async () => {
-	const config = await execa('git', ['config', '-l'])
+routes.post('/config', async (query: { isGlobal: string }) => {
+	const param = ['config', '-l']
+	if (query.isGlobal) {
+		param.push('--global')
+	}
+	const config = await execa('git', param)
 	const configArr = config.stdout.split('\n').map((e) =>
 		({ [e.split('=')[0]]: e.replace(/[a-z.]+=/, '') }))
 	return Object.assign(Object.create(null), ...configArr)

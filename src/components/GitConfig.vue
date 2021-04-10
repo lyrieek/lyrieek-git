@@ -17,6 +17,7 @@
 			</li>
 		</ul>
 		<Modal title="Config" v-model="configWin" width="720px">
+			<Checkbox v-model="isGlobal" @on-change="refresh">Global</Checkbox>
 			<div class="config-content" :style="{'max-height': maxHeight + 'px'}">
 				<template v-for="item of config.entries()">
 					<div>{{item[0]}}</div>
@@ -80,14 +81,15 @@ export default {
 	data: () => ({
 		config: new Map(),
 		configWin: false,
-		maxHeight: window.innerHeight - 300
+		maxHeight: window.innerHeight - 300,
+		isGlobal: false
 	}),
 	mounted() {
 		this.$root.$on("refreshStatus", this.refresh)
 	},
 	methods: {
 		async refresh() {
-			const config = new Map(Object.entries(await http.getJSON("config")))
+			const config = new Map(Object.entries(await http.postData("config", { isGlobal: this.isGlobal })))
 			this.config = config
 			this.$root.config = config
 			this.$root.$emit("ConfigUpdate", config)
