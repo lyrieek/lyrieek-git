@@ -1,6 +1,6 @@
 <template>
 
-	<div style="height: 100%">
+	<div style="height: 100%" @mouseover="refreshStatus">
 		<div style="height: 100%">
 			<Split v-model="externalSplit" mode="vertical">
 				<div slot="top" style="height: 100%">
@@ -57,7 +57,8 @@ export default {
 			index: [],
 			work: [],
 			untracked: []
-		}
+		},
+		statusChangeCount: 0
 	}),
 	mounted() {
 		this.$root.$on("refreshStatus", this.refreshStatus)
@@ -65,7 +66,10 @@ export default {
 	methods: {
 		async refreshStatus() {
 			const status = await http.getJSON("status")
-			this.$root.$emit("statusUpdated")
+			if (this.statusChangeCount !== status.changes.length) {
+				this.$root.$emit("statusUpdated")
+				this.statusChangeCount = status.changes.length
+			}
 			this.changesList.untracked = status.changes.filter(
 				(f) => f.type.startsWith("??"))
 			this.changesList.work = status.changes.filter(
