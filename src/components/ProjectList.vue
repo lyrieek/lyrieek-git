@@ -65,17 +65,17 @@ export default {
 	}),
 	async created() {
 		this.currentProject = this.project
+		await this.getProjects()
 		this.$root.$on("statusUpdated", async (callback) => {
 			await this.getProjects()
 			typeof callback === 'function' && callback()
 		})
-		await this.getProjects()
-		this.refreshStatus()
 	},
 	methods: {
 		async changeProject(e) {
 			this.currentProject.index = Number(e.index)
 			this.projectsCache = await http.postData("cd", { project: e.name })
+			await this.getProjects()
 			this.refreshStatus()
 		},
 		async getProjects() {

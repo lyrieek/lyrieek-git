@@ -67,6 +67,10 @@ export default {
 		},
 		openHostingSite() {
 			window.open(this.hostingSiteURL)
+		},
+		refreshStatus() {
+			this.$root.$emit("refreshStatus")
+			this.$root.$emit("statusUpdated")
 		}
 	}
 }
