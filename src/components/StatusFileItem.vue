@@ -1,6 +1,6 @@
 <template>
 	<ul class="file-list">
-		<li v-for="item of list" :key="item.fileName" @mouseenter="item.selected = true" @mouseleave="item.selected = false">
+		<li v-for="item of list" :key="item.fileName" @mouseenter="setItem(item, true)" @mouseleave="setItem(item, false)">
 			<Tooltip placement="bottom" style="width: 100%;">
 				<span class="git-file-name">{{ getPathTree(item.fileName).pop() }}</span>
 				<span class="status-control-btn">
@@ -90,6 +90,9 @@ export default {
 		},
 		getPathTree(path) {
 			return path.split(/\//g)
+		},
+		setItem(item, val) {
+			this.$set(item, 'selected', val)
 		}
 	}
 }

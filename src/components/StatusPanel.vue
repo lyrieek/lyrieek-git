@@ -1,6 +1,6 @@
 <template>
 
-	<div style="height: 100%" @mouseover="refreshStatus">
+	<div style="height: 100%">
 		<div style="height: 100%">
 			<Split v-model="externalSplit" mode="vertical">
 				<div slot="top" style="height: 100%">
