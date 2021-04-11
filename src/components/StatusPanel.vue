@@ -58,13 +58,18 @@ export default {
 			work: [],
 			untracked: []
 		},
-		statusChangeCount: 0
+		statusChangeCount: 0,
+		lastRefreshDate: Date.now()
 	}),
 	mounted() {
 		this.$root.$on("refreshStatus", this.refreshStatus)
 	},
 	methods: {
 		async refreshStatus() {
+			if (this.lastRefreshDate + 1200 > Date.now()) {
+				return
+			}
+			this.lastRefreshDate = Date.now()
 			const status = await http.getJSON("status")
 			if (this.statusChangeCount !== status.changes.length) {
 				this.$root.$emit("statusUpdated")
