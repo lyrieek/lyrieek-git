@@ -1,32 +1,30 @@
 <template>
 	<div id="main-control-button" class="toolbar-buttons">
-		<ButtonGroup>
-			<Button type="success" @click="push()">
-				<Icon type="md-arrow-round-up" />Push</Button>
-			<Button type="info" @click="pull()">
-				<Icon type="md-arrow-round-down" />Pull</Button>
-		</ButtonGroup>
-		<Tooltip placement="bottom" @on-popper-show="showSSHKeyPath" max-width="390">
-			<span style="border-bottom: 1px solid;
-			vertical-align: bottom;
-			padding: 2px;
-			border-radius: 3px;
-			color: #57c5f7;">
-				<Checkbox v-model="needSSHAgent" />SSH Agent</Checkbox>
+		<Button type="success" @click="push()">
+			<Icon type="md-arrow-round-up" />Push</Button>
+		<span class="u-checkboxs">
+			<span>
+				<Checkbox v-model="needForce" />Force</Checkbox></span>
+			<span>
+				<Tooltip placement="bottom" @on-popper-show="showSSHKeyPath" max-width="390">
+					<Checkbox v-model="needSSHAgent" />SSH Agent</Checkbox>
+					<div slot="content" style="width: 210px;">
+						<i style="display: block;border-bottom: 1px solid gray;line-height: 26px">
+							SSH Key Path
+							<span style="float: right;">
+								<Button style="margin-right: 5px;" size="small" v-show="!sshKeyPathEditing" @click="testSSH()">Test</Button>
+								<Button size="small" v-show="!sshKeyPathEditing" @click="sshKeyPathEditing = true" icon="md-create" shape="circle"></Button>
+								<Button size="small" v-show="sshKeyPathEditing" @click="saveSSHKeyPath()" icon="md-checkmark-circle" shape="circle"></Button>
+							</span>
+						</i>
+						<div style="padding-top: 15px" v-show="!sshKeyPathEditing">{{ sshKeyPath }}</div>
+						<Input v-show="sshKeyPathEditing" v-model="editSSHKeyPath" size="small" placeholder="SSH Key Path" />
+					</div>
+				</Tooltip>
 			</span>
-			<div slot="content" style="width: 210px;">
-				<i style="display: block;border-bottom: 1px solid gray;line-height: 26px">
-					SSH Key Path
-					<span style="float: right;">
-						<Button style="margin-right: 5px;" size="small" v-show="!sshKeyPathEditing" @click="testSSH()">Test</Button>
-						<Button size="small" v-show="!sshKeyPathEditing" @click="sshKeyPathEditing = true" icon="md-create" shape="circle"></Button>
-						<Button size="small" v-show="sshKeyPathEditing" @click="saveSSHKeyPath()" icon="md-checkmark-circle" shape="circle"></Button>
-					</span>
-				</i>
-				<div style="padding-top: 15px" v-show="!sshKeyPathEditing">{{ sshKeyPath }}</div>
-				<Input v-show="sshKeyPathEditing" v-model="editSSHKeyPath" size="small" placeholder="SSH Key Path" />
-			</div>
-		</Tooltip>
+		</span>
+		<Button type="info" @click="pull()">
+			<Icon type="md-arrow-round-down" />Pull</Button>
 		<!-- <Poptip v-model="sshAgentVisible">
 			<Button type="info" ghost @click="sshAgent()">
 				<Icon type="md-lock" />SSH Agent</Button>
@@ -79,6 +77,19 @@
 	margin-right: 10px;
 }
 
+.u-checkboxs>span {
+	margin: 5px;
+}
+
+.u-checkbox,
+.u-checkboxs>span {
+	border-bottom: 1px solid;
+	vertical-align: bottom;
+	padding: 2px;
+	border-radius: 3px;
+	color: #57c5f7;
+}
+
 </style>
 
 <script>
@@ -103,6 +114,7 @@ export default {
 		sshAgentVisible: false,
 		sshKeyPath: "",
 		needSSHAgent: false,
+		needForce: false,
 		sshKeyPathEditing: false,
 		editSSHKeyPath: ""
 	}),
@@ -117,7 +129,7 @@ export default {
 			this.editSSHKeyPath = this.sshKeyPath
 		},
 		async push() {
-			const content = await http.postText("push", { needSSHAgent: this.needSSHAgent })
+			const content = await http.postText("push", { needSSHAgent: this.needSSHAgent, force: this.needForce })
 			this.$Notice.success({
 				title: 'Push',
 				desc: content,

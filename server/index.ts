@@ -138,11 +138,15 @@ routes.post('/pull', async (query: { needSSHAgent: boolean }) => {
 	return res.stdout
 })
 
-routes.post('/push', async (query: { needSSHAgent: boolean }) => {
-	if (query.needSSHAgent) {
-		return await sshAgent("git push")
+routes.post('/push', async (query: { needSSHAgent: boolean, force: boolean }) => {
+	const command = ['push']
+	if (query.force) {
+		command.push("--force")
 	}
-	const res = await execa('git', ['push'])
+	if (query.needSSHAgent) {
+		return await sshAgent("git " + command.join(" "))
+	}
+	const res = await execa('git', command)
 	if (!res.stdout) {
 		res.stdout = res.stderr
 	}
