@@ -154,6 +154,7 @@ export default {
 		},
 		refreshStatus() {
 			this.$root.$emit("refreshStatus")
+			this.$root.$emit("statusUpdated")
 		},
 		getCommitShortDate() {
 			if (!this.dateSetEnable) {

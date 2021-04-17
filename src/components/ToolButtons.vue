@@ -37,7 +37,7 @@
 			<Icon type="md-arrow-round-down" />Fetch</Button>
 		<Button type="info" ghost @click="reset()">
 			<Icon type="md-return-left" />Reset(soft)</Button>
-		<Button type="info" ghost @click="checkout()">
+		<Button type="info" ghost @click="openCheckoutWin()">
 			<Icon type="md-redo" />Checkout</Button>
 
 		<Button type="info" ghost @click="assumeUnchangedWin = true">
@@ -107,6 +107,10 @@ export default {
 		editSSHKeyPath: ""
 	}),
 	methods: {
+		refreshStatus() {
+			this.$root.$emit("refreshStatus")
+			this.$root.$emit("statusUpdated")
+		},
 		async showSSHKeyPath() {
 			this.sshKeyPathEditing = false
 			this.sshKeyPath = this.project.sshKeyPath || await http.text('sshKeyPath')
@@ -123,20 +127,25 @@ export default {
 		},
 		async pull() {
 			const content = await http.postText("pull", { needSSHAgent: this.needSSHAgent })
+			this.refreshStatus()
 			this.$Notice.success({
 				title: 'Pull',
 				desc: content,
 				duration: 0
 			})
 		},
-		async checkout() {
+		async openCheckoutWin() {
 			this.branchModal = true
 		},
 		async fetch() {
 			await http.post("fetch")
+			this.refreshStatus()
+			this.$Message.success("Fetch done.")
 		},
 		async reset() {
 			await http.post("reset")
+			this.refreshStatus()
+			this.$Message.success("Reset done.")
 		},
 		async AURefresh() {
 			this.newAUName = ""
