@@ -89,7 +89,7 @@ export default {
 			return path.replace(/\//g, '<br>/')
 		},
 		getPathTree(path) {
-			return path.split(/\//g)
+			return path.split(/\/(?=[a-zA-Z]{1,})/g)
 		},
 		setItem(item, val) {
 			this.$set(item, 'selected', val)

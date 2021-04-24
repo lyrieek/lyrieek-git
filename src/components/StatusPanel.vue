@@ -78,9 +78,9 @@ export default {
 			this.changesList.untracked = status.changes.filter(
 				(f) => f.type.startsWith("??"))
 			this.changesList.work = status.changes.filter(
-				(f) => f.type.substring(1, 2).trim())
+				(f) => !f.type.startsWith("?") && f.type.substring(1, 2).trim())
 			this.changesList.index = status.changes.filter(
-				(f) => !f.type.startsWith(" "))
+				(f) => !f.type.startsWith("?") && !f.type.startsWith(" "))
 		},
 		async addAll() {
 			await http.text("addAll")
