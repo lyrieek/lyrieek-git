@@ -178,6 +178,28 @@ routes.post('/update-index', async (query: { item: string, control: string }) =>
 	return res.stdout
 })
 
+routes.post('/stash', async (query: { control: string, param: string }) => {
+	const command = ['stash']
+	if (!query.control) {
+		query.control = "list"
+	}
+	if (query.control ===  "push") {
+		query.param = `"${query.param}"`
+	}
+	command.push(query.control)
+	if (query.param) {
+		if (query.control ===  "push") {
+			command.push("-m")
+		}
+		command.push(query.param)
+	}
+	const res = await execa('git', command)
+	if (query.control === "list") {
+		return res.stdout.split('\n')
+	}
+	return res.stdout
+})
+
 routes.get('/branch', async () => {
 	const res = await execa('git', ['branch'])
 	const branchs: {

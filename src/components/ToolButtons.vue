@@ -40,6 +40,9 @@
 
 		<Button type="info" ghost @click="assumeUnchangedWin = true">
 			<Icon type="md-eye-off" />Assume Unchanged List</Button>
+		<Button type="info" ghost @click="stashWin = true">
+			<Icon type="ios-archive" />Stash</Button>
+
 		<BranchWindow v-bind:visible.sync="branchModal" :maxHeight="maxHeight" />
 		<Modal title="Assume Unchange(假定不变)" v-model="assumeUnchangedWin" @on-visible-change="AURefresh">
 			<List border size="small">
@@ -51,7 +54,7 @@
 						</li>
 					</template>
 				</ListItem>
-				<ListItem v-show="addAUVisible">
+				<ListItem v-show="addNewItemVisible">
 					<span class="ivu-list-item-meta-content">
 						<Input type="text" v-model="newAUName" placeholder="输入新的假定项"></Input>
 					</span>
@@ -60,13 +63,46 @@
 							<Button icon="ios-trash" type="success" size="small" @click="AUControl(newAUName, 'hide')">添加</Button>
 						</li>
 						<li>
-							<Button icon="ios-close-circle" size="small" @click="addAUVisible = false">取消</Button>
+							<Button icon="ios-close-circle" size="small" @click="addNewItemVisible = false">取消</Button>
 						</li>
 					</template>
 				</ListItem>
 			</List>
 			<div style="text-align: center;margin-top: 10px">
-				<Button v-show="!addAUVisible" icon="md-add" type="success" @click="inputNewAU()">添加新的假定项</Button>
+				<Button v-show="!addNewItemVisible" icon="md-add" type="success" @click="addNewItemVisible = true">添加新的假定项</Button>
+			</div>
+		</Modal>
+		<Modal title="Stash" v-model="stashWin"  @on-visible-change="stashRefresh">
+			<List border size="small">
+				<ListItem v-for="item of stashList" :key="item">
+					<span class="ivu-list-item-meta-content">{{item}}</span>
+					<template slot="action">
+						<li>
+							<Button icon="md-checkmark-circle" type="primary" size="small" @click="stashControl('apply', item)">应用</Button>
+						</li>
+					</template>
+					<template slot="action">
+						<li>
+							<Button icon="ios-trash" type="error" size="small" @click="stashControl('drop', item)">删除</Button>
+						</li>
+					</template>
+				</ListItem>
+				<ListItem v-show="addNewItemVisible">
+					<span class="ivu-list-item-meta-content">
+						<Input type="text" v-model="newStashRemark" placeholder="备注"></Input>
+					</span>
+					<template slot="action">
+						<li>
+							<Button icon="ios-trash" type="success" size="small" @click="stashControl('push', newStashRemark)">添加</Button>
+						</li>
+						<li>
+							<Button icon="ios-close-circle" size="small" @click="addNewItemVisible = false">取消</Button>
+						</li>
+					</template>
+				</ListItem>
+			</List>
+			<div style="text-align: center;margin-top: 10px">
+				<Button v-show="!addNewItemVisible" icon="md-add" type="success" @click="addNewItemVisible = true">存储</Button>
 			</div>
 		</Modal>
 	</div>
@@ -109,14 +145,17 @@ export default {
 		branchModal: false,
 		assumeUnchangedWin: false,
 		assumeUnchangedList: [],
-		addAUVisible: false,
+		stashList: [],
+		addNewItemVisible: false,
 		newAUName: "",
 		sshAgentVisible: false,
 		sshKeyPath: "",
 		needSSHAgent: false,
 		needForce: false,
 		sshKeyPathEditing: false,
-		editSSHKeyPath: ""
+		editSSHKeyPath: "",
+		stashWin: false,
+		newStashRemark: ""
 	}),
 	methods: {
 		refreshStatus() {
@@ -163,14 +202,25 @@ export default {
 			this.newAUName = ""
 			this.assumeUnchangedList = await http.postData("update-index")
 		},
+		async stashRefresh() {
+			this.newStashRemark = ""
+			this.stashList = await http.postData("stash")
+		},
 		async AUControl(item, control) {
 			await http.post("update-index", { item, control })
 			this.AURefresh()
 			this.$root.$emit("refreshStatus")
 		},
-		inputNewAU() {
-			this.AURefresh()
-			this.addAUVisible = true
+		async stashControl(control, param) {
+			const info = await http.postText("stash", { control, param: control === 'push' ? param : param.split(":")[0] })
+			if (info) {
+				this.$Notice.success({
+					title: 'Stash',
+					desc: info
+				})
+			}
+			this.stashRefresh()
+			this.$root.$emit("refreshStatus")
 		},
 		async saveSSHKeyPath() {
 			await http.post('sshKeyPath', { sshKeyPath: this.editSSHKeyPath })
