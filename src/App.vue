@@ -9,9 +9,7 @@
 						Lyrieek Git
 					</div>
 					<div class="layout-nav" style="margin-right: 0px;">
-						<MenuItem name="1">
-						关于
-						</MenuItem>
+						<MenuItem name="1" v-html="$t('message.about')"></MenuItem>
 					</div>
 				</Menu>
 			</Header>
