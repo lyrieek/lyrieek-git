@@ -1,5 +1,7 @@
 {
     "message": {
+        "ok": "确认",
+        "cancel": "取消",
         "about": "关于",
         "addTag": "添加标签",
         "workPath": "工作目录",
@@ -16,6 +18,10 @@
         "setCommitDate": "设置提交时间",
         "setLastCommitTime": "设置为上次提交时间",
         "addRandomTime": "随机增加一些时间",
-        "clickMsgCopyTips": "双击commit message将自动复制"
+        "clickMsgCopyTips": "双击commit message将自动复制",
+        "version": "版本",
+        "author": "作者",
+        "email": "邮箱",
+        "license": "许可"
     }
 }

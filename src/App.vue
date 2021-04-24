@@ -18,13 +18,13 @@
 			</Content>
 			<Footer class="layout-footer-center">2021 &copy; Lyrieek</Footer>
 		</Layout>
-		<Modal title="About" v-model="aboutWinVisible">
+		<Modal title="About" v-model="aboutWinVisible" footer-hide>
 			<h3>Lyrieek-Git</h3>
 			<ul>
-				<li>版本: <em>v0.1.2-Alpha</em></li>
-				<li>作者: <em>lyrieek</em></li>
-				<li>邮箱: <em>lyrieek@qq.com</em></li>
-				<li>许可: <em>AGPL(GNU AFFERO GENERAL PUBLIC LICENSE)</em></li>
+				<li>{{ $t("message.version") }}: <em>v0.1.2-Alpha</em></li>
+				<li>{{ $t("message.author") }}: <em>lyrieek</em></li>
+				<li>{{ $t("message.email") }}: <em>lyrieek@qq.com</em></li>
+				<li>{{ $t("message.license") }}: <em>AGPL(GNU AFFERO GENERAL PUBLIC LICENSE)</em></li>
 				<li style="text-align: right;">Copyleft Ɔ 2021 lyrieek</li>
 			</ul>
 		</Modal>

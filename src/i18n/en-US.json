@@ -1,5 +1,7 @@
 {
     "message": {
+        "ok": "OK",
+        "cancel": "Cancel",
         "about": "About",
         "addTag": "Add Tag",
         "workPath": "Work Path",
@@ -16,6 +18,10 @@
         "setCommitDate": "Set commit time",
         "setLastCommitTime": "Set last commit time",
         "addRandomTime": "Add random time",
-        "clickMsgCopyTips": "Double-clicking Commit Message will automatically copy"
+        "clickMsgCopyTips": "Double-clicking Commit Message will automatically copy",
+        "version": "Version",
+        "author": "Author",
+        "email": "Email",
+        "license": "License"
     }
 }
