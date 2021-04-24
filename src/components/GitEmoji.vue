@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<Poptip title="Title" content="content" placement="bottom-start" v-model="visible">
-			<Button size="small">😎Git Emoji选择</Button>
+			<Button size="small">😎{{ $t("message.addGitEmoji") }}</Button>
 			<div slot="title">
 				<Input v-model="searchEmojiText" @on-change="search()" placeholder="Search emoji" size="small" style="width: 300px">
 				<Icon type="ios-search" slot="suffix" />

@@ -1,5 +1,21 @@
 {
     "message": {
-        "about": "关于"
+        "about": "关于",
+        "addTag": "添加标签",
+        "workPath": "工作目录",
+        "seeAll": "查看全部",
+        "addGitEmoji": "添加Git Emoji",
+        "addNewProject": "添加新项目",
+        "refresh": "刷新",
+        "openIn": "打开",
+        "folder": "文件夹",
+        "updateConfig": "修改配置",
+        "newFile": "新文件",
+        "workArea": "工作区",
+        "indexArea": "暂存区",
+        "setCommitDate": "设置提交时间",
+        "setLastCommitTime": "设置为上次提交时间",
+        "addRandomTime": "随机增加一些时间",
+        "clickMsgCopyTips": "双击commit message将自动复制"
     }
 }

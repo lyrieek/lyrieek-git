@@ -4,8 +4,8 @@
 		<Input v-model="message" maxlength="100" @on-change="unscrambleMsg" @on-blur="commitInfoUpdate()" @on-focus="refreshStatus()" :rows=3 show-word-limit type="textarea" placeholder="Commit message" style="width: 100%" />
 		<div id="dateSetControl">
 			<span v-show="dateSetEnable">
-				<Button @click="setCommitTime(pageContent.lastCommitDate)" style="margin-right: 5px">设为上一次提交时间</Button>
-				<Button @click="appendTime()" style="margin-right: 5px">随机增加一些时间</Button>
+				<Button @click="setCommitTime(pageContent.lastCommitDate)" style="margin-right: 5px">{{ $t("message.setLastCommitTime") }}</Button>
+				<Button @click="appendTime()" style="margin-right: 5px">{{ $t("message.addRandomTime") }}</Button>
 				<DatePicker v-model="date" type="date" placeholder="Commit date" style="width: 120px"></DatePicker>
 				<TimePicker v-model="time" format="HH:mm:ss" placeholder="Commit time" style="width: 120px"></TimePicker>
 				<Input v-model="zone" placeholder="Time zone" style="width: 85px" />
@@ -38,9 +38,9 @@
 			</span>
 			<i-switch v-model="dateSetEnable" size="large">
 				<span slot="open">
-					<Icon type="ios-clock-outline" />设定日期</span>
+					<Icon type="ios-clock-outline" />{{ $t("message.setCommitDate") }}</span>
 				<span slot="close">
-					<Icon type="md-close" />设定日期</span>
+					<Icon type="md-close" />{{ $t("message.setCommitDate") }}</span>
 			</i-switch>
 		</div>
 		<div style="margin-top: 10px; text-align: right">
@@ -77,7 +77,7 @@
 }
 
 #dateSetControl .ivu-switch {
-	width: 90px;
+	width: 140px;
 	height: 30px;
 	line-height: 30px;
 	vertical-align: middle;
@@ -85,7 +85,7 @@
 }
 
 #dateSetControl .ivu-switch-checked:after {
-	left: 70px !important;
+	left: 110px !important;
 	top: 5px !important;
 }
 

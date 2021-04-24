@@ -7,7 +7,7 @@
 		</h2>
 		<div style="font-size: 12px;padding-left: 7px">{{ $root.config.get("remote.origin.url") }}</div>
 		<div style="margin-top: 12px;">
-			<span @click="refresh()">工作目录:</span>
+			<span @click="refresh()">{{ $t("message.workPath") }}:</span>
 			<span @click="currentPwdModal = true" class="pwd" v-text="currentPwd"></span>
 		</div>
 		<div style="display: flex;flex-wrap: wrap">
@@ -21,7 +21,7 @@
 				<Tag color="purple">{{ item }}</Tag>
 			</div>
 			<div>
-				<Button icon="ios-add" type="dashed" size="small" @click="addTag()">添加标签</Button>
+				<Button icon="ios-add" type="dashed" size="small" @click="addTag()">{{$t("message.addTag")}}</Button>
 			</div>
 		</div>
 		<Modal v-model="currentPwdModal" title="切换工作目录" :footer-hide=true width=570>

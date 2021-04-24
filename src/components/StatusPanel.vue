@@ -7,21 +7,21 @@
 					<Split v-model="unindexedSplit" mode="vertical">
 						<div slot="top" class="git-area">
 							<div>
-								<Button size="small" @click="refreshStatus()" icon="md-refresh">刷新</Button>
-								<Button size="small" @click="addAll()" icon="md-add">Add .</Button>
+								<Button size="small" @click="refreshStatus()" icon="md-refresh">{{ $t("message.refresh") }}</Button>
+								<Button size="small" @click="addAll()" icon="md-add">Add All</Button>
 								<Button size="small" @click="undo()" icon="md-return-left">Undo</Button>
 							</div>
-							<Divider>新文件</Divider>
+							<Divider>{{ $t("message.newFile") }}</Divider>
 							<StatusFileItem :list="changesList.untracked" />
 						</div>
 						<div slot="bottom" class="git-area">
-							<Divider>工作区</Divider>
+							<Divider>{{ $t("message.workArea") }}</Divider>
 							<StatusFileItem :list="changesList.work" />
 						</div>
 					</Split>
 				</div>
 				<div slot="bottom" class="git-area">
-					<Divider>暂存区</Divider>
+					<Divider>{{ $t("message.indexArea") }}</Divider>
 					<StatusFileItem recall :list="changesList.index" icon="md-arrow-round-up" />
 				</div>
 			</Split>

@@ -2,11 +2,11 @@
 	<div style="margin: 10px 0px">
 		<div>
 			<strong>Log:</strong>
-			<Button size="small" @click="gitLogModalDisplay=true">查看全部</Button>
+			<Button size="small" @click="gitLogModalDisplay=true">{{ $t("message.seeAll") }}</Button>
 			<Tooltip placement="right">
 				<Icon type="ios-information-circle-outline" style="margin-left: 5px" />
-				<div slot="content">
-					<span>双击commit message将自动复制</span>
+				<div slot="content" style="white-space: normal;">
+					<span>{{ $t("message.clickMsgCopyTips") }}</span>
 				</div>
 			</Tooltip>
 		</div>

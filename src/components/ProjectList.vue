@@ -9,7 +9,7 @@
 			<li class="add-project-item">
 				<div style="text-align: center; width: 100%">
 					<Icon type="md-add" />
-					添加新项目
+					{{ $t("message.addNewProject") }}
 				</div>
 			</li>
 		</ul>

@@ -2,15 +2,15 @@
 	<div>
 		<div class="toolbar-buttons">
 			<Button type="primary" @click="refreshStatus()" ghost>
-				<Icon type="md-refresh" />刷新</Button>
+				<Icon type="md-refresh" />{{ $t("message.refresh") }}</Button>
 			<Button type="primary" @click="openFolder()" ghost>
-				<Icon type="ios-folder-open" />打开文件夹</Button>
+				<Icon type="ios-folder-open" />{{ $t("message.openIn") }}{{ $t("message.folder") }}</Button>
 			<Button type="primary" @click="openHostingSite()" ghost>
-				<Icon type="ios-cloud" />打开{{ getHostingSite(this.$root.config.get("remote.origin.url")) }}</Button>
+				<Icon type="ios-cloud" />{{ $t("message.openIn") }}{{ getHostingSite(this.$root.config.get("remote.origin.url")) }}</Button>
 		</div>
 		<div class="toolbar-buttons" style="margin-top: 10px">
 			<Button type="primary" @click="configModal = true">
-				<Icon type="md-settings" />修改配置</Button>
+				<Icon type="md-settings" />{{ $t("message.updateConfig") }}</Button>
 		</div>
 		<Modal v-model="configModal" title="修改" @on-ok="updateConfig">
 			<Form :label-width="80">
