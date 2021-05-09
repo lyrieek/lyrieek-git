@@ -18,10 +18,13 @@
         "setCommitDate": "设置提交时间",
         "setLastCommitTime": "设置为上次提交时间",
         "addRandomTime": "随机增加一些时间",
+        "reviseCommitTime": "同步修改COMMIT_TIME",
         "clickMsgCopyTips": "双击commit message将自动复制",
         "version": "版本",
         "author": "作者",
         "email": "邮箱",
-        "license": "许可"
+        "license": "许可",
+        "update": "修改",
+        "projectName": "项目名"
     }
 }

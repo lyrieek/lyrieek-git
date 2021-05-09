@@ -16,7 +16,7 @@
 				<span v-text="config.get('core.autocrlf')"></span>
 			</li>
 		</ul>
-		<Modal title="Config" v-model="configWin" width="720px">
+		<Modal title="Config" v-model="configWin" width="720px" footer-hide>
 			<Checkbox v-model="isGlobal" @on-change="refresh">Global</Checkbox>
 			<div class="config-content" :style="{'max-height': maxHeight + 'px'}">
 				<template v-for="item of config.entries()">

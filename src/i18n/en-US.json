@@ -18,10 +18,13 @@
         "setCommitDate": "Set commit time",
         "setLastCommitTime": "Set last commit time",
         "addRandomTime": "Add random time",
+        "reviseCommitTime": "Also revise COMMIT_TIME",
         "clickMsgCopyTips": "Double-clicking Commit Message will automatically copy",
         "version": "Version",
         "author": "Author",
         "email": "Email",
-        "license": "License"
+        "license": "License",
+        "update": "Update",
+        "projectName": "Project Name"
     }
 }

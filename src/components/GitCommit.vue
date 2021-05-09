@@ -29,7 +29,7 @@
 				</Tooltip>
 				<Tooltip placement="bottom">
 					<CheckboxGroup>
-						<Checkbox label="Also revise commit time" border style="margin: 0px 5px;padding: 0px 0px 0px 5px;vertical-align: middle;" v-model="pageContent.alsoReviseCommitTime"></Checkbox>
+						<Checkbox :label="$t('message.reviseCommitTime')" border style="margin: 0px 5px;padding: 0px 0px 0px 5px;vertical-align: middle;" v-model="pageContent.alsoReviseCommitTime"></Checkbox>
 					</CheckboxGroup>
 					<div slot="content" style="white-space: pre-wrap;">
 						默认只修改GIT_AUTHOR_DATE，勾选此选项时，连同修改GIT_COMMITTER_DATE

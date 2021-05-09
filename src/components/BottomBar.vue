@@ -12,9 +12,9 @@
 			<Button type="primary" @click="configModal = true">
 				<Icon type="md-settings" />{{ $t("message.updateConfig") }}</Button>
 		</div>
-		<Modal v-model="configModal" title="修改" @on-ok="updateConfig">
+		<Modal v-model="configModal" :title="$t('message.update')" @on-ok="updateConfig" :ok-text="$t('message.ok')" :cancel-text="$t('message.cancel')">
 			<Form :label-width="80">
-				<FormItem label="项目名">
+				<FormItem :label="$t('message.projectName')">
 					<Input type="text" v-model="project.name"></Input>
 				</FormItem>
 			</Form>

@@ -2,6 +2,8 @@ export default {
 	parameter: (title, content, options) => Object.assign({
 		title: title,
 		width: "700px",
+		okText: 'OK',
+		cancelText: 'Cancel',
 		render: (h) =>
 			h('div', {
 				style: {

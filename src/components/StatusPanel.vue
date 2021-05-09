@@ -59,7 +59,7 @@ export default {
 			untracked: []
 		},
 		statusChangeCount: 0,
-		lastRefreshDate: Date.now()
+		lastRefreshDate: 0
 	}),
 	mounted() {
 		this.$root.$on("refreshStatus", this.refreshStatus)
