@@ -17,14 +17,14 @@
 				</Tooltip>
 				<Tooltip placement="bottom">
 					<Button shape="circle" icon="md-refresh" @click="commitInfoUpdate()" style="margin-left: 2px"></Button>
-					<div slot="content">同步现在的时间</div>
+					<div slot="content">{{ $t("message.syncNowTime") }}</div>
 				</Tooltip>
 				<Tooltip placement="bottom">
 					<CheckboxGroup>
 						<Checkbox label="Pin" border style="margin: 0px 5px;padding: 0px 0px 0px 5px;vertical-align: middle;" v-model="pageContent.pin"></Checkbox>
 					</CheckboxGroup>
 					<div slot="content" style="white-space: pre-wrap;">
-						<Icon type="ios-outlet-outline" />选中后不再自动同步时间，未选中在写完commit message之后自动同步当前时间
+						<Icon type="ios-outlet-outline" />{{ $t("message.pinTime") }}
 					</div>
 				</Tooltip>
 				<Tooltip placement="bottom">
@@ -32,7 +32,7 @@
 						<Checkbox :label="$t('message.reviseCommitTime')" border style="margin: 0px 5px;padding: 0px 0px 0px 5px;vertical-align: middle;" v-model="pageContent.alsoReviseCommitTime"></Checkbox>
 					</CheckboxGroup>
 					<div slot="content" style="white-space: pre-wrap;">
-						默认只修改GIT_AUTHOR_DATE，勾选此选项时，连同修改GIT_COMMITTER_DATE
+						{{ $t("message.reviseCommitTimeTips") }}
 					</div>
 				</Tooltip>
 			</span>
@@ -65,7 +65,7 @@
 				</div>
 			</Tooltip>
 			<Button type="success" @click="commit()">
-				<Icon type="md-checkmark" />Commit</Button>
+				<Icon type="md-checkmark" />{{ $t("message.commit") }}</Button>
 		</div>
 	</div>
 </template>
@@ -166,6 +166,12 @@ export default {
 			return moment(this.date).format('YYYY-MM-DD') + "T" + this.time + this.zone
 		},
 		async commit() {
+			if (!this.date) {
+				return this.$Notice.error({
+					title: this.$i18n.t("message.commit"),
+					desc: this.$i18n.t("message.notFillTimeTips")
+				})
+			}
 			const res = await http.postText('commit', {
 				message: this.message,
 				date: this.getCommitShortDate(),
@@ -175,7 +181,7 @@ export default {
 			})
 			this.refreshStatus()
 			this.$Notice.success({
-				title: 'Commit',
+				title: this.$i18n.t("message.commit"),
 				desc: res
 			})
 			this.clearCommitInfo()

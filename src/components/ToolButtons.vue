@@ -41,7 +41,7 @@
 		<Button type="info" ghost @click="assumeUnchangedWin = true">
 			<Icon type="md-eye-off" />Assume Unchanged List</Button>
 		<Button type="info" ghost @click="stashWin = true">
-			<Icon type="ios-archive" />Stash</Button>
+			<Icon type="ios-archive" />{{ $t("message.stash") }}</Button>
 
 		<BranchWindow v-bind:visible.sync="branchModal" :maxHeight="maxHeight" />
 		<Modal title="Assume Unchange(假定不变)" v-model="assumeUnchangedWin" @on-visible-change="AURefresh">
@@ -50,59 +50,59 @@
 					<span class="ivu-list-item-meta-content">{{item}}</span>
 					<template slot="action">
 						<li>
-							<Button icon="ios-trash" type="error" size="small" @click="AUControl(item, 'show')">移出列表</Button>
+							<Button icon="ios-trash" type="error" size="small" @click="AUControl(item, 'show')">{{ $t("message.remove") }}</Button>
 						</li>
 					</template>
 				</ListItem>
 				<ListItem v-show="addNewItemVisible">
 					<span class="ivu-list-item-meta-content">
-						<Input type="text" v-model="newAUName" placeholder="输入新的假定项"></Input>
+						<Input type="text" v-model="newAUName" :placeholder="$t('message.inputFilterItem')"></Input>
 					</span>
 					<template slot="action">
 						<li>
-							<Button icon="ios-trash" type="success" size="small" @click="AUControl(newAUName, 'hide')">添加</Button>
+							<Button icon="md-checkmark" type="success" size="small" @click="AUControl(newAUName, 'hide')">{{ $t("message.add") }}</Button>
 						</li>
 						<li>
-							<Button icon="ios-close-circle" size="small" @click="addNewItemVisible = false">取消</Button>
+							<Button icon="ios-close-circle" size="small" @click="addNewItemVisible = false">{{ $t("message.cancel") }}</Button>
 						</li>
 					</template>
 				</ListItem>
 			</List>
 			<div style="text-align: center;margin-top: 10px">
-				<Button v-show="!addNewItemVisible" icon="md-add" type="success" @click="addNewItemVisible = true">添加新的假定项</Button>
+				<Button v-show="!addNewItemVisible" icon="md-add" type="success" @click="addNewItemVisible = true">{{ $t("message.addAUItem") }}</Button>
 			</div>
 		</Modal>
-		<Modal title="Stash" v-model="stashWin"  @on-visible-change="stashRefresh">
+		<Modal :title="$t('message.stash')" v-model="stashWin"  @on-visible-change="stashRefresh">
 			<List border size="small">
 				<ListItem v-for="item of stashList" :key="item">
-					<span class="ivu-list-item-meta-content">{{item}}</span>
+					<span class="ivu-list-item-meta-content">{{ item }}</span>
 					<template slot="action">
 						<li>
-							<Button icon="md-checkmark-circle" type="primary" size="small" @click="stashControl('apply', item)">应用</Button>
+							<Button icon="md-checkmark-circle" type="primary" size="small" @click="stashControl('apply', item)">{{ $t("message.apply") }}</Button>
 						</li>
 					</template>
 					<template slot="action">
 						<li>
-							<Button icon="ios-trash" type="error" size="small" @click="stashControl('drop', item)">删除</Button>
+							<Button icon="ios-trash" type="error" size="small" @click="stashControl('drop', item)">{{ $t("message.remove") }}</Button>
 						</li>
 					</template>
 				</ListItem>
 				<ListItem v-show="addNewItemVisible">
 					<span class="ivu-list-item-meta-content">
-						<Input type="text" v-model="newStashRemark" placeholder="备注"></Input>
+						<Input type="text" v-model="newStashRemark" :placeholder="$t('message.remark')"></Input>
 					</span>
 					<template slot="action">
 						<li>
-							<Button icon="ios-trash" type="success" size="small" @click="stashControl('push', newStashRemark)">添加</Button>
+							<Button icon="md-checkmark" type="success" size="small" @click="stashControl('push', newStashRemark)">{{ $t("message.add") }}</Button>
 						</li>
 						<li>
-							<Button icon="ios-close-circle" size="small" @click="addNewItemVisible = false">取消</Button>
+							<Button icon="ios-close-circle" size="small" @click="addNewItemVisible = false">{{ $t("message.cancel") }}</Button>
 						</li>
 					</template>
 				</ListItem>
 			</List>
 			<div style="text-align: center;margin-top: 10px">
-				<Button v-show="!addNewItemVisible" icon="md-add" type="success" @click="addNewItemVisible = true">存储</Button>
+				<Button v-show="!addNewItemVisible" icon="md-add" type="success" @click="addNewItemVisible = true">{{ $t("message.stash") }}</Button>
 			</div>
 		</Modal>
 	</div>
