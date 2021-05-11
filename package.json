@@ -1,5 +1,5 @@
 {
-	"name": "lyrieek-git",
+	"name": "@lyrieek/lyrieek-git",
 	"version": "0.1.2",
 	"description": "Git's Web visualization interface",
 	"author": {
@@ -44,5 +44,10 @@
 		"> 1%",
 		"last 2 versions",
 		"not dead"
-	]
+	],
+	"publishConfig": {
+		"cache": "cache/.npm",
+		"registry": "https://npm.pkg.github.com/",
+		"access": "public"
+	}
 }
