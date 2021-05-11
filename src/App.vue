@@ -23,7 +23,7 @@
 			<img src="/favicon.ico" alt="Logo" width="120px" style="float: right;padding-right: 20px;" />
 			<h3>Lyrieek-Git</h3>
 			<ul>
-				<li>{{ $t("message.version") }}: <em>v0.1.2-Alpha</em></li>
+				<li>{{ $t("message.version") }}: <em>v0.1.2</em></li>
 				<li>{{ $t("message.author") }}: <em>lyrieek</em></li>
 				<li>{{ $t("message.email") }}: <em>lyrieek@qq.com</em></li>
 				<li>{{ $t("message.license") }}: <em><img src="/AGPLv3_Logo.svg" title="AGPL(GNU AFFERO GENERAL PUBLIC LICENSE)" alt="AGPL(GNU AFFERO GENERAL PUBLIC LICENSE)" width="120px" />AGPL(GNU AFFERO GENERAL PUBLIC LICENSE)</em></li>

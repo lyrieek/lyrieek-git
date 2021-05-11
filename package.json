@@ -1,6 +1,19 @@
 {
 	"name": "lyrieek-git",
-	"version": "0.1.1",
+	"version": "0.1.2",
+	"description": "Git's Web visualization interface",
+	"author": {
+		"name": "lyrieek",
+		"email": "lyrieek@qq.com",
+		"url": "https://www.lyrieek.com"
+	},
+	"keywords": [
+		"git",
+		"gui",
+		"web-gui",
+		"visualization"
+	],
+	"license": "AGPL-3.0 License",
 	"bin": "dist/index.js",
 	"scripts": {
 		"dev": "vue-cli-service serve",
